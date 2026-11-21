@@ -24,7 +24,7 @@
 
 ## Designs, rendered live
 
-Everything below is a real render from a real account — change the username in any URL and it becomes yours. On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) all twelve designs re-render with *your* data the moment you type your username.
+Everything below is a real render from a real account — change the username in any URL and it becomes yours. On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) all fourteen designs re-render with *your* data the moment you type your username.
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=transparent&height=120&text=Gallery%20Luxury&fontSize=44&fontColor=A98B4F" alt="Gallery Luxury" />
@@ -72,8 +72,8 @@ Most generators hand you one fixed frame and a form. This Studio is built differ
 - **A profile score, with the fixes.** Before you decorate anything, the Studio audits your
   account out of 100 and tells you exactly what is leaking visitors: missing bio, repos
   without descriptions, a cold activity graph — each with the concrete fix.
-- **Mix and match, not one frame.** 22 independent blocks from different styles; take the
-  header from one, the projects from another, reorder freely. Plus 12 style presets and the
+- **Mix and match, not one frame.** 40 independent blocks from different styles; take the
+  header from one, the projects from another, reorder freely. Plus 14 style presets and the
   full 10 template gallery, all on the web.
 - **One-click publish.** Paste a fine-grained token you create (used only in your browser
   tab, sent only to api.github.com, never stored) and the Studio creates your profile
@@ -112,13 +112,13 @@ README in, commit. Full walkthrough: [`docs/guide.md`](docs/guide.md).
 
 | Piece | Where |
 | --- | --- |
-| Web Studio: username-only auto-fill from the GitHub API, 12 style presets, 22 mix-and-match blocks, 10 themes, custom hex colour, live preview | [`docs/index.html`](docs/index.html) · [live](https://dongdarealest.github.io/github-profile-studio/) |
+| Web Studio: username-only auto-fill from the GitHub API, 14 style presets, 40 mix-and-match blocks, 10 themes, custom hex colour, live preview | [`docs/index.html`](docs/index.html) · [live](https://dongdarealest.github.io/github-profile-studio/) |
 | 10 ready templates: Minimal, Dark Luxury, Neon Cyber, Pastel Soft, Terminal, Gallery, Hire Me, Maintainer, Student, Creative | [`templates/`](templates/) |
 | Block library: 30 copy-paste blocks with every colour parameter explained | [`docs/blocks.md`](docs/blocks.md) |
 | Pro tips: the 10 rules behind profiles that get followed | [`docs/pro-tips.md`](docs/pro-tips.md) |
 | 10 curated themes + bring-your-own-colour rules | [`docs/themes.md`](docs/themes.md) |
 | Offline CLI generator (Python, zero dependencies) | [`tools/generate.py`](tools/generate.py) |
-| Your own dynamic SVG API — banner, typing, stats, languages, streak, pins, activity graph, score badge, wave. No third party | [`api/`](api/) |
+| Your own dynamic SVG API — banner, typing, live card, stats, languages, streak, pins, activity graph, score badge, Your Sky, wave. No third party | [`api/`](api/) |
 | Snake, Pac-Man + full metrics workflows for your profile repo | [`templates/workflows/`](templates/workflows/) |
 | Agent-readable profile: `AGENTS.md` + `llms.txt` templates — the 2026 pattern no other kit ships | [`templates/agent/`](templates/agent/) |
 | A worked example, generated for the author | [`examples/dongdarealest.md`](examples/dongdarealest.md) |
