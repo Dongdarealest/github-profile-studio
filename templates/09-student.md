@@ -1,4 +1,4 @@
-<!-- TEMPLATE 09 · STUDENT (learning in public) — GitHub Profile Studio
+<!-- TEMPLATE 09 · STUDENT (learning in public)
      Replace YOUR_USERNAME and Your Name. Accent: 38BDF8 — swap the hex to re-skin.
      Honest beats impressive: show the journey, the streak and what is next. -->
 <div align="center">
