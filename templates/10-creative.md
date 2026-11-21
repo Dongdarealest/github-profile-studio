@@ -1,4 +1,4 @@
-<!-- TEMPLATE 10 · CREATIVE (designer / creative developer) — GitHub Profile Studio
+<!-- TEMPLATE 10 · CREATIVE (designer / creative developer)
      Replace YOUR_USERNAME and Your Name. Accent: DCA7A0 rose gold on 191013 — swap the hex to re-skin.
      Type, air and one colour do the showing off. Keep the words few. -->
 <div align="center">
