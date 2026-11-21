@@ -117,23 +117,38 @@
   a{color:var(--gold)}
   details summary{outline:none}
   ::selection{background:rgba(169,139,79,.4)}
+  .wallframe{height:300px;overflow:hidden;position:relative}
+  .wallscale{width:896px;transform:scale(.52);transform-origin:top left;padding:14px;pointer-events:none}
+  @media(max-width:1200px){.wallscale{transform:scale(.46)}}
+  @media(max-width:640px){
+    .wallscale{transform:scale(.40)} .wallframe{height:250px}
+    .fetchbar{flex-direction:column} .fetchbar button{width:100%}
+    header{padding:40px 16px 20px} .card{padding:16px;border-radius:20px}
+    main{padding:16px 12px 50px} pre{font-size:11px}
+    .preset,.theme,.addbtn{min-height:44px}
+    #scorenum{font-size:42px !important}
+  }
+
 </style>
 </head>
 <body>
 <header>
   <div class="mark"></div>
   <h1>GitHub Profile <em>Studio</em></h1>
-  <p><strong style="color:var(--bone)">Type only your username.</strong> The Studio reads your real GitHub —
-  your name, bio, languages and best repositories — fills everything in for you,
-  then lets you mix beautiful blocks from different styles into a layout that is yours.</p>
+  <p><strong style="color:var(--bone)" data-i18n="hero_b">Type only your username.</strong> <span data-i18n="hero_rest"> The Studio reads your real GitHub — your name, bio, languages and best repositories — fills everything in for you, then lets you mix beautiful blocks from different styles into a layout that is yours.</span></p>
+  <div style="margin-top:18px">
+    <select id="langsel" aria-label="Language" style="appearance:none;background:rgba(255,255,255,.07);color:var(--bone);border:1px solid var(--stroke);border-radius:999px;padding:10px 38px 10px 16px;font-size:14px;cursor:pointer;box-shadow:var(--spec);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)">
+      <option value="en">🌐 English</option><option value="vi">Tiếng Việt</option><option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="es">Español</option><option value="pt">Português</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="hi">हिन्दी</option>
+    </select>
+  </div>
 </header>
 
 <div class="fetchbar">
-  <input type="text" id="username" placeholder="your-github-username" autocomplete="off" />
-  <button id="fetchbtn">Build my profile</button>
+  <input type="text" id="username" placeholder="your-github-username" data-i18n-ph="ph" autocomplete="off" />
+  <button id="fetchbtn" data-i18n="build">Build my profile</button>
 </div>
-<p id="fetchmsg">No sign-up, no token. Everything is read from the public GitHub API, in your browser.</p>
-<p style="text-align:center;margin:10px 0 0"><a href="#" id="scratch" style="font-size:13.5px">or start from scratch, without fetching &rarr;</a></p>
+<p id="fetchmsg" data-i18n="nosignup">No sign-up, no token. Everything is read from the public GitHub API, in your browser.</p>
+<p style="text-align:center;margin:10px 0 0"><a href="#" id="scratch" style="font-size:13.5px"><span data-i18n="scratch">or start from scratch, without fetching →</span></a></p>
 <div id="profilechip">
   <img id="avatar" alt="" />
   <div class="who" id="whotext"></div>
@@ -141,12 +156,12 @@
 
 <div style="max-width:1240px;margin:26px auto 0;padding:0 16px">
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
-    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"><strong style="color:var(--gold)">Step 1</strong><br>Type your username and press <em>Build my profile</em>. We fetch your real data.</div>
-    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"><strong style="color:var(--gold)">Step 2</strong><br>Pick a style preset, a full template from the gallery, or mix your own blocks.</div>
-    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"><strong style="color:var(--gold)">Step 3</strong><br>Copy the README — or publish straight to GitHub in one click, below.</div>
+    <div data-i18n="step1" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"></div>
+    <div data-i18n="step2" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"></div>
+    <div data-i18n="step3" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"></div>
   </div>
   <details style="margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px">
-    <summary style="cursor:pointer;font-weight:600">How do I put this on my GitHub? (30 seconds, by hand)</summary>
+    <summary style="cursor:pointer;font-weight:600" data-i18n="howto_q">How do I put this on my GitHub? (30 seconds, by hand)</summary>
     <ol style="color:var(--muted);line-height:1.65;margin:10px 0 4px;padding-left:20px">
       <li>On GitHub, create a <strong style="color:var(--bone)">new public repository named exactly your username</strong> (for example <em>octocat/octocat</em>). GitHub itself will tell you it is special.</li>
       <li>Open its README.md, delete the placeholder text, and paste what you copied here.</li>
@@ -168,15 +183,15 @@
 
 <section style="max-width:1240px;margin:22px auto 0;padding:0 16px">
   <div class="card" style="margin-bottom:0">
-    <h3 style="font-size:13px">The designs — every one rendered live from real GitHub data</h3>
-    <p class="hint" id="wallhint">This is a sample profile. Type <em>your</em> username above and press Build — the whole wall re-renders with your name, your languages, your repositories. Click any design to use it.</p>
-    <div id="wall" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:14px"></div>
+    <h3 style="font-size:13px" data-i18n="wall_h">The designs — every one rendered live from real GitHub data</h3>
+    <p class="hint" id="wallhint" data-i18n="wall_hint">This is a sample profile. Type <em>your</em> username above and press Build — the whole wall re-renders with your name, your languages, your repositories. Click any design to use it.</p>
+    <div id="wall" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(400px,100%),1fr));gap:14px"></div>
   </div>
 </section>
 
 <section id="gallerywrap" style="display:none;max-width:1240px;margin:22px auto 0;padding:0 16px">
   <div class="card" style="margin-bottom:0">
-    <h3>Template gallery — complete profiles, one click</h3>
+    <h3 data-i18n="gallery_h">Template gallery — complete profiles, one click</h3>
     <p class="hint">The same templates as the repository files, now on the web. Preview any of them with <em>your</em> data, then use it as-is — your username and name are substituted automatically. Or go back to mixing blocks below; both roads lead to the same Copy button.</p>
     <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px"></div>
     <p id="tplstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
@@ -186,13 +201,13 @@
 <main id="mainui" style="display:none">
   <div>
     <section class="card">
-      <h3>1 · Start from a style</h3>
+      <h3 data-i18n="presets_h">1 · Start from a style</h3>
       <p class="hint">Twelve complete layouts, each a different mix of blocks. Apply one, then make it yours below.</p>
       <div class="presets" id="presets"></div>
     </section>
 
     <section class="card">
-      <h3>2 · Colour</h3>
+      <h3 data-i18n="colour_h">2 · Colour</h3>
       <p class="hint">One accent, applied to every block at once — or bring your own hex.</p>
       <div class="themes" id="themes"></div>
       <div class="colorrow">
@@ -202,7 +217,7 @@
     </section>
 
     <section class="card">
-      <h3>3 · Your layout — mix and match</h3>
+      <h3 data-i18n="layout_h">3 · Your layout — mix and match</h3>
       <p class="hint">This is your profile, block by block. Reorder, remove, and add pieces from any style. Nothing is a fixed frame.</p>
       <div id="layout"></div>
       <h3 style="margin-top:16px">Add a block</h3>
@@ -210,9 +225,9 @@
     </section>
 
     <section class="card">
-      <h3>4 · Words (already filled from your GitHub)</h3>
+      <h3 data-i18n="words_h">4 · Words (already filled from your GitHub)</h3>
       <p class="hint">Fetched automatically. Edit only if you want different words.</p>
-      <div class="btns" style="margin-bottom:4px"><button class="ghost" id="writeforme" type="button">Write my lines for me</button></div>
+      <div class="btns" style="margin-bottom:4px"><button class="ghost" id="writeforme" type="button" data-i18n="write_btn">Write my lines for me</button></div>
       <p class="hint" id="writehint">Three tones, generated from your real data. Click again for the next tone.</p>
       <label style="display:block;color:var(--muted);font-size:12px;margin:10px 0 5px">DISPLAY NAME</label>
       <input type="text" id="name" placeholder="Your Name" />
@@ -228,7 +243,7 @@
 
 
     <section class="card">
-      <h3>5 · Publish straight to GitHub (optional)</h3>
+      <h3 data-i18n="publish_h">5 · Publish straight to GitHub (optional)</h3>
       <p class="hint">One click: creates your profile repository if needed and commits this README — plus, if you tick them, the snake and Pac-Man workflows and the agent files. Uses a token <strong>you</strong> create, only in this tab, sent only to api.github.com, never stored.</p>
       <p class="hint">Create one in 20 seconds: GitHub → Settings → Developer settings → Personal access tokens → <em>Fine-grained</em> → Repository access: only your username repository → Permissions: Contents and Workflows, read and write.</p>
       <input type="password" id="ghtoken" placeholder="github_pat_…" autocomplete="off" style="margin-bottom:10px" />
@@ -243,8 +258,8 @@
 
     <section class="card">
       <div class="btns">
-        <button id="copy">Copy README</button>
-        <button class="ghost" id="download">Download .md</button>
+        <button id="copy" data-i18n="copy">Copy README</button>
+        <button class="ghost" id="download" data-i18n="download">Download .md</button>
       </div>
       <p id="status" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
     </section>
@@ -252,17 +267,17 @@
 
   <div>
     <section class="card">
-      <div class="previewhead"><span>Live preview — your real data</span><span><button class="mini" style="width:auto;padding:0 9px" id="w-desktop">Desktop 896</button> <button class="mini" style="width:auto;padding:0 9px" id="w-mobile">Mobile 390</button></span></div><div id="tplbanner" style="display:none;margin-bottom:10px"></div>
+      <div class="previewhead"><span data-i18n="preview_h">Live preview — your real data</span><span><button class="mini" style="width:auto;padding:0 9px" id="w-desktop">Desktop 896</button> <button class="mini" style="width:auto;padding:0 9px" id="w-mobile">Mobile 390</button></span></div><div id="tplbanner" style="display:none;margin-bottom:10px"></div>
       <div class="mock" id="preview"><div id="previewinner" style="max-width:896px;margin:0 auto"></div></div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-      <button id="copy2" style="background:var(--gold);color:#141414;border:none;border-radius:9px;padding:13px 20px;font-size:15.5px;font-weight:700;cursor:pointer">Copy README — done</button>
-      <button id="pub2" style="background:transparent;color:var(--bone);border:1px solid var(--gold);border-radius:9px;padding:13px 18px;font-size:15px;font-weight:600;cursor:pointer">Publish to GitHub for me</button>
-      <button id="custombtn" style="background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:9px;padding:13px 18px;font-size:15px;cursor:pointer">Customize</button>
+      <button id="copy2" data-i18n="a_copy" style="background:linear-gradient(180deg,#d8bc7f,#a98b4f 60%,#96793f);color:#17130a;border:none;border-radius:999px;padding:13px 22px;font-size:15.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 10px 24px rgba(169,139,79,.3)">Copy README — done</button>
+      <button id="pub2" data-i18n="a_publish" style="background:rgba(255,255,255,.06);color:var(--bone);border:1px solid var(--gold);border-radius:999px;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer">Publish to GitHub for me</button>
+      <button id="custombtn" data-i18n="a_customize" style="background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--stroke);border-radius:999px;padding:13px 20px;font-size:15px;cursor:pointer">Customize</button>
     </div>
-    <p style="color:var(--muted);font-size:13px;margin:10px 0 0">That is all most people need. <em>Customize</em> opens styles, blocks, templates and wording — only if you want them.</p>
+    <p style="color:var(--muted);font-size:13px;margin:10px 0 0" data-i18n="a_note">That is all most people need. <em>Customize</em> opens styles, blocks, templates and wording — only if you want them.</p>
     </section>
     <section class="card">
-      <div class="previewhead"><span>Your README.md</span><span>paste into your username repository</span></div>
+      <div class="previewhead"><span data-i18n="output_h">Your README.md</span><span>paste into your username repository</span></div>
       <pre id="output"></pre>
     </section>
   </div>
@@ -274,6 +289,7 @@
 </footer>
 
 <script src="templates-data.js"></script>
+<script src="i18n.js"></script>
 <script>
 const THEMES = {
   "midnight-gold": {label:"Midnight Gold", bg:"0D1117", accent:"A98B4F", text:"E6EDF3", border:"30363D", grad:"0:0D1117,50:1A1A1A,100:A98B4F", icons:"dark", statsTheme:null},
@@ -358,6 +374,10 @@ const BLOCKS = {
     return '\n<div align="center">\n<img height="200" src="https://github-readme-stats.vercel.app/api/top-langs/?username=' + u + '&layout=donut&langs_count=8&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="languages donut" />\n</div>\n'; }},
   "divider": {label:"Divider", small:"A thin line in your accent, between sections", make(t,u){
     return '\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=rect&color=' + t.accent + '&height=4" width="100%" alt="" />\n</div>\n'; }},
+  "own-glass-banner": {label:"Liquid Glass banner (our own API)", small:"Frosted glass header with a specular highlight", make(t,u){
+    return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '&style=glass" width="100%" alt="banner" />\n</div>\n'; }},
+  "own-glass-card": {label:"Liquid Glass stats card (our own API)", small:"Your live numbers on frosted glass", make(t,u){
+    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '&style=glass" alt="GitHub stats card" />\n</div>\n'; }},
   "own-banner": {label:"Studio banner (our own API)", small:"Served by our own service — never a dead third party", make(t,u){
     return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '" width="100%" alt="banner" />\n</div>\n'; }},
   "own-typing": {label:"Studio typing (our own API)", small:"Typewriter lines, hosted by the Studio", make(t,u){
@@ -378,6 +398,7 @@ const BLOCKS = {
 };
 
 const PRESETS = [
+  {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","badges","about","skills","own-glass-card","stats-row","own-wave"]},
   {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","pins","stats-row","footer-plate"]},
   {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","stats-row","streak","graph","footer-wave"]},
   {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","skills","stats-row","graph","trophies","snake","footer-wave"]},
@@ -475,8 +496,8 @@ function render() {
 const LANG2ICON = {Python:"python",JavaScript:"javascript",TypeScript:"typescript",HTML:"html",CSS:"css",Go:"go",Rust:"rust",Java:"java",C:"c","C++":"cpp","C#":"cs",PHP:"php",Ruby:"ruby",Swift:"swift",Kotlin:"kotlin",Dart:"dart",Shell:"bash",Lua:"lua",Scala:"scala",Vue:"vue",Svelte:"svelte",Dockerfile:"docker"};
 async function fetchProfile() {
   const u = user();
-  if (!u || u === "YOUR_USERNAME") { $("fetchmsg").textContent = "Type your GitHub username first."; return; }
-  $("fetchmsg").textContent = "Reading github.com/" + u + " …";
+  if (!u || u === "YOUR_USERNAME") { $("fetchmsg").textContent = t("fetch_first"); return; }
+  $("fetchmsg").textContent = t("fetching", {u});
   try {
     const [ur, rr, hasProfileRepo] = await Promise.all([
       fetch("https://api.github.com/users/" + u).then(r => { if (!r.ok) throw new Error("user"); return r.json(); }),
@@ -516,7 +537,7 @@ async function fetchProfile() {
       ];
       const total = checks.reduce((sum, c) => sum + (c.ok ? c.pts : 0), 0);
       $("scorenum").textContent = total;
-      $("scoreword").textContent = total >= 85 ? "Profile score — showcase level." : total >= 65 ? "Profile score — strong, with clear wins left." : total >= 45 ? "Profile score — a solid base, leaking visitors." : "Profile score — the fixes below are worth an evening.";
+      $("scoreword").textContent = total >= 85 ? t("score85") : total >= 65 ? t("score65") : total >= 45 ? t("score45") : t("score0");
       $("scorelist").innerHTML = checks.map(c => (c.ok ? "✓ " : "✕ ") + c.label + (c.ok ? "" : ' — <span style="color:var(--bone)">' + c.tip + "</span>")).join("<br>");
       $("scorepanel").style.display = "block";
     })();
@@ -524,11 +545,11 @@ async function fetchProfile() {
     $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>@" + u + " · " + ur.public_repos + " public repos · " + ur.followers + " followers · top languages: " + (langs.slice(0, 3).join(", ") || "—") + "</span><br><span>Everything below was filled from this. Change nothing, or change anything.</span>";
     $("profilechip").style.display = "flex";
     showStudio(); renderWall();
-    $("fetchmsg").textContent = "Done. Your score is below, your profile is ready on the right — copy it, publish it, or customize it.";
+    $("fetchmsg").textContent = t("fetch_done");
     setTimeout(() => $("scorepanel").scrollIntoView({behavior: "smooth", block: "center"}), 60);
     render();
   } catch (e) {
-    $("fetchmsg").textContent = "Could not read that username from GitHub. Check the spelling and try again.";
+    $("fetchmsg").textContent = t("fetch_fail");
   }
 }
 $("fetchbtn").onclick = fetchProfile;
@@ -537,7 +558,7 @@ document.querySelectorAll("input,textarea").forEach(el => el.addEventListener("i
 $("colorpick").addEventListener("input", () => { $("colorhex").value = $("colorpick").value.slice(1).toUpperCase(); render(); });
 $("colorhex").addEventListener("input", () => { const a = T().accent; $("colorpick").value = "#" + a; render(); });
 $("copy").onclick = async () => {
-  try { await navigator.clipboard.writeText(build()); $("status").textContent = "Copied. Paste it into the README of your " + user() + " repository."; }
+  try { await navigator.clipboard.writeText(build()); $("status").textContent = t("copied", {u: user()}); }
   catch { $("status").textContent = "Clipboard blocked — select the text below and copy it manually."; }
 };
 $("download").onclick = () => {
@@ -645,6 +666,24 @@ function deriveAccent(name) {
 
 
 
+
+// ---- Languages: 10 interface languages, auto-detected, remembered ----
+let LANG = "en";
+function t(key, vars) {
+  let str = (window.I18N && window.I18N[LANG] && window.I18N[LANG][key]) || (window.I18N && window.I18N.en[key]) || key;
+  if (vars) for (const k in vars) str = str.split("{" + k + "}").join(vars[k]);
+  return str;
+}
+function applyLang(l) {
+  if (!window.I18N || !window.I18N[l]) l = "en";
+  LANG = l;
+  try { localStorage.setItem("gps-lang", l); } catch (e) {}
+  document.querySelectorAll("[data-i18n]").forEach(el => { const v = t(el.dataset.i18n); if (v && v !== el.dataset.i18n) el.innerHTML = v; });
+  document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  const sel = $("langsel"); if (sel) sel.value = l;
+  document.documentElement.lang = l;
+}
+
 // ---- The Designs wall: live-rendered presets you choose with your eyes ----
 const SAMPLE = {username: "Dongdarealest", name: "Dongdarealest", lines: "Developer\nOpen source builder\nAlways learning", about: "I build small, finished things and learn in public.", skills: "javascript,python,html,css,git,github", repos: "TubeEQ,sai-dau-sua-do,DONGUNLOCK,github-profile-studio"};
 function snapshot() {
@@ -667,8 +706,8 @@ function renderWall() {
     const html = mdToHtml(build()).replace(/<img /g, '<img loading="lazy" ');
     const card = document.createElement("div");
     card.style.cssText = "border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b0f14;cursor:pointer";
-    card.innerHTML = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)"><strong>' + p.name + '</strong><span style="color:var(--gold);font-size:12.5px">Use this design &rarr;</span></div>' +
-      '<div style="height:300px;overflow:hidden;position:relative"><div style="width:896px;transform:scale(0.52);transform-origin:top left;padding:14px;pointer-events:none">' + html + '</div><div style="position:absolute;inset:0"></div></div>';
+    card.innerHTML = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)"><strong>' + p.name + '</strong><span style="color:var(--gold);font-size:12.5px">Use this design →</span></div>' +
+      '<div class="wallframe"><div class="wallscale">' + html + '</div><div style="position:absolute;inset:0"></div></div>';
     card.onclick = () => {
       restore(st);
       applyPreset(p);
@@ -708,6 +747,13 @@ $("about").value = "I build small, finished things and learn in public.";
 $("skills").value = "python,javascript,html,css,git,github";
 $("repos").value = "";
 renderThemes(); renderPresets(); renderGallery(); applyPreset(PRESETS[1]); renderWall();
+(function initLang() {
+  let l = "en";
+  try { l = localStorage.getItem("gps-lang") || (navigator.language || "en").slice(0, 2); } catch (e) {}
+  if (!window.I18N || !window.I18N[l]) l = "en";
+  applyLang(l);
+  $("langsel").addEventListener("change", e => applyLang(e.target.value));
+})();
 </script>
 </body>
 </html>
