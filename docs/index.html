@@ -146,6 +146,22 @@
   .mini{background:rgba(255,255,255,.06);border:1px solid var(--stroke);color:var(--bone);border-radius:999px;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;box-shadow:var(--spec)}
   .mini:hover{border-color:var(--gold)}
   .addgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .secrow{display:flex;align-items:center;gap:14px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer}
+  .secrow:last-of-type{border-bottom:none}
+  .secinfo{flex:1;min-width:0}
+  .secname{display:block;font-size:15px;font-weight:600}
+  .secinfo small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.45}
+  .switch{position:relative;flex:none;width:46px;height:26px;display:inline-block}
+  .switch input{opacity:0;width:100%;height:100%;position:absolute;inset:0;margin:0;cursor:pointer;z-index:2}
+  .switch .track{position:absolute;inset:0;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid var(--stroke);transition:background .2s,border-color .2s;box-shadow:var(--spec)}
+  .switch .track::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#8a8680;transition:left .2s,background .2s}
+  .switch input:checked + .track{background:rgba(169,139,79,.35);border-color:var(--gold)}
+  .switch input:checked + .track::after{left:22px;background:linear-gradient(180deg,#d8bc7f,#a98b4f)}
+  .extrasbox{margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:12px}
+  .extrasbox summary{cursor:pointer;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:4px 0}
+  .exrow{display:flex;align-items:center;gap:11px;padding:10px 2px;font-size:14.5px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05)}
+  .exrow:last-child{border-bottom:none}
+  .exrow input{width:18px;height:18px;accent-color:var(--gold);cursor:pointer;flex:none}
   .addbtn{border-style:dashed;padding:9px 10px;cursor:pointer;font-size:12.5px;text-align:left}
   .btns{display:flex;gap:10px;flex-wrap:wrap}
   .btns button{
@@ -245,11 +261,13 @@
     </section>
 
     <section class="card">
-      <h3 data-i18n="layout_h">3 · Your layout — mix and match</h3>
-      <p class="hint">This is your profile, block by block. Reorder, remove, and add pieces from any style. Nothing is a fixed frame.</p>
-      <div id="layout"></div>
-      <h3 style="margin-top:16px">Add a block</h3>
-      <div class="addgrid" id="addgrid"></div>
+      <h3 data-i18n="sections_h">Your profile, section by section</h3>
+      <p class="hint" data-i18n="sections_hint">Turn a section on or off — the preview and the README update themselves. That is the whole layout.</p>
+      <div id="sections"></div>
+      <details class="extrasbox">
+        <summary data-i18n="extras_h">Extras</summary>
+        <div id="extras"></div>
+      </details>
     </section>
 
     <section class="card">
@@ -358,7 +376,7 @@ const BLOCKS = {
     return "```bash\n$ whoami\n> " + u + " — " + (linesArr()[0] || "developer") + "\n$ status\n> building in public\n```\n"; }},
   "typing": {label:"Typing line", small:"Your lines, typed and re-typed forever", make(t,u){
     const ls = linesArr(); if (!ls.length) return "";
-    return '<div align="center">\n<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1100&color=' + t.accent + '&center=true&vCenter=true&width=880&lines=' + ls.map(enc).join(";") + '" alt="typing" />\n</div>\n'; }},
+    return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/typing?lines=' + ls.map(enc).join(";") + '&color=' + t.accent + '&bg=' + t.bg + '" alt="typing" />\n</div>\n'; }},
   "badges": {label:"Badges row", small:"Views, followers and total stars", make(t,u){
     return '<div align="center">\n<img src="https://komarev.com/ghpvc/?username=' + u + '&color=' + t.accent + '&style=flat-square&label=Profile+views" alt="views" />\n<img src="https://img.shields.io/github/followers/' + u + '?style=flat-square&color=' + t.accent + '&labelColor=' + t.bg + '&label=Followers" alt="followers" />\n<img src="https://img.shields.io/github/stars/' + u + '?style=flat-square&color=' + t.accent + '&labelColor=' + t.bg + '&label=Total+stars" alt="stars" />\n</div>\n'; }},
   "about": {label:"About", small:"Your bio line, in plain searchable text", make(t,u){
@@ -423,6 +441,10 @@ const BLOCKS = {
     return '\n## Featured projects\n\n<div align="center">\n' + rs.map(r => '<a href="https://github.com/' + u + '/' + r + '"><img src="https://github-profile-studio-api.vercel.app/api/pin?username=' + u + '&repo=' + r + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="' + r + '" /></a>').join("\n") + '\n</div>\n'; }},
   "own-sky": {label:"Your Sky — signature artwork (our own API)", small:"Your work as a night sky: pushes are stars, best repos are constellations", make(t,u){
     return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/sky?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="Your Sky — my work as a night sky" />\n</div>\n'; }},
+  "own-strip": {label:"Identity strip — followers, stars, repos, score (our own API)", small:"One plate, your real numbers, in the sky language", make(t,u){
+    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/strip?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="My numbers" />\n</div>\n'; }},
+  "own-stack": {label:"Tech stack — monogram tiles (our own API)", small:"Your languages as serif monogram tiles, no borrowed icons", make(t,u){
+    return '\n## Tech stack\n\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/stack?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="Tech stack" />\n</div>\n'; }},
   "own-banner": {label:"Studio banner (our own API)", small:"Served by our own service — never a dead third party", make(t,u){
     return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '" width="100%" alt="banner" />\n</div>\n'; }},
   "own-typing": {label:"Studio typing (our own API)", small:"Typewriter lines, hosted by the Studio", make(t,u){
@@ -443,27 +465,27 @@ const BLOCKS = {
 };
 
 const PRESETS = [
-  {name:"Night Sky", desc:"Your Sky as the centrepiece — the signature", theme:"midnight-gold", blocks:["own-sky","typing","badges","about","skills","own-stats-pair","own-pins","footer-plate"]},
-  {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","badges","about","skills","own-glass-card","own-stats-pair","own-wave"]},
-  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","own-pins","own-stats-pair","footer-plate"]},
-  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","own-stats-pair","own-streak","own-graph","footer-wave"]},
-  {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","skills","stats-row","graph","trophies","snake","footer-wave"]},
-  {name:"Terminal Hacker", desc:"Monospace, minimal, no decoration", theme:"emerald", blocks:["header-terminal","about","skills","stats-row","streak","footer-plate"]},
-  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","own-pins","projects-table","skills","own-stats-pair","connect","footer-wave"]},
+  {name:"Night Sky", desc:"Your Sky as the centrepiece — the signature", theme:"midnight-gold", blocks:["own-sky","typing","own-strip","about","own-stack","own-stats-pair","own-pins","footer-plate"]},
+  {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","own-strip","about","own-stack","own-glass-card","own-stats-pair","own-wave"]},
+  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","own-strip","about","own-stack","own-pins","own-stats-pair","footer-plate"]},
+  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","own-strip","about","own-stack","own-stats-pair","own-streak","own-graph","footer-wave"]},
+  {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","own-stack","stats-row","graph","trophies","snake","footer-wave"]},
+  {name:"Terminal Hacker", desc:"Monospace, minimal, no decoration", theme:"emerald", blocks:["header-terminal","about","own-stack","stats-row","streak","footer-plate"]},
+  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","own-pins","projects-table","own-stack","own-stats-pair","connect","footer-wave"]},
   {name:"Maintainer", desc:"Work on top, activity as proof", theme:"emerald", blocks:["header-wave","about","own-pins","own-graph","own-stats-pair","trophies","connect","footer-wave"]},
-  {name:"Student Journey", desc:"Streak front and centre, friendly", theme:"ocean", blocks:["typing","about","skills","streak","stats-row","quote","footer-wave"]},
-  {name:"Creative Portfolio", desc:"Type and air do the talking", theme:"rose-gold", blocks:["header-serif","about","projects-table","skills","stats-wide","connect","footer-plate"]},
-  {name:"Pastel Friendly", desc:"Light, soft, welcoming", theme:"pastel", blocks:["header-wave","typing","about","skills","stats-row","streak","quote","footer-wave"]},
+  {name:"Student Journey", desc:"Streak front and centre, friendly", theme:"ocean", blocks:["typing","about","own-stack","streak","stats-row","quote","footer-wave"]},
+  {name:"Creative Portfolio", desc:"Type and air do the talking", theme:"rose-gold", blocks:["header-serif","about","projects-table","own-stack","stats-wide","connect","footer-plate"]},
+  {name:"Pastel Friendly", desc:"Light, soft, welcoming", theme:"pastel", blocks:["header-wave","typing","about","own-stack","stats-row","streak","quote","footer-wave"]},
   {name:"Editorial Paper", desc:"Black on white, like a magazine", theme:"paper", blocks:["header-serif","about","projects-table","stats-row","connect","footer-plate"]},
-  {name:"Show-off Max", desc:"Everything, including the city and Pac-Man", theme:"dracula", blocks:["header-venom","typing","badges","skills","stats-wide","trophies","city","pacman","graph","streak","footer-wave"]},
-  {name:"One Screen", desc:"The whole profile, no scrolling", theme:"nord", blocks:["header-serif","about","skills","stats-row","footer-plate"]}
+  {name:"Show-off Max", desc:"Everything, including the city and Pac-Man", theme:"dracula", blocks:["header-venom","typing","own-strip","own-stack","stats-wide","trophies","city","pacman","graph","streak","footer-wave"]},
+  {name:"One Screen", desc:"The whole profile, no scrolling", theme:"nord", blocks:["header-serif","about","own-stack","stats-row","footer-plate"]}
 ];
 
 function applyPreset(p) {
   themeKey = p.theme; layout = p.blocks.slice();
   $("colorhex").value = THEMES[p.theme].accent; $("colorpick").value = "#" + THEMES[p.theme].accent;
   document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === p.theme ? "true" : "false"));
-  renderLayout(); render(); updateHeroSky();
+  renderSections(); render(); updateHeroSky();
 }
 function renderThemes() {
   const el = $("themes"); el.innerHTML = "";
@@ -488,24 +510,67 @@ function renderPresets() {
     el.appendChild(b);
   });
 }
-function renderLayout() {
-  const el = $("layout"); el.innerHTML = "";
-  layout.forEach((id, i) => {
-    const d = document.createElement("div"); d.className = "blockitem";
-    d.innerHTML = '<span class="nm">' + BLOCKS[id].label + '<small>' + BLOCKS[id].small + '</small></span>';
-    const up = document.createElement("button"); up.className = "mini"; up.textContent = "↑"; up.title = t("move_up");
-    up.onclick = () => { if (i > 0) { [layout[i-1], layout[i]] = [layout[i], layout[i-1]]; renderLayout(); render(); } };
-    const dn = document.createElement("button"); dn.className = "mini"; dn.textContent = "↓"; dn.title = t("move_down");
-    dn.onclick = () => { if (i < layout.length - 1) { [layout[i+1], layout[i]] = [layout[i], layout[i+1]]; renderLayout(); render(); } };
-    const rm = document.createElement("button"); rm.className = "mini"; rm.textContent = "✕"; rm.title = t("remove_block");
-    rm.onclick = () => { layout.splice(i, 1); renderLayout(); render(); };
-    d.appendChild(up); d.appendChild(dn); d.appendChild(rm); el.appendChild(d);
+// ---- Sections: the calm layout panel. One switch per section, fixed order. ----
+const SECTIONS = [
+  {name:"sec_sky", desc:"sec_sky_d", blocks:["own-sky"]},
+  {name:"sec_typing", desc:"sec_typing_d", blocks:["typing"]},
+  {name:"sec_about", desc:"sec_about_d", blocks:["about"]},
+  {name:"sec_numbers", desc:"sec_numbers_d", blocks:["own-strip"]},
+  {name:"sec_stack", desc:"sec_stack_d", blocks:["own-stack"]},
+  {name:"sec_stats", desc:"sec_stats_d", blocks:["own-stats-pair"]},
+  {name:"sec_projects", desc:"sec_projects_d", blocks:["own-pins"]},
+  {name:"sec_activity", desc:"sec_activity_d", blocks:["own-streak","own-graph"]},
+  {name:"sec_footer", desc:"sec_footer_d", blocks:["footer-plate"]}
+];
+const EXTRAS = [
+  {name:"ex_snake", blocks:["snake"]},
+  {name:"ex_pacman", blocks:["pacman"]},
+  {name:"ex_trophies", blocks:["trophies"]},
+  {name:"ex_quote", blocks:["quote"]},
+  {name:"ex_blog", blocks:["blog"]},
+  {name:"ex_connect", blocks:["connect"]},
+  {name:"ex_city", blocks:["city"]},
+  {name:"ex_wave", blocks:["header-wave"]}
+];
+function partOn(blocks) { return blocks.every(id => layout.includes(id)); }
+function composeLayout() {
+  const next = [];
+  SECTIONS.forEach(sec => { if (partOn(sec.blocks)) next.push(...sec.blocks); });
+  EXTRAS.forEach(x => { if (partOn(x.blocks)) next.push(...x.blocks); });
+  return next;
+}
+function setPart(blocks, on) {
+  blocks.forEach(id => {
+    const i = layout.indexOf(id);
+    if (on && i < 0) layout.push(id);
+    if (!on && i >= 0) layout.splice(i, 1);
   });
-  const ag = $("addgrid"); ag.innerHTML = "";
-  Object.keys(BLOCKS).filter(id => !layout.includes(id)).forEach(id => {
-    const b = document.createElement("button"); b.type = "button"; b.className = "addbtn"; b.textContent = "+ " + BLOCKS[id].label;
-    b.onclick = () => { layout.push(id); renderLayout(); render(); };
-    ag.appendChild(b);
+  layout = composeLayout();
+}
+function renderSections() {
+  const el = $("sections"); if (!el) return;
+  el.innerHTML = "";
+  SECTIONS.forEach(sec => {
+    const row = document.createElement("label"); row.className = "secrow";
+    const info = document.createElement("span"); info.className = "secinfo";
+    info.innerHTML = '<span class="secname">' + t(sec.name) + '</span><small>' + t(sec.desc) + '</small>';
+    const sw = document.createElement("span"); sw.className = "switch";
+    const inp = document.createElement("input"); inp.type = "checkbox"; inp.checked = partOn(sec.blocks);
+    inp.onchange = () => { setPart(sec.blocks, inp.checked); renderSections(); render(); };
+    const track = document.createElement("span"); track.className = "track";
+    sw.appendChild(inp); sw.appendChild(track);
+    row.appendChild(info); row.appendChild(sw);
+    el.appendChild(row);
+  });
+  const ex = $("extras"); if (!ex) return;
+  ex.innerHTML = "";
+  EXTRAS.forEach(x => {
+    const row = document.createElement("label"); row.className = "exrow";
+    const inp = document.createElement("input"); inp.type = "checkbox"; inp.checked = partOn(x.blocks);
+    inp.onchange = () => { setPart(x.blocks, inp.checked); renderSections(); render(); };
+    row.appendChild(inp);
+    row.appendChild(document.createTextNode(t(x.name)));
+    ex.appendChild(row);
   });
 }
 let activeTemplate = null;
@@ -728,6 +793,7 @@ function applyLang(l) {
   document.documentElement.lang = l;
   if (typeof renderThemes === "function") renderThemes();
   if (typeof renderGallery === "function") renderGallery();
+  if (typeof renderSections === "function") renderSections();
 }
 
 // ---- The calm flow: hero sky, result, five looks, advanced ----
