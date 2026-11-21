@@ -1,0 +1,1 @@
+{"rewrites":[{"destination":"/api/banner","source":"/banner"},{"destination":"/api/typing","source":"/typing"},{"destination":"/api/card","source":"/card"},{"destination":"/api/wave","source":"/wave"}]}

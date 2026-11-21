@@ -1,0 +1,27 @@
+# Copy this file to .github/workflows/metrics.yml IN YOUR PROFILE REPOSITORY.
+# It renders a full metrics dashboard daily and commits metrics.svg back.
+# Then embed it in your README:  ![Metrics](./metrics.svg)
+name: Metrics
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: lowlighter/metrics@latest
+        with:
+          token: ${{ secrets.METRICS_TOKEN }} # a classic PAT with repo scope, stored as a repo secret
+          user: ${{ github.repository_owner }}
+          template: classic
+          base: header, activity, community, repositories, metadata
+          config_timezone: Etc/UTC
+          plugin_languages: yes
+          plugin_habits: yes
+          plugin_calendar: yes
+          filename: metrics.svg

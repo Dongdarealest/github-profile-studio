@@ -1,0 +1,1 @@
+{"description":"Dynamic SVG API for GitHub Profile Studio. Deploy on Vercel, then every image is just a URL: change the username, change the colour, done.","name":"github-profile-studio-api","private":true,"type":"module","version":"1.0.0"}

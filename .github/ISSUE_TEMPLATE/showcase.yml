@@ -1,0 +1,21 @@
+name: Share your profile or ask for help
+description: Show the profile you built, or get unstuck building one
+title: "[profile] "
+labels: ["showcase"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Built something with Profile Studio? Paste your profile link — the best ones get featured in the README gallery.
+        Stuck? Tell us where, and paste the snippet that is misbehaving.
+  - type: input
+    id: profile
+    attributes:
+      label: Your GitHub profile
+      placeholder: https://github.com/your-username
+  - type: textarea
+    id: details
+    attributes:
+      label: What did you build, or what is not working?
+    validations:
+      required: true

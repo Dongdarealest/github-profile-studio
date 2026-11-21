@@ -1,0 +1,19 @@
+name: Suggest a theme, template or block
+description: An idea that would make profiles prettier for everyone
+title: "[idea] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What is it, and which profiles would love it?
+    validations:
+      required: true
+  - type: checkboxes
+    id: rule
+    attributes:
+      label: The one rule
+      options:
+        - label: It works by changing only a username, a colour, or a line of text
+          required: true

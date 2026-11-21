@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GitHub Profile Studio — a beautiful profile in 60 seconds</title>
+<meta name="description" content="Make your GitHub profile beautiful in 60 seconds. Type your username, pick a colour, copy your README. Free, open source, no sign-up." />
+<meta property="og:title" content="GitHub Profile Studio — a beautiful profile in 60 seconds" />
+<meta property="og:description" content="Just change the username. Pick one colour. Every stat updates itself, forever." />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<style>
+  :root{--bg:#0d1117;--panel:#11161d;--line:#30363d;--gold:#a98b4f;--bone:#f2efe9;--muted:#8a8680}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--bone);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+  header{padding:56px 20px 26px;text-align:center;border-bottom:1px solid var(--line)}
+  header .mark{width:54px;height:30px;margin:0 auto 14px;border:2px solid var(--gold);border-bottom:none;border-radius:54px 54px 0 0}
+  h1{font-family:Georgia,"Times New Roman",serif;font-weight:500;font-size:clamp(34px,6vw,58px);margin:0;letter-spacing:.5px}
+  h1 em{color:var(--gold);font-style:italic}
+  header p{color:var(--muted);max-width:640px;margin:14px auto 0;font-size:17px;line-height:1.55}
+  main{max-width:1180px;margin:0 auto;padding:28px 18px 70px;display:grid;grid-template-columns:360px 1fr;gap:22px}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+  label{display:block;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:18px 0 7px}
+  label:first-child{margin-top:0}
+  input[type=text],textarea,select{width:100%;background:#0b0f14;border:1px solid var(--line);border-radius:9px;color:var(--bone);padding:11px 12px;font-size:15px}
+  textarea{resize:vertical;min-height:64px}
+  .colorrow{display:flex;gap:10px;align-items:center}
+  input[type=color]{width:52px;height:44px;border:1px solid var(--line);border-radius:9px;background:#0b0f14;padding:4px;cursor:pointer}
+  .themes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .theme{border:1px solid var(--line);border-radius:10px;padding:9px 10px;cursor:pointer;font-size:13px;display:flex;gap:8px;align-items:center;background:#0b0f14}
+  .theme[aria-pressed=true]{border-color:var(--gold)}
+  .swatch{width:18px;height:18px;border-radius:50%;flex:none;border:1px solid rgba(255,255,255,.25)}
+  .checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;font-size:14px}
+  .checks label{display:flex;gap:7px;align-items:center;text-transform:none;letter-spacing:0;color:var(--bone);margin:0;font-size:14px;cursor:pointer}
+  .btns{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+  button{background:var(--gold);color:#141414;border:none;border-radius:9px;padding:12px 18px;font-size:15px;font-weight:600;cursor:pointer}
+  button.ghost{background:transparent;color:var(--bone);border:1px solid var(--line)}
+  .previewhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:var(--muted);font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+  .mock{border:1px solid var(--line);border-radius:12px;background:#0b0f14;padding:18px;overflow:auto}
+  .mock img{max-width:100%}
+  pre{background:#07090c;border:1px solid var(--line);border-radius:12px;padding:16px;overflow:auto;font-size:12.5px;line-height:1.5;max-height:430px;white-space:pre-wrap;word-break:break-all}
+  footer{text-align:center;color:var(--muted);padding:26px;font-size:14px;border-top:1px solid var(--line)}
+  a{color:var(--gold)}
+</style>
+</head>
+<body>
+<header>
+  <div class="mark"></div>
+  <h1>GitHub Profile <em>Studio</em></h1>
+  <p>Type your username. Pick a theme, or one colour of your own. Copy the README.
+  Every number on your new profile updates itself — you never touch it again.</p>
+</header>
+
+<main>
+  <section class="card" aria-label="Generator controls">
+    <label for="username">GitHub username — the only required field</label>
+    <input type="text" id="username" placeholder="octocat" autocomplete="off" />
+
+    <label for="name">Display name</label>
+    <input type="text" id="name" placeholder="Your Name" autocomplete="off" />
+
+    <label for="lines">Typing lines, one per line</label>
+    <textarea id="lines">Software engineer
+Open source builder
+Less, but better</textarea>
+
+    <label>Theme</label>
+    <div class="themes" id="themes"></div>
+
+    <label for="colorhex">Or your own accent colour</label>
+    <div class="colorrow">
+      <input type="color" id="colorpick" value="#a98b4f" />
+      <input type="text" id="colorhex" value="A98B4F" maxlength="7" />
+    </div>
+
+    <label>Sections</label>
+    <div class="checks" id="sections">
+      <label><input type="checkbox" data-sec="typing" checked /> Typing line</label>
+      <label><input type="checkbox" data-sec="views" checked /> View counter</label>
+      <label><input type="checkbox" data-sec="skills" checked /> Skill icons</label>
+      <label><input type="checkbox" data-sec="stats" checked /> Stats card</label>
+      <label><input type="checkbox" data-sec="langs" checked /> Top languages</label>
+      <label><input type="checkbox" data-sec="streak" checked /> Streak</label>
+      <label><input type="checkbox" data-sec="graph" checked /> Activity graph</label>
+      <label><input type="checkbox" data-sec="trophy" /> Trophies</label>
+      <label><input type="checkbox" data-sec="projects" checked /> Featured repos</label>
+      <label><input type="checkbox" data-sec="connect" checked /> Connect line</label>
+    </div>
+
+    <label for="skills">Skills, comma separated (ids from skillicons.dev)</label>
+    <input type="text" id="skills" value="python,javascript,html,css,git,github,docker,linux" />
+
+    <label for="repos">Featured repositories, comma separated (up to 4)</label>
+    <input type="text" id="repos" placeholder="my-best-project, another-project" />
+
+    <label for="website">Website (optional)</label>
+    <input type="text" id="website" placeholder="https://example.dev" />
+
+    <div class="btns">
+      <button id="copy">Copy README</button>
+      <button class="ghost" id="download">Download .md</button>
+    </div>
+    <p id="status" style="color:var(--muted);font-size:13px;min-height:18px"></p>
+  </section>
+
+  <section>
+    <div class="card">
+      <div class="previewhead"><span>Live preview</span><span>mock GitHub frame</span></div>
+      <div class="mock" id="preview"></div>
+    </div>
+    <div class="card" style="margin-top:22px">
+      <div class="previewhead"><span>Your README.md</span><span>paste it into your username repository</span></div>
+      <pre id="output"></pre>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Free and open source, MIT. Built with <a href="https://github.com/Dongdarealest/github-profile-studio">GitHub Profile Studio</a>.
+  Widgets by capsule-render, readme-typing-svg, github-readme-stats, streak-stats, skillicons and shields.io.
+</footer>
+
+<script>
+const THEMES = {
+  "midnight-gold": {label:"Midnight Gold", bg:"0D1117", accent:"A98B4F", text:"E6EDF3", border:"30363D", grad:"0:0D1117,50:1A1A1A,100:A98B4F", icons:"dark", statsTheme:null},
+  "tokyo-night":   {label:"Tokyo Night",   bg:"1A1B27", accent:"70A5FD", text:"C0CAF5", border:"292E42", grad:"0:1A1B27,50:24283B,100:70A5FD", icons:"dark", statsTheme:"tokyonight"},
+  "dracula":       {label:"Dracula",       bg:"282A36", accent:"BD93F9", text:"F8F8F2", border:"44475A", grad:"0:282A36,50:44475A,100:BD93F9", icons:"dark", statsTheme:"dracula"},
+  "ocean":         {label:"Ocean",         bg:"0F2027", accent:"38BDF8", text:"E0F2FE", border:"203A43", grad:"0:0F2027,50:203A43,100:2C5364", icons:"dark", statsTheme:"ocean_dark"},
+  "emerald":       {label:"Emerald",       bg:"0B1D17", accent:"34D399", text:"D1FAE5", border:"134E3A", grad:"0:0B1D17,50:134E3A,100:34D399", icons:"dark", statsTheme:null},
+  "sunset":        {label:"Sunset",        bg:"201016", accent:"FB7185", text:"FFE4E6", border:"4C1D2F", grad:"0:201016,50:7F1D3A,100:F59E0B", icons:"dark", statsTheme:"sunset_dark"},
+  "rose-gold":     {label:"Rose Gold",     bg:"191013", accent:"DCA7A0", text:"FBE9E7", border:"3F2A2E", grad:"0:191013,50:3F2A2E,100:B76E79", icons:"dark", statsTheme:"rose_pine"},
+  "nord":          {label:"Nord",          bg:"2E3440", accent:"88C0D0", text:"ECEFF4", border:"3B4252", grad:"0:2E3440,50:3B4252,100:88C0D0", icons:"dark", statsTheme:"nord"},
+  "pastel":        {label:"Pastel",        bg:"FFF7ED", accent:"EC4899", text:"374151", border:"FED7AA", grad:"0:FFF7ED,50:FED7AA,100:EC4899", icons:"light", statsTheme:null},
+  "paper":         {label:"Paper",         bg:"FFFFFF", accent:"111827", text:"111827", border:"E5E7EB", grad:"0:FFFFFF,50:F3F4F6,100:111827", icons:"light", statsTheme:"default"}
+};
+let themeKey = "midnight-gold";
+const $ = id => document.getElementById(id);
+const themesEl = $("themes");
+Object.entries(THEMES).forEach(([key, t]) => {
+  const b = document.createElement("button");
+  b.type = "button"; b.className = "theme"; b.setAttribute("aria-pressed", key === themeKey);
+  b.innerHTML = '<span class="swatch" style="background:#' + t.accent + '"></span>' + t.label;
+  b.onclick = () => {
+    themeKey = key;
+    document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", "false"));
+    b.setAttribute("aria-pressed", "true");
+    $("colorhex").value = t.accent; $("colorpick").value = "#" + t.accent;
+    render();
+  };
+  themesEl.appendChild(b);
+});
+function accent() {
+  const raw = $("colorhex").value.replace(/^#/, "").toUpperCase();
+  return /^[0-9A-F]{6}$/.test(raw) ? raw : THEMES[themeKey].accent;
+}
+function sec(name) {
+  const el = document.querySelector('[data-sec="' + name + '"]');
+  return el ? el.checked : false;
+}
+function build() {
+  const t = Object.assign({}, THEMES[themeKey], {accent: accent()});
+  const user = ($("username").value.trim() || "YOUR_USERNAME");
+  const name = ($("name").value.trim() || "Your Name");
+  const lines = $("lines").value.split("\n").map(s => s.trim()).filter(Boolean);
+  const encLines = lines.map(s => encodeURIComponent(s).replace(/%20/g, "+")).join(";");
+  const skills = $("skills").value.split(",").map(s => s.trim()).filter(Boolean).join(",");
+  const parts = [];
+  parts.push('<div align="center">\n');
+  parts.push('<img src="https://capsule-render.vercel.app/api?type=waving&color=' + t.grad + '&height=210&section=header&text=' + encodeURIComponent(name) + '&fontSize=52&fontColor=' + t.text + '&animation=fadeIn&fontAlignY=36" width="100%" alt="header" />\n');
+  if (sec("typing") && encLines) parts.push('<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1100&color=' + t.accent + '&center=true&vCenter=true&width=880&lines=' + encLines + '" alt="typing" />\n');
+  if (sec("views")) parts.push('<img src="https://komarev.com/ghpvc/?username=' + user + '&color=' + t.accent + '&style=flat-square&label=Profile+views" alt="views" />\n');
+  parts.push('</div>\n');
+  parts.push('\n## About\n\n- Building in public at [github.com/' + user + '](https://github.com/' + user + ')\n- Replace this line with what you are working on right now\n- Replace this line with what you are learning\n');
+  if (sec("skills") && skills) parts.push('\n## Tech stack\n\n<div align="center">\n<img src="https://skillicons.dev/icons?i=' + skills + '&theme=' + t.icons + '&perline=8" alt="skills" />\n</div>\n');
+  const repos = $("repos").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 4);
+  if (sec("projects") && repos.length) {
+    parts.push('\n## Featured projects\n\n<div align="center">\n');
+    repos.forEach(r => parts.push('<a href="https://github.com/' + user + '/' + r + '"><img src="https://github-readme-stats.vercel.app/api/pin/?username=' + user + '&repo=' + r + '&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="' + r + '" /></a>\n'));
+    parts.push('</div>\n');
+  }
+  const site = $("website").value.trim();
+  if (sec("connect")) parts.push('\n## Connect\n\n- GitHub: [github.com/' + user + '](https://github.com/' + user + ')' + (site ? '\n- Web: [' + site.replace(/^https?:\/\//, "") + '](' + site + ')' : '') + '\n');
+  if (sec("stats") || sec("langs")) {
+    parts.push('\n## GitHub stats\n\n<div align="center">\n');
+    if (sec("stats")) parts.push('<img height="170" src="https://github-readme-stats.vercel.app/api?username=' + user + '&show_icons=true&include_all_commits=true&title_color=' + t.accent + '&icon_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="stats" />\n');
+    if (sec("langs")) parts.push('<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=' + user + '&layout=compact&langs_count=8&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="top languages" />\n');
+    parts.push('</div>\n');
+  }
+  if (sec("streak")) parts.push('\n<div align="center">\n<img src="https://streak-stats.demolab.com?user=' + user + '&background=' + t.bg + '&border=' + t.border + '&ring=' + t.accent + '&fire=' + t.accent + '&currStreakNum=' + t.text + '&sideNums=' + t.text + '&currStreakLabel=' + t.accent + '&sideLabels=' + t.text + '&dates=' + t.text + '" alt="streak" />\n</div>\n');
+  if (sec("graph")) parts.push('\n<div align="center">\n<img src="https://github-readme-activity-graph.vercel.app/graph?username=' + user + '&bg_color=' + t.bg + '&color=' + t.accent + '&line=' + t.accent + '&point=' + t.text + '&area=true&hide_border=true" width="100%" alt="activity graph" />\n</div>\n');
+  if (sec("trophy")) parts.push('\n<div align="center">\n<img src="https://github-profile-trophy.vercel.app/?username=' + user + '&theme=' + (t.statsTheme || "flat") + '&no-frame=true&margin-w=6" alt="trophies" />\n</div>\n');
+  parts.push('\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=waving&color=' + t.grad + '&height=110&section=footer" width="100%" alt="footer" />\n</div>\n');
+  return parts.join("");
+}
+function render() {
+  const md = build();
+  $("output").textContent = md;
+  $("preview").innerHTML = md
+    .replace(/## (.*)/g, '<h2 style="font-family:Georgia,serif;color:#f2efe9">$1</h2>')
+    .replace(/^- (.*)$/gm, '<p style="color:#c9d1d9;margin:4px 0">• $1</p>')
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+}
+document.querySelectorAll("input,textarea,select").forEach(el => el.addEventListener("input", render));
+$("colorpick").addEventListener("input", () => { $("colorhex").value = $("colorpick").value.slice(1).toUpperCase(); render(); });
+$("colorhex").addEventListener("input", () => { const a = accent(); $("colorpick").value = "#" + a; render(); });
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText(build()); $("status").textContent = "Copied. Now paste it into the README of your username repository."; }
+  catch { $("status").textContent = "Clipboard blocked — select the text below and copy it manually."; }
+};
+$("download").onclick = () => {
+  const blob = new Blob([build()], {type: "text/markdown"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "README.md"; a.click();
+  URL.revokeObjectURL(a.href);
+};
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+.DS_Store
+*.log
+README.generated.md
+node_modules/
+.vercel
