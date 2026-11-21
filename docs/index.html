@@ -75,6 +75,7 @@
   <button id="fetchbtn">Build my profile</button>
 </div>
 <p id="fetchmsg">No sign-up, no token. Everything is read from the public GitHub API, in your browser.</p>
+<p style="text-align:center;margin:10px 0 0"><a href="#" id="scratch" style="font-size:13.5px">or start from scratch, without fetching &rarr;</a></p>
 <div id="profilechip">
   <img id="avatar" alt="" />
   <div class="who" id="whotext"></div>
@@ -106,7 +107,7 @@
   </div>
 </div>
 
-<section style="max-width:1240px;margin:22px auto 0;padding:0 16px">
+<section id="gallerywrap" style="display:none;max-width:1240px;margin:22px auto 0;padding:0 16px">
   <div class="card" style="margin-bottom:0">
     <h3>Template gallery — complete profiles, one click</h3>
     <p class="hint">The same templates as the repository files, now on the web. Preview any of them with <em>your</em> data, then use it as-is — your username and name are substituted automatically. Or go back to mixing blocks below; both roads lead to the same Copy button.</p>
@@ -115,7 +116,7 @@
   </div>
 </section>
 
-<main>
+<main id="mainui" style="display:none">
   <div>
     <section class="card">
       <h3>1 · Start from a style</h3>
@@ -186,6 +187,12 @@
     <section class="card">
       <div class="previewhead"><span>Live preview — your real data</span><span><button class="mini" style="width:auto;padding:0 9px" id="w-desktop">Desktop 896</button> <button class="mini" style="width:auto;padding:0 9px" id="w-mobile">Mobile 390</button></span></div><div id="tplbanner" style="display:none;margin-bottom:10px"></div>
       <div class="mock" id="preview"><div id="previewinner" style="max-width:896px;margin:0 auto"></div></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+      <button id="copy2" style="background:var(--gold);color:#141414;border:none;border-radius:9px;padding:13px 20px;font-size:15.5px;font-weight:700;cursor:pointer">Copy README — done</button>
+      <button id="pub2" style="background:transparent;color:var(--bone);border:1px solid var(--gold);border-radius:9px;padding:13px 18px;font-size:15px;font-weight:600;cursor:pointer">Publish to GitHub for me</button>
+      <button id="custombtn" style="background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:9px;padding:13px 18px;font-size:15px;cursor:pointer">Customize</button>
+    </div>
+    <p style="color:var(--muted);font-size:13px;margin:10px 0 0">That is all most people need. <em>Customize</em> opens styles, blocks, templates and wording — only if you want them.</p>
     </section>
     <section class="card">
       <div class="previewhead"><span>Your README.md</span><span>paste into your username repository</span></div>
@@ -447,7 +454,9 @@ async function fetchProfile() {
     $("avatar").src = ur.avatar_url;
     $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>@" + u + " · " + ur.public_repos + " public repos · " + ur.followers + " followers · top languages: " + (langs.slice(0, 3).join(", ") || "—") + "</span><br><span>Everything below was filled from this. Change nothing, or change anything.</span>";
     $("profilechip").style.display = "flex";
-    $("fetchmsg").textContent = "Done. Your real data is in — now pick a style, mix your blocks, copy.";
+    showStudio();
+    $("fetchmsg").textContent = "Done. Your score is below, your profile is ready on the right — copy it, publish it, or customize it.";
+    setTimeout(() => $("scorepanel").scrollIntoView({behavior: "smooth", block: "center"}), 60);
     render();
   } catch (e) {
     $("fetchmsg").textContent = "Could not read that username from GitHub. Check the spelling and try again.";
@@ -564,6 +573,27 @@ function deriveAccent(name) {
   const f = n => { const k = (n + hue / 30) % 12; const a = s * Math.min(l, 1 - l); const v = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1))); return Math.round(255 * v).toString(16).padStart(2, "0"); };
   return (f(0) + f(8) + f(4)).toUpperCase();
 }
+
+
+// ---- First-visit simplicity: one input, one button, then the result ----
+function showStudio() {
+  $("mainui").style.display = "grid";
+  $("gallerywrap").style.display = "block";
+}
+document.querySelectorAll("#mainui > div:first-child > .card").forEach((c, i) => { if (i < 4) { c.classList.add("adv"); c.style.display = "none"; } });
+let advOpen = false;
+$("custombtn").onclick = () => {
+  advOpen = !advOpen;
+  document.querySelectorAll(".adv").forEach(c => { c.style.display = advOpen ? "block" : "none"; });
+  $("custombtn").textContent = advOpen ? "Hide customization" : "Customize";
+  if (advOpen) document.querySelector(".adv").scrollIntoView({behavior: "smooth", block: "start"});
+};
+$("scratch").onclick = e => { e.preventDefault(); showStudio(); $("mainui").scrollIntoView({behavior: "smooth"}); };
+$("copy2").onclick = () => $("copy").click();
+$("pub2").onclick = () => {
+  if (!advOpen) $("custombtn").click();
+  document.getElementById("ghtoken").scrollIntoView({behavior: "smooth", block: "center"});
+};
 
 // Defaults: a sensible starter profile, fully editable, before any fetch.
 $("name").value = "Your Name";
