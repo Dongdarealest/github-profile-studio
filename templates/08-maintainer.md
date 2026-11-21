@@ -1,4 +1,4 @@
-<!-- TEMPLATE 08 · MAINTAINER (open source) — GitHub Profile Studio
+<!-- TEMPLATE 08 · MAINTAINER (open source)
      Replace YOUR_USERNAME and Your Name. Accent: 34D399 — swap the hex to re-skin. -->
 <div align="center">
 
