@@ -34,3 +34,14 @@ The README is only the top of the page. Three free wins around it:
 - **Private contributions missing:** stats services see public data. In your contribution settings you can opt to show private contributions as anonymous counts.
 - **Colours look inconsistent:** you missed a block. Search your README for the old hex and replace all — one accent everywhere is the whole trick.
 - **Dark/light mismatch:** wrap an image in `<picture>` with `prefers-color-scheme` sources when a block ships two variants (the snake workflow does this out of the box).
+
+## A note on reliability
+
+Hosted widget services are free and occasionally sleep, rate-limit or pause — the
+popular stats backend has had public-instance outages. Three defences, in order:
+
+1. **Verify before you embed.** Open every new block's URL once; a 200 today is the entry ticket.
+2. **Self-host the stats card.** Fork `anuraghazra/github-readme-stats`, deploy it on your own
+   Vercel with a `PAT_1` token, and swap the host in your URLs — same parameters, your quota.
+3. **Prefer Actions for the crown jewels.** Blocks rendered by an Action in your own repo
+   (snake, Pac-Man, metrics, this kit's `api/` folder) have no third party at view time at all.
