@@ -1,6 +1,8 @@
 // GET /api/sky?username=octocat&color=A98B4F&bg=0D1117&text=E6EDF3
-// "Your Sky" — the last 90 days of pushes rendered as a night-sky artwork.
-// One star per push, banded by date; the top repositories become named
+// "Your Sky" v2 — the last 90 days of pushes rendered as a cinematic
+// night-sky artwork. A Milky Way band runs diagonally across the frame so
+// the canvas is never empty; each day's pushes become stars along the band,
+// the brightest days get hero stars, and the top repositories become named
 // constellations. Layout is seeded from the username, so the same user
 // always gets the same sky.
 function hex(v, fallback) {
@@ -68,6 +70,12 @@ function seededRandom(seedStr) {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 }
+// Standard normal sample from the seeded PRNG (Box–Muller).
+function gauss(rand) {
+  let u = 0;
+  while (u === 0) u = rand();
+  return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rand());
+}
 function lift(hexStr, amt) {
   const n = parseInt(hexStr, 16);
   const f = v => Math.min(255, v + amt);
@@ -86,39 +94,104 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
   const rand = seededRandom(username.toLowerCase());
   const total = counts.reduce((s, n) => s + n, 0);
   const activeDays = counts.filter(n => n > 0).length;
+  const F1 = n => Number(n).toFixed(1), F2 = n => Number(n).toFixed(2);
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-  // Faint seeded dust, always present (the sparse sky for quiet users).
-  let dust = "";
-  for (let i = 0; i < 46; i++) {
-    const x = (14 + rand() * 872).toFixed(1), y = (12 + rand() * 316).toFixed(1);
-    const r = (0.5 + rand() * 0.6).toFixed(2), o = (0.12 + rand() * 0.22).toFixed(2);
-    dust += `<circle cx="${x}" cy="${y}" r="${r}" fill="#${tx}" opacity="${o}"/>`;
+  // --- Milky Way band geometry: lower-left -> upper-right -----------------
+  const AX = 150, AY = 330, BX = 860, BY = 40;         // band axis endpoints
+  const DX = BX - AX, DY = BY - AY;
+  const LEN = Math.hypot(DX, DY);
+  const UX = DX / LEN, UY = DY / LEN;                  // along-band unit
+  const PX = -UY, PY = UX;                             // perpendicular unit
+  const ANG = (Math.atan2(DY, DX) * 180 / Math.PI).toFixed(1);
+  const MOON = { x: 806, y: 66 };
+  const bandPt = (t, perp) => [AX + DX * t + PX * perp, AY + DY * t + PY * perp];
+  // Keep a star out of the moon disc: push it radially outward to a
+  // jittered radius, so displaced stars scatter in an annulus instead of
+  // tracing a perfect artificial ring around the moon.
+  const moonSafe = (x, y) => {
+    const dx = x - MOON.x, dy = y - MOON.y, d = Math.hypot(dx, dy);
+    if (d >= 56 || d === 0) return [x, y];
+    const rim = 58 + rand() * 42;
+    return [MOON.x + dx / d * rim, MOON.y + dy / d * rim];
+  };
+
+  // --- Nebula blobs: three soft colour fields, seeded off-axis ------------
+  const nebAt = (x, y, j) => [clamp(x + (rand() - 0.5) * j, 60, 840), clamp(y + (rand() - 0.5) * j, 30, 330)];
+  const [nAx, nAy] = nebAt(255, 130, 90);
+  const [nVx, nVy] = nebAt(615, 235, 110);
+  const [nTx, nTy] = nebAt(745, 285, 90);
+  const nebula =
+    `<circle cx="${F1(nAx)}" cy="${F1(nAy)}" r="${(280 + rand() * 60).toFixed(0)}" fill="url(#nebA)"/>` +
+    `<circle cx="${F1(nVx)}" cy="${F1(nVy)}" r="${(300 + rand() * 60).toFixed(0)}" fill="url(#nebV)"/>` +
+    `<circle cx="${F1(nTx)}" cy="${F1(nTy)}" r="${(240 + rand() * 50).toFixed(0)}" fill="url(#nebT)"/>`;
+
+  // --- Band glow: layered blurred ellipses along the diagonal -------------
+  const bandFills = ["url(#bandA)", "url(#bandI)", "url(#bandV)", "url(#bandI)"];
+  let bandGlow = "";
+  bandGlow += `<ellipse cx="505" cy="185" rx="500" ry="118" transform="rotate(${ANG} 505 185)" fill="url(#bandI)"/>`;
+  for (let i = 0; i < 11; i++) {
+    const t = 0.03 + (i / 10) * 0.94;
+    const [gx, gy] = bandPt(t, (rand() - 0.5) * 36);
+    const rx = (150 + rand() * 70).toFixed(0), ry = (46 + rand() * 26).toFixed(0);
+    bandGlow += `<ellipse cx="${F1(gx)}" cy="${F1(gy)}" rx="${rx}" ry="${ry}" transform="rotate(${ANG} ${F1(gx)} ${F1(gy)})" fill="${bandFills[i % bandFills.length]}"/>`;
   }
 
-  // Activity stars: one per push, banded horizontally by date, capped ~260.
-  const scale = total > 0 ? Math.min(1, 260 / total) : 0;
-  const brightest = [...counts].sort((x, y) => y - x).slice(0, 3).filter(n => n > 0);
+  // --- Band dust: ~350 tiny stars in a gaussian spread around the axis ----
+  let bandDust = "";
+  for (let i = 0; i < 350; i++) {
+    const t = rand();
+    const perp = clamp(gauss(rand) * 46, -125, 125);
+    let [x, y] = bandPt(t, perp);
+    x = clamp(x, 8, 892); y = clamp(y, 8, 334);
+    if (Math.hypot(x - MOON.x, y - MOON.y) < 50) continue;
+    const r = (0.4 + rand() * 0.7).toFixed(2), o = (0.15 + rand() * 0.5).toFixed(2);
+    const fill = rand() < 0.14 ? `#${c}` : `#${tx}`;
+    bandDust += `<circle cx="${F1(x)}" cy="${F1(y)}" r="${r}" fill="${fill}" opacity="${o}"/>`;
+  }
+  // Faint field dust across the whole frame, so the corners stay alive.
+  let fieldDust = "";
+  for (let i = 0; i < 70; i++) {
+    const x = 10 + rand() * 880, y = 10 + rand() * 320;
+    if (Math.hypot(x - MOON.x, y - MOON.y) < 48) continue;
+    fieldDust += `<circle cx="${F1(x)}" cy="${F1(y)}" r="${(0.4 + rand() * 0.5).toFixed(2)}" fill="#${tx}" opacity="${(0.06 + rand() * 0.16).toFixed(2)}"/>`;
+  }
+
+  // --- Activity stars: each day's pushes, laid along the band by date -----
+  const scale = total > 0 ? Math.min(1, 240 / total) : 0;
+  const heroDays = new Set(
+    counts.map((n, i) => [n, i]).filter(([n]) => n > 0)
+      .sort((a, b2) => b2[0] - a[0]).slice(0, 3).map(([, i]) => i)
+  );
   let stars = "", placed = 0;
   counts.forEach((n, day) => {
+    if (n <= 0) return;
     let k = Math.round(n * scale);
-    if (n > 0 && k < 1) k = 1;
-    const sparkleDay = brightest.includes(n) && n > 0;
-    for (let i = 0; i < k && placed < 260; i++, placed++) {
-      const x = Math.max(10, Math.min(890, 34 + (day / 89) * 832 + (rand() - 0.5) * 26)).toFixed(1);
-      const y = (16 + rand() * 312).toFixed(1);
-      const r = ((0.8 + rand() * 1.4) * (0.7 + Math.min(n, 10) / 10 * 0.6)).toFixed(2);
-      const o = (0.35 + rand() * 0.65).toFixed(2);
-      stars += `<circle cx="${x}" cy="${y}" r="${r}" fill="#${tx}" opacity="${o}"/>`;
-      if (sparkleDay && i === 0) {
-        const sx = Number(x), sy = Number(y), L = 7;
-        stars += `<path d="M ${sx - L} ${sy} H ${sx + L} M ${sx} ${sy - L} V ${sy + L}" stroke="#${tx}" stroke-width="0.8" opacity="0.75"/>`;
+    if (k < 1) k = 1;
+    const t = 0.03 + (day / 89) * 0.94;
+    const heat = Math.min(n, 14) / 14;
+    for (let i = 0; i < k && placed < 240; i++, placed++) {
+      const perp = clamp(gauss(rand) * 30, -95, 95);
+      const along = (rand() - 0.5) * 18;
+      let [x, y] = bandPt(t, perp);
+      x += UX * along; y += UY * along;
+      [x, y] = moonSafe(clamp(x, 12, 888), clamp(y, 14, 334));
+      x = clamp(x, 12, 888); y = clamp(y, 14, 334);
+      const r = 1.0 + heat * 1.6 + rand() * 0.6;
+      const o = 0.55 + heat * 0.45;
+      if (heroDays.has(day) && i === 0) {
+        const L = 13, w = 1.8;
+        stars += `<circle cx="${F1(x)}" cy="${F1(y)}" r="15" fill="url(#heroGlow)"/>` +
+          `<path d="M ${F1(x)} ${F1(y - L)} L ${F1(x + w)} ${F1(y - w)} L ${F1(x + L)} ${F1(y)} L ${F1(x + w)} ${F1(y + w)} L ${F1(x)} ${F1(y + L)} L ${F1(x - w)} ${F1(y + w)} L ${F1(x - L)} ${F1(y)} L ${F1(x - w)} ${F1(y - w)} Z" fill="#${tx}" opacity="0.92"/>` +
+          `<circle cx="${F1(x)}" cy="${F1(y)}" r="${F2(Math.min(3.2, r + 0.5))}" fill="#${tx}"/>`;
+      } else {
+        stars += `<circle cx="${F1(x)}" cy="${F1(y)}" r="${F2(r)}" fill="#${tx}" opacity="${F2(o)}"/>`;
       }
     }
   });
 
-  // Constellations: one per top repo, centres slotted to avoid the moon
-  // (top-right) and the title block (bottom-left).
-  const slots = [[168, 92], [392, 158], [566, 78], [706, 196], [286, 238]];
+  // --- Constellations: one per top repo, kept clear of moon and title -----
+  const slots = [[168, 92], [392, 158], [540, 104], [706, 196], [286, 238]];
   let constellations = "";
   repos.forEach((repo, i) => {
     const [cx, cy] = slots[i % slots.length];
@@ -127,13 +200,20 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
     const nPts = 4 + Math.floor(rand() * 3);
     for (let j = 0; j < nPts; j++) {
       const ang = rand() * Math.PI * 2, rad = j === 0 ? 0 : 26 + rand() * 30;
-      pts.push([jx + Math.cos(ang) * rad, Math.max(24, Math.min(300, jy + Math.sin(ang) * rad * 0.72))]);
+      pts.push([jx + Math.cos(ang) * rad, clamp(jy + Math.sin(ang) * rad * 0.72, 24, 300)]);
     }
-    const line = pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
-    const dots = pts.map(([x, y]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(2 + rand() * 0.9).toFixed(1)}" fill="#${tx}"/>`).join("");
+    const line = pts.map(([x, y]) => `${F1(x)},${F1(y)}`).join(" ");
+    let dots = "";
+    for (const [x, y] of pts) {
+      const r = 2.4 + rand() * 1.0;
+      dots += `<circle cx="${F1(x)}" cy="${F1(y)}" r="${F1(r * 2.3)}" fill="#${tx}" opacity="0.35" filter="url(#soft)"/>` +
+        `<circle cx="${F1(x)}" cy="${F1(y)}" r="${F1(r)}" fill="#${tx}"/>`;
+    }
     const labelY = Math.max(...pts.map(p => p[1])) + 24;
-    constellations += `<polyline points="${line}" fill="none" stroke="#${c}" stroke-width="1" opacity="0.5"/>${dots}` +
-      `<text x="${jx.toFixed(1)}" y="${labelY.toFixed(1)}" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="13" letter-spacing="2" fill="#${tx}" opacity="0.85">${esc(repo)}</text>`;
+    const label = (dx, dy, fill, op) =>
+      `<text x="${F1(jx + dx)}" y="${F1(labelY + dy)}" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="13" letter-spacing="2" fill="${fill}" opacity="${op}">${esc(repo)}</text>`;
+    constellations += `<polyline points="${line}" fill="none" stroke="#${c}" stroke-width="1.1" opacity="0.55"/>${dots}` +
+      label(1, 1.2, "#000000", "0.6") + label(0, 0, `#${tx}`, "0.88");
   });
 
   const subtitle = total > 0
@@ -146,28 +226,72 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
       <stop offset="0" stop-color="#${b}"/>
       <stop offset="1" stop-color="#${horizon}"/>
     </linearGradient>
-    <radialGradient id="skyGlow" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#${c}" stop-opacity="0.16"/>
+    <radialGradient id="nebA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#${c}" stop-opacity="0.10"/>
       <stop offset="1" stop-color="#${c}" stop-opacity="0"/>
     </radialGradient>
-    <filter id="skyBlur" x="-40%" y="-40%" width="180%" height="180%">
-      <feGaussianBlur stdDeviation="26"/>
+    <radialGradient id="nebV" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#6D5DF6" stop-opacity="0.09"/>
+      <stop offset="1" stop-color="#6D5DF6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="nebT" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#2DD4BF" stop-opacity="0.08"/>
+      <stop offset="1" stop-color="#2DD4BF" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bandA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#${c}" stop-opacity="0.13"/>
+      <stop offset="0.55" stop-color="#${c}" stop-opacity="0.05"/>
+      <stop offset="1" stop-color="#${c}" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bandV" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#6D5DF6" stop-opacity="0.12"/>
+      <stop offset="0.55" stop-color="#6D5DF6" stop-opacity="0.045"/>
+      <stop offset="1" stop-color="#6D5DF6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bandI" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#3B348C" stop-opacity="0.13"/>
+      <stop offset="0.55" stop-color="#3B348C" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#3B348C" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="heroGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#${tx}" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#${tx}" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="vig" cx="0.5" cy="0.42" r="0.72">
+      <stop offset="0.55" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
+    </radialGradient>
+    <filter id="soft" x="-90%" y="-90%" width="280%" height="280%">
+      <feGaussianBlur stdDeviation="2.5"/>
+    </filter>
+    <filter id="moonBlur" x="-90%" y="-90%" width="280%" height="280%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+    <filter id="grainF" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.5 0"/>
     </filter>
     <clipPath id="skyClip"><rect width="900" height="420" rx="14"/></clipPath>
   </defs>
   <rect width="900" height="420" rx="14" fill="url(#skyGrad)"/>
   <g clip-path="url(#skyClip)">
-    <ellipse cx="450" cy="428" rx="430" ry="120" fill="url(#skyGlow)" filter="url(#skyBlur)"/>
-    ${dust}
+    ${nebula}
+    ${bandGlow}
+    ${bandDust}
+    ${fieldDust}
     ${stars}
+    <rect width="900" height="420" fill="url(#vig)"/>
     ${constellations}
-    <circle cx="806" cy="66" r="25" fill="#${c}" opacity="0.9"/>
-    <circle cx="817" cy="59" r="22" fill="#${b}"/>
+    <circle cx="${MOON.x}" cy="${MOON.y}" r="48" fill="#${c}" opacity="0.18" filter="url(#moonBlur)"/>
+    <circle cx="${MOON.x}" cy="${MOON.y}" r="25" fill="#${c}" opacity="0.92"/>
+    <circle cx="${MOON.x + 11}" cy="${MOON.y - 7}" r="22" fill="#${b}"/>
+    <rect width="900" height="420" filter="url(#grainF)" opacity="0.05"/>
   </g>
   <rect width="899" height="419" x="0.5" y="0.5" rx="14" fill="none" stroke="#${c}" stroke-width="1.5"/>
-  <line x1="36" y1="348" x2="864" y2="348" stroke="#${c}" stroke-width="1" opacity="0.35"/>
-  <text x="36" y="384" font-family="Georgia, serif" font-size="29" fill="#${tx}">${esc(name)}'s sky</text>
-  <text x="36" y="406" font-family="Verdana, sans-serif" font-size="11" letter-spacing="2.5" fill="#${tx}" opacity="0.7">${subtitle}</text>
+  <line x1="36" y1="342" x2="864" y2="342" stroke="#${c}" stroke-width="1" opacity="0.35"/>
+  <text x="37" y="364" font-family="Verdana, sans-serif" font-size="10" letter-spacing="4" fill="#${c}">YOUR SKY</text>
+  <text x="36" y="390" font-family="Georgia, serif" font-size="27" fill="#${tx}">${esc(name)}'s sky</text>
+  <text x="36" y="409" font-family="Verdana, sans-serif" font-size="10.5" letter-spacing="2.2" fill="#${tx}" opacity="0.7">${subtitle}</text>
 </svg>`;
 }
 export default async function handler(req, res) {
