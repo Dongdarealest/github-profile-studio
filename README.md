@@ -30,9 +30,13 @@ This kit is built around three simple ideas:
 
 ## Use it in 60 seconds
 
-**Option A — the web generator (no files, no clone):**
-open **[dongdarealest.github.io/github-profile-studio](https://dongdarealest.github.io/github-profile-studio/)**,
-type your username, pick from 10 themes or any colour, tick your sections, copy the README.
+**Option A — the web Studio (no files, no clone):**
+open **[dongdarealest.github.io/github-profile-studio](https://dongdarealest.github.io/github-profile-studio/)**
+and type **only your username**. The Studio reads your real GitHub — name, bio, languages,
+most-starred repositories — and fills everything in. Then pick one of 12 style presets,
+or mix your own layout from 22 independent blocks: take the header from one style, the
+projects from another, the closer from a third. Reorder them, remove them, add more.
+Copy the README. That is the whole workflow.
 
 **Option B — a template:** copy any file from [`templates/`](templates/),
 find-replace `YOUR_USERNAME`, paste it into your profile repository.
@@ -51,7 +55,7 @@ README in, commit. Full walkthrough: [`docs/guide.md`](docs/guide.md).
 
 | Piece | Where |
 | --- | --- |
-| Web generator with live preview, 10 themes, custom hex colour | [`docs/index.html`](docs/index.html) · [live](https://dongdarealest.github.io/github-profile-studio/) |
+| Web Studio: username-only auto-fill from the GitHub API, 12 style presets, 22 mix-and-match blocks, 10 themes, custom hex colour, live preview | [`docs/index.html`](docs/index.html) · [live](https://dongdarealest.github.io/github-profile-studio/) |
 | 10 ready templates: Minimal, Dark Luxury, Neon Cyber, Pastel Soft, Terminal, Gallery, Hire Me, Maintainer, Student, Creative | [`templates/`](templates/) |
 | Block library: 30 copy-paste blocks with every colour parameter explained | [`docs/blocks.md`](docs/blocks.md) |
 | Pro tips: the 10 rules behind profiles that get followed | [`docs/pro-tips.md`](docs/pro-tips.md) |
