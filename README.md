@@ -46,8 +46,9 @@ Most generators hand you one fixed frame and a form. This Studio is built differ
 - **Honest preview.** Desktop at GitHub's real 896px width, or mobile at 390px.
 - **Agent-ready.** Ships `AGENTS.md` and `llms.txt` profile templates, so AI tools describe
   you from facts you wrote.
-- **Yours to run.** MIT licensed, a static page, an offline CLI, and your own SVG API in
-  `api/` to self-host when a public widget service goes down.
+- **Yours to run.** MIT licensed, a static page, an offline CLI, and an SVG API in `api/`
+  that is also hosted for everyone at `github-profile-studio-api.vercel.app` — the Studio's
+  own banner, typing, card and wave blocks never depend on a stranger's uptime.
 
 ## Use it in 60 seconds
 
