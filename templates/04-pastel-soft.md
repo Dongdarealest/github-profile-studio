@@ -1,4 +1,4 @@
-<!-- TEMPLATE 04 · PASTEL SOFT — GitHub Profile Studio
+<!-- TEMPLATE 04 · PASTEL SOFT
      Replace YOUR_USERNAME and Your Name. Accent: EC4899 — swap the hex to re-skin. Light and friendly. -->
 <div align="center">
 
