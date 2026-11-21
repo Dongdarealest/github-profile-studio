@@ -4,9 +4,9 @@
 
 **A profile that lives.**
 
-[![Stars](https://img.shields.io/github/stars/Dongdarealest/github-profile-studio?style=flat-square&color=A98B4F&labelColor=0D1117)](https://github.com/Dongdarealest/github-profile-studio/stargazers)
-[![License](https://img.shields.io/badge/license-MIT-A98B4F?style=flat-square&labelColor=0D1117)](LICENSE)
-[![Generator](https://img.shields.io/badge/try_the-web_generator-A98B4F?style=flat-square&labelColor=0D1117)](https://dongdarealest.github.io/github-profile-studio/)
+<img src="https://github-profile-studio-api.vercel.app/api/strip?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="The maker's numbers, on the Studio's own identity strip" />
+
+[Stars](https://github.com/Dongdarealest/github-profile-studio/stargazers) · [MIT License](LICENSE) · [Open the web Studio](https://dongdarealest.github.io/github-profile-studio/)
 
 </div>
 
@@ -22,15 +22,44 @@
 
 </div>
 
-## Designs, rendered live
+## One identity — every element ours
 
-Everything below is a real render from a real account — change the username in any URL and it becomes yours. On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) all fourteen designs re-render with *your* data the moment you type your username.
+Most kits assemble your profile from a dozen strangers' services. The Studio draws
+**everything itself**, in one design language — ink, antique gold, serif — served by
+its own API. This page is the proof: every image below is live, from one real account,
+and becomes yours by changing one word in its URL.
 
 <div align="center">
-<img src="https://capsule-render.vercel.app/api?type=transparent&height=120&text=Gallery%20Luxury&fontSize=44&fontColor=A98B4F" alt="Gallery Luxury" />
-<img src="https://github-profile-studio-api.vercel.app/api/stats?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" height="200" alt="The Studio's own stats card" />
-<img src="https://github-profile-studio-api.vercel.app/api/streak?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" height="200" alt="The Studio's own streak card" />
+<img src="https://github-profile-studio-api.vercel.app/api/strip?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="Identity strip — replaces shields.io and view counters" />
 </div>
+
+The identity strip replaces the badge row: followers, stars, repositories and your
+profile score on one plate, drawn by the Studio.
+
+<div align="center">
+<img src="https://github-profile-studio-api.vercel.app/api/stack?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Tech stack monogram tiles — replaces skillicons" />
+</div>
+
+Your languages as serif monogram tiles — no borrowed icon sets.
+
+<div align="center">
+<img height="218" src="https://github-profile-studio-api.vercel.app/api/stats?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Stats with a moon rank — replaces github-readme-stats" />
+<img height="218" src="https://github-profile-studio-api.vercel.app/api/langs?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Languages — drawn by the Studio" />
+</div>
+
+Stats in the sky language: star-led rows and your rank as a moon, not a copied ring.
+
+<div align="center">
+<img src="https://github-profile-studio-api.vercel.app/api/streak?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Streak — drawn by the Studio" />
+<img src="https://github-profile-studio-api.vercel.app/api/pin?username=Dongdarealest&repo=TubeEQ&color=A98B4F&bg=0D1117&text=E6EDF3" alt="A Studio pin card" />
+</div>
+
+<div align="center">
+<img src="https://github-profile-studio-api.vercel.app/api/graph?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="Activity wave — drawn by the Studio" />
+</div>
+
+On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) all fourteen
+designs re-render with *your* data the moment you type your username.
 
 **Your GitHub profile is your portfolio, your résumé and your first impression — all in one page.**
 This kit makes that page beautiful in about 60 seconds, even if you have never written a line of Markdown.
@@ -82,8 +111,9 @@ Most generators hand you one fixed frame and a form. This Studio is built differ
 - **Agent-ready.** Ships `AGENTS.md` and `llms.txt` profile templates, so AI tools describe
   you from facts you wrote.
 - **Yours to run.** MIT licensed, a static page, an offline CLI, and an SVG API in `api/`
-  that is also hosted for everyone at `github-profile-studio-api.vercel.app` — the Studio's
-  own banner, typing, card and wave blocks never depend on a stranger's uptime.
+  that is also hosted for everyone at `github-profile-studio-api.vercel.app` — every visual on your profile — sky, strip, stack, stats,
+  languages, streak, pins, graph, score, banner, typing, card, wave — is drawn by the
+  Studio itself and never depends on a stranger's uptime.
 
 ## Use it in 60 seconds
 
@@ -156,11 +186,11 @@ Palettes and contrast notes: [`docs/themes.md`](docs/themes.md).
 
 ## Credits and honesty
 
-The kit stands on excellent free services: capsule-render, readme-typing-svg,
-github-readme-stats, streak-stats, github-readme-activity-graph, skillicons,
-shields.io, komarev, github-profile-trophy and github-profile-summary-cards,
-plus the Platane/snk and lowlighter/metrics Actions. The `api/` folder exists for
-anyone who would rather self-host the core images than depend on third parties.
+The core of the Studio is 100% its own: one API, one design system, no third-party
+widgets in any default design. A few beloved classics remain available as optional
+extras in the Advanced panel — the contribution snake (Platane/snk), the Pac-Man
+graph and trophies — and they are credited here, plainly, because honesty about
+what is borrowed is part of the design.
 
 ## Show us yours
 
