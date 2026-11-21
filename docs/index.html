@@ -80,6 +80,41 @@
   <div class="who" id="whotext"></div>
 </div>
 
+<div style="max-width:1240px;margin:26px auto 0;padding:0 16px">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"><strong style="color:var(--gold)">Step 1</strong><br>Type your username and press <em>Build my profile</em>. We fetch your real data.</div>
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"><strong style="color:var(--gold)">Step 2</strong><br>Pick a style preset, a full template from the gallery, or mix your own blocks.</div>
+    <div style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"><strong style="color:var(--gold)">Step 3</strong><br>Copy the README — or publish straight to GitHub in one click, below.</div>
+  </div>
+  <details style="margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px">
+    <summary style="cursor:pointer;font-weight:600">How do I put this on my GitHub? (30 seconds, by hand)</summary>
+    <ol style="color:var(--muted);line-height:1.65;margin:10px 0 4px;padding-left:20px">
+      <li>On GitHub, create a <strong style="color:var(--bone)">new public repository named exactly your username</strong> (for example <em>octocat/octocat</em>). GitHub itself will tell you it is special.</li>
+      <li>Open its README.md, delete the placeholder text, and paste what you copied here.</li>
+      <li>Commit. Your profile updates immediately — every number on it then updates itself.</li>
+      <li>No repository yet? The one-click Publish button in step 5 creates it for you.</li>
+    </ol>
+  </details>
+  <div id="scorepanel" style="display:none;margin-top:12px;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:16px">
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+      <div id="scorenum" style="font-family:Georgia,serif;font-size:52px;color:var(--gold);line-height:1">–</div>
+      <div style="flex:1;min-width:260px">
+        <div id="scoreword" style="font-weight:700;font-size:16px"></div>
+        <div id="scorelist" style="color:var(--muted);font-size:13.5px;line-height:1.6;margin-top:4px"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section style="max-width:1240px;margin:22px auto 0;padding:0 16px">
+  <div class="card" style="margin-bottom:0">
+    <h3>Template gallery — complete profiles, one click</h3>
+    <p class="hint">The same templates as the repository files, now on the web. Preview any of them with <em>your</em> data, then use it as-is — your username and name are substituted automatically. Or go back to mixing blocks below; both roads lead to the same Copy button.</p>
+    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px"></div>
+    <p id="tplstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
+  </div>
+</section>
+
 <main>
   <div>
     <section class="card">
@@ -121,6 +156,21 @@
       <input type="text" id="repos" />
     </section>
 
+
+    <section class="card">
+      <h3>5 · Publish straight to GitHub (optional)</h3>
+      <p class="hint">One click: creates your profile repository if needed and commits this README — plus, if you tick them, the snake and Pac-Man workflows and the agent files. Uses a token <strong>you</strong> create, only in this tab, sent only to api.github.com, never stored.</p>
+      <p class="hint">Create one in 20 seconds: GitHub → Settings → Developer settings → Personal access tokens → <em>Fine-grained</em> → Repository access: only your username repository → Permissions: Contents and Workflows, read and write.</p>
+      <input type="password" id="ghtoken" placeholder="github_pat_…" autocomplete="off" style="margin-bottom:10px" />
+      <div class="checks" style="margin-bottom:12px">
+        <label><input type="checkbox" id="pubsnake" checked /> Snake workflow</label>
+        <label><input type="checkbox" id="pubpacman" /> Pac-Man workflow</label>
+        <label><input type="checkbox" id="pubagent" checked /> AGENTS.md + llms.txt</label>
+      </div>
+      <div class="btns"><button id="publish">Publish to GitHub</button></div>
+      <p id="pubstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
+    </section>
+
     <section class="card">
       <div class="btns">
         <button id="copy">Copy README</button>
@@ -132,8 +182,8 @@
 
   <div>
     <section class="card">
-      <div class="previewhead"><span>Live preview — your real data</span><span>mock GitHub frame</span></div>
-      <div class="mock" id="preview"></div>
+      <div class="previewhead"><span>Live preview — your real data</span><span><button class="mini" style="width:auto;padding:0 9px" id="w-desktop">Desktop 896</button> <button class="mini" style="width:auto;padding:0 9px" id="w-mobile">Mobile 390</button></span></div><div id="tplbanner" style="display:none;margin-bottom:10px"></div>
+      <div class="mock" id="preview"><div id="previewinner" style="max-width:896px;margin:0 auto"></div></div>
     </section>
     <section class="card">
       <div class="previewhead"><span>Your README.md</span><span>paste into your username repository</span></div>
@@ -147,6 +197,7 @@
   Widgets by capsule-render, readme-typing-svg, github-readme-stats, streak-stats, skillicons, shields.io and friends.
 </footer>
 
+<script src="templates-data.js"></script>
 <script>
 const THEMES = {
   "midnight-gold": {label:"Midnight Gold", bg:"0D1117", accent:"A98B4F", text:"E6EDF3", border:"30363D", grad:"0:0D1117,50:1A1A1A,100:A98B4F", icons:"dark", statsTheme:null},
@@ -223,6 +274,14 @@ const BLOCKS = {
     if (profile && profile.twitter) s += "\n- X: [@" + profile.twitter + "](https://x.com/" + profile.twitter + ")";
     if (profile && profile.location) s += "\n- Based in: " + profile.location;
     return s + "\n"; }},
+  "header-shark": {label:"Header · Shark banner", small:"A fin cutting through your name", make(t,u){
+    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=shark&color=' + t.grad + '&height=200&text=' + enc(dispName()) + '&fontSize=50&fontColor=' + t.text + '&animation=fadeIn" width="100%" alt="header" />\n</div>\n'; }},
+  "header-slice": {label:"Header · Slice banner", small:"A hard diagonal, editorial and bold", make(t,u){
+    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=slice&color=0:' + t.bg + ',100:' + t.accent + '&height=190&text=' + enc(dispName()) + '&fontSize=52&fontColor=' + t.text + '&animation=fadeIn" width="100%" alt="header" />\n</div>\n'; }},
+  "langs-donut": {label:"Languages · Donut", small:"Your languages as a ring, not a list", make(t,u){
+    return '\n<div align="center">\n<img height="200" src="https://github-readme-stats.vercel.app/api/top-langs/?username=' + u + '&layout=donut&langs_count=8&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="languages donut" />\n</div>\n'; }},
+  "divider": {label:"Divider", small:"A thin line in your accent, between sections", make(t,u){
+    return '\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=rect&color=' + t.accent + '&height=4" width="100%" alt="" />\n</div>\n'; }},
   "footer-wave": {label:"Footer · Wave", small:"The wave, closing the page", make(t,u){
     return '\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=waving&color=' + t.grad + '&height=110&section=footer" width="100%" alt="footer" />\n</div>\n'; }},
   "footer-plate": {label:"Footer · Quiet plate", small:"One centred line, nothing else", make(t,u){
@@ -259,6 +318,10 @@ function renderThemes() {
     b.onclick = () => { themeKey = k; $("colorhex").value = t.accent; $("colorpick").value = "#" + t.accent; document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === k ? "true" : "false")); render(); };
     el.appendChild(b);
   });
+  const ab = document.createElement("button"); ab.type = "button"; ab.className = "theme";
+  ab.innerHTML = '<span class="swatch" style="background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)"></span>Auto from my username';
+  ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); };
+  el.appendChild(ab);
 }
 function renderPresets() {
   const el = $("presets"); el.innerHTML = "";
@@ -289,7 +352,16 @@ function renderLayout() {
     ag.appendChild(b);
   });
 }
+let activeTemplate = null;
+function templateMd() {
+  let md = activeTemplate.md;
+  md = md.split("YOUR_USERNAME").join(user());
+  md = md.split("Your Name").join(dispName());
+  md = md.split("your-name").join(user().toLowerCase());
+  return "<!-- Built with GitHub Profile Studio — template: " + activeTemplate.name + " -->\n" + md;
+}
 function build() {
+  if (activeTemplate) return templateMd();
   const t = T(), u = user();
   return "<!-- Built with GitHub Profile Studio — https://github.com/Dongdarealest/github-profile-studio -->\n" +
     layout.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
@@ -297,7 +369,7 @@ function build() {
 function render() {
   const md = build();
   $("output").textContent = md;
-  $("preview").innerHTML = md
+  $("previewinner").innerHTML = md
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/^## (.*)$/gm, '<h2>$1</h2>')
     .replace(/^\| (.*) \|$/gm, "")
@@ -313,9 +385,10 @@ async function fetchProfile() {
   if (!u || u === "YOUR_USERNAME") { $("fetchmsg").textContent = "Type your GitHub username first."; return; }
   $("fetchmsg").textContent = "Reading github.com/" + u + " …";
   try {
-    const [ur, rr] = await Promise.all([
+    const [ur, rr, hasProfileRepo] = await Promise.all([
       fetch("https://api.github.com/users/" + u).then(r => { if (!r.ok) throw new Error("user"); return r.json(); }),
-      fetch("https://api.github.com/users/" + u + "/repos?per_page=100&sort=pushed").then(r => r.json())
+      fetch("https://api.github.com/users/" + u + "/repos?per_page=100&sort=pushed").then(r => r.json()),
+      fetch("https://api.github.com/repos/" + u + "/" + u).then(r => r.ok).catch(() => false)
     ]);
     const repos = Array.isArray(rr) ? rr.filter(x => !x.fork) : [];
     const langCount = {};
@@ -330,6 +403,30 @@ async function fetchProfile() {
     $("lines").value = [ur.bio ? ur.bio.replace(/\.*$/, "") : "Developer", "Building in public", "Always learning"].join("\n");
     $("skills").value = Array.from(new Set([].concat(icons, ["git", "github"]))).slice(0, 10).join(",");
     $("repos").value = top.map(r => r.name).join(",");
+
+    // ---- Profile score: an honest audit, not a vanity number ----
+    (function score() {
+      const sample = repos.slice(0, 20);
+      const withDesc = sample.filter(r => r.description).length;
+      const recent = repos.some(r => (Date.now() - new Date(r.pushed_at).getTime()) < 30 * 24 * 3600 * 1000);
+      const checks = [
+        {label: "Profile README exists (the repository named " + u + ")", ok: !!hasProfileRepo, pts: 18, tip: "Create it — it is the whole top of your profile. The Publish button below can do it for you."},
+        {label: "Bio written", ok: !!ur.bio, pts: 12, tip: "Add one line to your GitHub bio: what you build, for whom."},
+        {label: "Display name set", ok: !!ur.name, pts: 6, tip: "Set your name in GitHub settings — profiles with real names get followed more."},
+        {label: "Location set", ok: !!ur.location, pts: 6, tip: "A city makes you a person, not a handle."},
+        {label: "Website or blog linked", ok: !!ur.blog, pts: 8, tip: "Link your site or best project page in your profile's website field."},
+        {label: "At least 5 public repositories", ok: ur.public_repos >= 5, pts: 10, tip: "Ship small things in public; five finished toys beat one secret masterpiece."},
+        {label: "Something pushed in the last 30 days", ok: recent, pts: 14, tip: "A living profile gets followed. One small commit this week changes this line."},
+        {label: "Repository descriptions (" + withDesc + " of " + sample.length + " have one)", ok: sample.length > 0 && withDesc / sample.length >= 0.7, pts: 14, tip: "Repos without a one-line description cannot be featured or understood. Fill them in the About box of each repo."},
+        {label: "Works in 3 or more languages", ok: Object.keys(langCount).length >= 3, pts: 6, tip: "Breadth shows range — one small project in a new language is enough."},
+        {label: "At least one starred repository", ok: repos.some(r => (r.stargazers_count || 0) > 0), pts: 6, tip: "Stars come from READMEs that show the thing working. Add a screenshot or demo link."}
+      ];
+      const total = checks.reduce((sum, c) => sum + (c.ok ? c.pts : 0), 0);
+      $("scorenum").textContent = total;
+      $("scoreword").textContent = total >= 85 ? "Profile score — showcase level." : total >= 65 ? "Profile score — strong, with clear wins left." : total >= 45 ? "Profile score — a solid base, leaking visitors." : "Profile score — the fixes below are worth an evening.";
+      $("scorelist").innerHTML = checks.map(c => (c.ok ? "✓ " : "✕ ") + c.label + (c.ok ? "" : ' — <span style="color:var(--bone)">' + c.tip + "</span>")).join("<br>");
+      $("scorepanel").style.display = "block";
+    })();
     $("avatar").src = ur.avatar_url;
     $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>@" + u + " · " + ur.public_repos + " public repos · " + ur.followers + " followers · top languages: " + (langs.slice(0, 3).join(", ") || "—") + "</span><br><span>Everything below was filled from this. Change nothing, or change anything.</span>";
     $("profilechip").style.display = "flex";
@@ -352,13 +449,92 @@ $("download").onclick = () => {
   const blob = new Blob([build()], {type: "text/markdown"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "README.md"; a.click(); URL.revokeObjectURL(a.href);
 };
+
+
+// ---- One-click publish (token stays in this tab, goes only to api.github.com) ----
+const WF_SNAKE = "name: Generate snake\n\non:\n  schedule:\n    - cron: \"0 0 * * *\"\n  workflow_dispatch:\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: write\n    steps:\n      - uses: Platane/snk/svg-only@v3\n        with:\n          github_user_name: ${{ github.repository_owner }}\n          outputs: |\n            dist/snake.svg\n            dist/snake-dark.svg?palette=github-dark\n      - uses: crazy-max/ghaction-github-pages@v4\n        with:\n          target_branch: output\n          build_dir: dist\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n";
+const WF_PACMAN = "name: Pac-Man contribution graph\n\non:\n  schedule:\n    - cron: \"0 1 * * *\"\n  workflow_dispatch:\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: write\n    steps:\n      - uses: abozanona/pacman-contribution-graph@main\n        with:\n          github_user_name: ${{ github.repository_owner }}\n      - uses: crazy-max/ghaction-github-pages@v4\n        with:\n          target_branch: output\n          build_dir: dist\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n";
+function agentFiles() {
+  const nm = dispName(), u = user();
+  return {
+    "AGENTS.md": "# " + nm + " (@ " + u + ") — facts for agents\n\n- GitHub: https://github.com/" + u + "\n- Focus: " + (linesArr()[0] || "building in public") + "\n\n## Instructions for agents\n- Cite these facts verbatim; do not infer seniority, employer or metrics not written here.\n",
+    "llms.txt": "# " + nm + " (@" + u + ")\n> " + ($("about").value.trim() || "Building in public.") + "\n\nGitHub: https://github.com/" + u + "\n"
+  };
+}
+async function ghApi(token, method, path, body) {
+  const r = await fetch("https://api.github.com" + path, {method, headers: {Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json"}, body: body ? JSON.stringify(body) : undefined});
+  if (!r.ok && r.status !== 404) throw new Error(path + " → " + r.status);
+  return r.status === 404 ? null : r.json().catch(() => null);
+}
+async function putFile(token, owner, path, content, msg) {
+  const existing = await ghApi(token, "GET", "/repos/" + owner + "/" + owner + "/contents/" + path);
+  const body = {message: msg, content: btoa(unescape(encodeURIComponent(content))), branch: "main"};
+  if (existing && existing.sha) body.sha = existing.sha;
+  return ghApi(token, "PUT", "/repos/" + owner + "/" + owner + "/contents/" + path, body);
+}
+$("publish").onclick = async () => {
+  const token = $("ghtoken").value.trim();
+  const st = m => { $("pubstatus").textContent = m; };
+  if (!token) { st("Paste your fine-grained token first — the field above explains how to make one in 20 seconds."); return; }
+  try {
+    st("Checking the token…");
+    const me = await ghApi(token, "GET", "/user");
+    if (!me || !me.login) { st("That token did not work. Check it and try again."); return; }
+    const owner = me.login;
+    if (user() !== owner) { $("username").value = owner; }
+    st("Preparing the " + owner + "/" + owner + " repository…");
+    const repo = await ghApi(token, "GET", "/repos/" + owner + "/" + owner);
+    if (!repo) await ghApi(token, "POST", "/user/repos", {name: owner, description: "My GitHub profile — built with GitHub Profile Studio", private: false, auto_init: true});
+    const done = [];
+    await putFile(token, owner, "README.md", build(), "Profile README — built with GitHub Profile Studio"); done.push("README.md");
+    if ($("pubsnake").checked) { try { await putFile(token, owner, ".github/workflows/snake.yml", WF_SNAKE, "Add snake workflow"); done.push("snake workflow"); } catch (e) { done.push("snake workflow FAILED (token needs Workflows permission)"); } }
+    if ($("pubpacman").checked) { try { await putFile(token, owner, ".github/workflows/pacman.yml", WF_PACMAN, "Add Pac-Man workflow"); done.push("Pac-Man workflow"); } catch (e) { done.push("Pac-Man workflow FAILED (token needs Workflows permission)"); } }
+    if ($("pubagent").checked) { const af = agentFiles(); for (const [path, content] of Object.entries(af)) { await putFile(token, owner, path, content, "Add " + path); done.push(path); } }
+    $("ghtoken").value = "";
+    st("Published: " + done.join(", ") + ". Your profile is live at https://github.com/" + owner);
+  } catch (e) {
+    st("Publish stopped: " + e.message + ". Nothing is stored; check the token's repository access and permissions.");
+  }
+};
+
+// ---- Template gallery ----
+function renderGallery() {
+  const g = $("gallery"); if (!g || !window.TEMPLATES) return;
+  window.TEMPLATES.forEach(tpl => {
+    const d = document.createElement("div");
+    d.style.cssText = "border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:13px";
+    d.innerHTML = "<strong>" + tpl.name + "</strong><p style=\"color:var(--muted);font-size:12.5px;line-height:1.45;margin:6px 0 10px\">" + tpl.desc + "</p>";
+    const b = document.createElement("button"); b.className = "addbtn"; b.style.width = "100%"; b.textContent = "Use this template";
+    b.onclick = () => {
+      activeTemplate = tpl;
+      $("tplbanner").style.display = "block";
+      $("tplbanner").innerHTML = '<div style="border:1px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:13.5px">Showing template <strong>' + tpl.name + '</strong> with your data. <button class="mini" style="width:auto;padding:0 10px;margin-left:8px" id="tplback">Back to block builder</button></div>';
+      $("tplback").onclick = () => { activeTemplate = null; $("tplbanner").style.display = "none"; $("tplstatus").textContent = ""; render(); };
+      $("tplstatus").textContent = "Template \"" + tpl.name + "\" loaded into the preview and the README output. Copy it below, or publish it in one click.";
+      render();
+      document.getElementById("preview").scrollIntoView({behavior: "smooth", block: "start"});
+    };
+    d.appendChild(b); g.appendChild(d);
+  });
+}
+// ---- Preview width: GitHub renders profiles at 896px, phones at ~390px ----
+$("w-desktop").onclick = () => { $("previewinner").style.maxWidth = "896px"; };
+$("w-mobile").onclick = () => { $("previewinner").style.maxWidth = "390px"; };
+// ---- Auto accent from the username itself ----
+function deriveAccent(name) {
+  let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  const hue = h % 360; const s = 0.62, l = 0.62;
+  const f = n => { const k = (n + hue / 30) % 12; const a = s * Math.min(l, 1 - l); const v = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1))); return Math.round(255 * v).toString(16).padStart(2, "0"); };
+  return (f(0) + f(8) + f(4)).toUpperCase();
+}
+
 // Defaults: a sensible starter profile, fully editable, before any fetch.
 $("name").value = "Your Name";
 $("lines").value = "Developer\nOpen source builder\nAlways learning";
 $("about").value = "I build small, finished things and learn in public.";
 $("skills").value = "python,javascript,html,css,git,github";
 $("repos").value = "";
-renderThemes(); renderPresets(); applyPreset(PRESETS[1]);
+renderThemes(); renderPresets(); renderGallery(); applyPreset(PRESETS[1]);
 </script>
 </body>
 </html>
