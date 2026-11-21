@@ -398,6 +398,7 @@ function build() {
     layout.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
 }
 function mdToHtml(md) {
+  md = md.replace(/```\w*\n([\s\S]*?)```/g, '<pre style="background:#07090c;border:1px solid #30363d;border-radius:8px;padding:10px;font-size:12px;overflow:auto">$1</pre>');
   return md
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/^## (.*)$/gm, '<h2>$1</h2>')
