@@ -50,6 +50,19 @@ This kit is built around three simple ideas:
 3. **Text is a parameter too.** The typing lines, the banner name, the tagline all
    live in the URL. Edit the words, the image follows.
 
+## The signature: Your Sky
+
+Every kit can paste charts. The Studio paints one thing nobody else has:
+**your last 90 days of work as a night sky** — every push a star, your best
+repositories drawn as named constellations. No two skies are alike, and yours
+is rendered by the Studio's own API:
+
+<div align="center">
+<img src="https://github-profile-studio-api.vercel.app/api/sky?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="Your Sky — the author's last 90 days as a night sky" />
+</div>
+
+Yours is one word away: change `Dongdarealest` in that URL to your username.
+
 ## Why this one, when profile generators already exist?
 
 Most generators hand you one fixed frame and a form. This Studio is built differently:
