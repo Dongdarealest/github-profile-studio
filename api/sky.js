@@ -1,10 +1,13 @@
 // GET /api/sky?username=octocat&color=A98B4F&bg=0D1117&text=E6EDF3
-// "Your Sky" v2 — the last 90 days of pushes rendered as a cinematic
-// night-sky artwork. A Milky Way band runs diagonally across the frame so
-// the canvas is never empty; each day's pushes become stars along the band,
-// the brightest days get hero stars, and the top repositories become named
-// constellations. Layout is seeded from the username, so the same user
-// always gets the same sky.
+// "Your Sky" v3 (living) — the last 90 days of pushes rendered as a
+// cinematic night-sky artwork. A Milky Way band runs diagonally across the
+// frame so the canvas is never empty; each day's pushes become stars along
+// the band, the brightest days get hero stars, and the top repositories
+// become named constellations. Layout is seeded from the username, so the
+// same user always gets the same sky. Living layer: the moon shows
+// tonight's real phase (computed at noon UTC, so the artwork is stable
+// all day), a TONIGHT line names the date and phase, and the single
+// busiest day is marked with a gold milestone star.
 function hex(v, fallback) {
   const s = String(v || fallback).replace(/^#/, "");
   return /^[0-9a-fA-F]{6}$/.test(s) ? s : fallback;
@@ -75,6 +78,32 @@ function gauss(rand) {
   let u = 0;
   while (u === 0) u = rand();
   return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rand());
+}
+const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const PHASE_NAMES = ["New Moon", "Waxing Crescent", "First Quarter", "Waxing Gibbous",
+  "Full Moon", "Waning Gibbous", "Last Quarter", "Waning Crescent"];
+const SYNODIC = 29.530588853;
+const NEW_MOON_REF = Date.UTC(2000, 0, 6, 18, 14); // known new moon
+// Tonight's moon, evaluated at noon UTC of the current day so every fetch
+// within the same day renders byte-identical artwork.
+export function moonPhase(now = new Date()) {
+  const t = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 12);
+  const age = (((t - NEW_MOON_REF) / DAY) % SYNODIC + SYNODIC) % SYNODIC;
+  const p = age / SYNODIC;
+  const k = (1 - Math.cos(2 * Math.PI * p)) / 2;
+  return { age, p, k, name: PHASE_NAMES[Math.floor(p * 8 + 0.5) % 8] };
+}
+// SVG path of the lit part of the moon for phase fraction p (0 = new,
+// 0.5 = full). Waxing moons are lit on the right, waning on the left; the
+// terminator is a half-ellipse whose rx collapses at the quarters.
+function moonLitPath(cx, cy, r, p) {
+  const cos = Math.cos(2 * Math.PI * p);
+  const rx = Math.max(0.05, r * Math.abs(cos)).toFixed(2);
+  const top = `${cx} ${cy - r}`, bot = `${cx} ${cy + r}`;
+  if (p < 0.5) { // waxing: outer arc down the right side, terminator back up
+    return `M ${top} A ${r} ${r} 0 0 1 ${bot} A ${rx} ${r} 0 0 ${cos < 0 ? 1 : 0} ${top} Z`;
+  } // waning: outer arc down the left side, terminator back up
+  return `M ${top} A ${r} ${r} 0 0 0 ${bot} A ${rx} ${r} 0 0 ${cos > 0 ? 1 : 0} ${top} Z`;
 }
 function lift(hexStr, amt) {
   const n = parseInt(hexStr, 16);
@@ -216,6 +245,70 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
       label(1, 1.2, "#000000", "0.6") + label(0, 0, `#${tx}`, "0.88");
   });
 
+  // --- Living layer: tonight's real moon --------------------------------
+  const nowD = new Date();
+  const moon = moonPhase(nowD);
+  const tonightLine = `TONIGHT · ${nowD.getUTCDate()} ${MONTHS[nowD.getUTCMonth()]} ${nowD.getUTCFullYear()} · ${moon.name}`;
+  let moonSvg;
+  if (moon.k > 0.97) {
+    moonSvg = `<circle cx="${MOON.x}" cy="${MOON.y}" r="25" fill="#${c}" opacity="0.95"/>`;
+  } else if (moon.k < 0.03) {
+    moonSvg = `<circle cx="${MOON.x}" cy="${MOON.y}" r="25" fill="#${lift(b, 14)}" opacity="0.85"/>` +
+      `<circle cx="${MOON.x}" cy="${MOON.y}" r="24.4" fill="none" stroke="#${c}" stroke-width="1" opacity="0.45"/>`;
+  } else {
+    moonSvg = `<circle cx="${MOON.x}" cy="${MOON.y}" r="25" fill="#${lift(b, 14)}" opacity="0.55"/>` +
+      `<path d="${moonLitPath(MOON.x, MOON.y, 25, moon.p)}" fill="#${c}" opacity="0.95"/>`;
+  }
+
+  // --- Milestone star: the single busiest day, marked in gold ------------
+  // Placed after every other rand consumer, so the v2 layout is untouched
+  // (moonSafe's rand use here can no longer shift anything already drawn);
+  // the star's own jitter comes from a separate stream seeded per user.
+  let milestone = "";
+  if (total > 0) {
+    let bi = 0;
+    counts.forEach((n, i) => { if (n > counts[bi]) bi = i; });
+    const bn = counts[bi];
+    const mrand = seededRandom(username.toLowerCase() + "#busiest");
+    const t = 0.03 + (bi / 89) * 0.94;
+    const perp = clamp(gauss(mrand) * 26, -80, 80);
+    let [mx, my] = bandPt(t, perp);
+    mx += UX * 16; my += UY * 16;
+    [mx, my] = moonSafe(clamp(mx, 16, 884), clamp(my, 18, 330));
+    // Tight final clamp: the sparkle (16) and halo (19) must stay in frame,
+    // and clamping must not push the star back inside the moon's safe ring.
+    mx = clamp(mx, 30, 856); my = clamp(my, 30, 318);
+    {
+      const dx = mx - MOON.x, dy = my - MOON.y, d = Math.hypot(dx, dy);
+      if (d < 58 && d > 0) { mx = MOON.x + dx / d * 62; my = MOON.y + dy / d * 62; }
+      mx = clamp(mx, 30, 884); my = clamp(my, 30, 330);
+    }
+    const todayUTC = Date.UTC(nowD.getUTCFullYear(), nowD.getUTCMonth(), nowD.getUTCDate());
+    const bd = new Date(todayUTC - (89 - bi) * DAY);
+    const mText = `THE BUSIEST NIGHT · ${bd.getUTCDate()} ${MONTHS[bd.getUTCMonth()]} · ${bn} PUSHES`;
+    // The label rides on a dark cartouche pill, so it stays legible over
+    // stars and constellation lines; placement only has to keep the pill
+    // inside the frame and clear of the moon disc itself.
+    const pw = mText.length * 7.6 + 18, hw = pw / 2;
+    const lx0 = clamp(mx, 175, 725);
+    const pillClear = (x, y) => {
+      const x0 = x - hw, x1 = x + hw, y0 = y - 13, y1 = y + 8;
+      if (x0 < 8 || x1 > 892 || y0 < 14 || y1 > 334) return false;
+      return !(x0 < MOON.x + 28 && x1 > MOON.x - 28 && y0 < MOON.y + 36 && y1 > MOON.y - 36);
+    };
+    let lx = lx0, ly = my + 34;
+    if (!pillClear(lx, ly)) ly = my - 28;
+    if (!pillClear(lx, ly)) { lx = Math.min(lx0, MOON.x - 36 - hw); ly = my + 34; }
+    if (!pillClear(lx, ly)) ly = my + 58;
+    const L = 16, w = 2.1;
+    milestone =
+      `<circle cx="${F1(mx)}" cy="${F1(my)}" r="19" fill="url(#goldGlow)"/>` +
+      `<path d="M ${F1(mx)} ${F1(my - L)} L ${F1(mx + w)} ${F1(my - w)} L ${F1(mx + L)} ${F1(my)} L ${F1(mx + w)} ${F1(my + w)} L ${F1(mx)} ${F1(my + L)} L ${F1(mx - w)} ${F1(my + w)} L ${F1(mx - L)} ${F1(my)} L ${F1(mx - w)} ${F1(my - w)} Z" fill="#${c}"/>` +
+      `<circle cx="${F1(mx)}" cy="${F1(my)}" r="3.4" fill="#${c}"/>` +
+      `<rect x="${F1(lx - hw)}" y="${F1(ly - 13)}" width="${F1(pw)}" height="21" rx="8" fill="#${b}" opacity="0.78" stroke="#${c}" stroke-opacity="0.3"/>` +
+      `<text x="${F1(lx)}" y="${F1(ly)}" text-anchor="middle" font-family="Verdana, sans-serif" font-size="9.5" letter-spacing="2" fill="#${c}">${mText}</text>`;
+  }
+
   const subtitle = total > 0
     ? `${total} PUSHES · ${activeDays} ACTIVE DAYS · LAST 90 DAYS`
     : "A QUIET SKY — FOR NOW";
@@ -257,6 +350,10 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
       <stop offset="0" stop-color="#${tx}" stop-opacity="0.55"/>
       <stop offset="1" stop-color="#${tx}" stop-opacity="0"/>
     </radialGradient>
+    <radialGradient id="goldGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#${c}" stop-opacity="0.6"/>
+      <stop offset="1" stop-color="#${c}" stop-opacity="0"/>
+    </radialGradient>
     <radialGradient id="vig" cx="0.5" cy="0.42" r="0.72">
       <stop offset="0.55" stop-color="#000000" stop-opacity="0"/>
       <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
@@ -283,8 +380,8 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
     <rect width="900" height="420" fill="url(#vig)"/>
     ${constellations}
     <circle cx="${MOON.x}" cy="${MOON.y}" r="48" fill="#${c}" opacity="0.18" filter="url(#moonBlur)"/>
-    <circle cx="${MOON.x}" cy="${MOON.y}" r="25" fill="#${c}" opacity="0.92"/>
-    <circle cx="${MOON.x + 11}" cy="${MOON.y - 7}" r="22" fill="#${b}"/>
+    ${moonSvg}
+    ${milestone}
     <rect width="900" height="420" filter="url(#grainF)" opacity="0.05"/>
   </g>
   <rect width="899" height="419" x="0.5" y="0.5" rx="14" fill="none" stroke="#${c}" stroke-width="1.5"/>
@@ -292,6 +389,7 @@ export function skySvg({ username, name, counts, repos, color, bg, text }) {
   <text x="37" y="364" font-family="Verdana, sans-serif" font-size="10" letter-spacing="4" fill="#${c}">YOUR SKY</text>
   <text x="36" y="390" font-family="Georgia, serif" font-size="27" fill="#${tx}">${esc(name)}'s sky</text>
   <text x="36" y="409" font-family="Verdana, sans-serif" font-size="10.5" letter-spacing="2.2" fill="#${tx}" opacity="0.7">${subtitle}</text>
+  <text x="864" y="409" text-anchor="end" font-family="Verdana, sans-serif" font-size="10.5" letter-spacing="2.2" fill="#${tx}" opacity="0.75">${tonightLine}</text>
 </svg>`;
 }
 export default async function handler(req, res) {
