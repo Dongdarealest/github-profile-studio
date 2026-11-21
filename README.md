@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:1A1A1A,100:A98B4F&height=220&section=header&text=GitHub%20Profile%20Studio&fontSize=50&fontColor=F2EFE9&animation=fadeIn&fontAlignY=36&desc=A%20beautiful%20GitHub%20profile%20in%2060%20seconds%20—%20change%20the%20username,%20done&descAlignY=58&descSize=15" width="100%" alt="GitHub Profile Studio" />
+<img src="https://raw.githubusercontent.com/Dongdarealest/github-profile-studio/main/brand/wordmark.svg" width="560" alt="GitHub Profile Studio" />
 
-<img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=21&pause=1100&color=A98B4F&center=true&vCenter=true&width=880&lines=Type+your+username.+Pick+a+colour.+Copy.+Done.;Every+stat+updates+itself%2C+forever;One+accent+colour+everywhere+%3D+a+designed+profile" alt="typing" />
+**A profile that lives.**
 
 [![Stars](https://img.shields.io/github/stars/Dongdarealest/github-profile-studio?style=flat-square&color=A98B4F&labelColor=0D1117)](https://github.com/Dongdarealest/github-profile-studio/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-A98B4F?style=flat-square&labelColor=0D1117)](LICENSE)
