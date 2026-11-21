@@ -107,6 +107,15 @@
   </div>
 </div>
 
+
+<section style="max-width:1240px;margin:22px auto 0;padding:0 16px">
+  <div class="card" style="margin-bottom:0">
+    <h3 style="font-size:13px">The designs — every one rendered live from real GitHub data</h3>
+    <p class="hint" id="wallhint">This is a sample profile. Type <em>your</em> username above and press Build — the whole wall re-renders with your name, your languages, your repositories. Click any design to use it.</p>
+    <div id="wall" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:14px"></div>
+  </div>
+</section>
+
 <section id="gallerywrap" style="display:none;max-width:1240px;margin:22px auto 0;padding:0 16px">
   <div class="card" style="margin-bottom:0">
     <h3>Template gallery — complete profiles, one click</h3>
@@ -304,8 +313,6 @@ const BLOCKS = {
     return '\n## Latest writing\n\n<!-- BLOG-POST-LIST:START -->\n<!-- BLOG-POST-LIST:END -->\n\n<sub>Updated automatically by the blog-post workflow — add templates/workflows/blog.yml to your profile repo and set your feed.</sub>\n'; }},
   "own-wave": {label:"Studio wave (our own API)", small:"Animated wave divider and closer", make(t,u){
     return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/wave?color=' + t.accent + '&bg=' + t.bg + '" width="100%" alt="" />\n</div>\n'; }},
-  "credit": {label:"Credit line", small:"One quiet line that helps the next person find the Studio", make(t,u){
-    return '\n<div align="center">\n<sub>Built with <a href="https://github.com/Dongdarealest/github-profile-studio">GitHub Profile Studio</a></sub>\n</div>\n'; }},
   "footer-wave": {label:"Footer · Wave", small:"The wave, closing the page", make(t,u){
     return '\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=waving&color=' + t.grad + '&height=110&section=footer" width="100%" alt="footer" />\n</div>\n'; }},
   "footer-plate": {label:"Footer · Quiet plate", small:"One centred line, nothing else", make(t,u){
@@ -313,18 +320,18 @@ const BLOCKS = {
 };
 
 const PRESETS = [
-  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","pins","stats-row","footer-plate","credit"]},
-  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","stats-row","streak","graph","footer-wave","credit"]},
-  {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","skills","stats-row","graph","trophies","snake","footer-wave","credit"]},
-  {name:"Terminal Hacker", desc:"Monospace, minimal, no decoration", theme:"emerald", blocks:["header-terminal","about","skills","stats-row","streak","footer-plate","credit"]},
-  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","pins","projects-table","skills","stats-row","connect","footer-wave","credit"]},
-  {name:"Maintainer", desc:"Work on top, activity as proof", theme:"emerald", blocks:["header-wave","about","pins","graph","stats-row","trophies","connect","footer-wave","credit"]},
-  {name:"Student Journey", desc:"Streak front and centre, friendly", theme:"ocean", blocks:["typing","about","skills","streak","stats-row","quote","footer-wave","credit"]},
-  {name:"Creative Portfolio", desc:"Type and air do the talking", theme:"rose-gold", blocks:["header-serif","about","projects-table","skills","stats-wide","connect","footer-plate","credit"]},
-  {name:"Pastel Friendly", desc:"Light, soft, welcoming", theme:"pastel", blocks:["header-wave","typing","about","skills","stats-row","streak","quote","footer-wave","credit"]},
-  {name:"Editorial Paper", desc:"Black on white, like a magazine", theme:"paper", blocks:["header-serif","about","projects-table","stats-row","connect","footer-plate","credit"]},
-  {name:"Show-off Max", desc:"Everything, including the city and Pac-Man", theme:"dracula", blocks:["header-venom","typing","badges","skills","stats-wide","trophies","city","pacman","graph","streak","footer-wave","credit"]},
-  {name:"One Screen", desc:"The whole profile, no scrolling", theme:"nord", blocks:["header-serif","about","skills","stats-row","footer-plate","credit"]}
+  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","pins","stats-row","footer-plate"]},
+  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","stats-row","streak","graph","footer-wave"]},
+  {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","skills","stats-row","graph","trophies","snake","footer-wave"]},
+  {name:"Terminal Hacker", desc:"Monospace, minimal, no decoration", theme:"emerald", blocks:["header-terminal","about","skills","stats-row","streak","footer-plate"]},
+  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","pins","projects-table","skills","stats-row","connect","footer-wave"]},
+  {name:"Maintainer", desc:"Work on top, activity as proof", theme:"emerald", blocks:["header-wave","about","pins","graph","stats-row","trophies","connect","footer-wave"]},
+  {name:"Student Journey", desc:"Streak front and centre, friendly", theme:"ocean", blocks:["typing","about","skills","streak","stats-row","quote","footer-wave"]},
+  {name:"Creative Portfolio", desc:"Type and air do the talking", theme:"rose-gold", blocks:["header-serif","about","projects-table","skills","stats-wide","connect","footer-plate"]},
+  {name:"Pastel Friendly", desc:"Light, soft, welcoming", theme:"pastel", blocks:["header-wave","typing","about","skills","stats-row","streak","quote","footer-wave"]},
+  {name:"Editorial Paper", desc:"Black on white, like a magazine", theme:"paper", blocks:["header-serif","about","projects-table","stats-row","connect","footer-plate"]},
+  {name:"Show-off Max", desc:"Everything, including the city and Pac-Man", theme:"dracula", blocks:["header-venom","typing","badges","skills","stats-wide","trophies","city","pacman","graph","streak","footer-wave"]},
+  {name:"One Screen", desc:"The whole profile, no scrolling", theme:"nord", blocks:["header-serif","about","skills","stats-row","footer-plate"]}
 ];
 
 function applyPreset(p) {
@@ -390,10 +397,8 @@ function build() {
   return "<!-- Built with GitHub Profile Studio — https://github.com/Dongdarealest/github-profile-studio -->\n" +
     layout.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
 }
-function render() {
-  const md = build();
-  $("output").textContent = md;
-  $("previewinner").innerHTML = md
+function mdToHtml(md) {
+  return md
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/^## (.*)$/gm, '<h2>$1</h2>')
     .replace(/^\| (.*) \|$/gm, "")
@@ -401,6 +406,11 @@ function render() {
     .replace(/\*\*\[([^\]]+)\]\(([^)]+)\)\*\*/g, '<a href="$2">$1</a>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
     .replace(/\*([^*]+)\*/g, '<i>$1</i>');
+}
+function render() {
+  const md = build();
+  $("output").textContent = md;
+  $("previewinner").innerHTML = mdToHtml(md);
 }
 
 const LANG2ICON = {Python:"python",JavaScript:"javascript",TypeScript:"typescript",HTML:"html",CSS:"css",Go:"go",Rust:"rust",Java:"java",C:"c","C++":"cpp","C#":"cs",PHP:"php",Ruby:"ruby",Swift:"swift",Kotlin:"kotlin",Dart:"dart",Shell:"bash",Lua:"lua",Scala:"scala",Vue:"vue",Svelte:"svelte",Dockerfile:"docker"};
@@ -454,7 +464,7 @@ async function fetchProfile() {
     $("avatar").src = ur.avatar_url;
     $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>@" + u + " · " + ur.public_repos + " public repos · " + ur.followers + " followers · top languages: " + (langs.slice(0, 3).join(", ") || "—") + "</span><br><span>Everything below was filled from this. Change nothing, or change anything.</span>";
     $("profilechip").style.display = "flex";
-    showStudio();
+    showStudio(); renderWall();
     $("fetchmsg").textContent = "Done. Your score is below, your profile is ready on the right — copy it, publish it, or customize it.";
     setTimeout(() => $("scorepanel").scrollIntoView({behavior: "smooth", block: "center"}), 60);
     render();
@@ -575,6 +585,43 @@ function deriveAccent(name) {
 }
 
 
+
+// ---- The Designs wall: live-rendered presets you choose with your eyes ----
+const SAMPLE = {username: "Dongdarealest", name: "Dongdarealest", lines: "Developer\nOpen source builder\nAlways learning", about: "I build small, finished things and learn in public.", skills: "javascript,python,html,css,git,github", repos: "TubeEQ,sai-dau-sua-do,DONGUNLOCK,github-profile-studio"};
+function snapshot() {
+  return {themeKey, layout: layout.slice(), color: $("colorhex").value, username: $("username").value, name: $("name").value, lines: $("lines").value, about: $("about").value, skills: $("skills").value, repos: $("repos").value, profile};
+}
+function restore(st) {
+  themeKey = st.themeKey; layout = st.layout; $("colorhex").value = st.color; $("colorpick").value = "#" + T().accent;
+  $("username").value = st.username; $("name").value = st.name; $("lines").value = st.lines; $("about").value = st.about; $("skills").value = st.skills; $("repos").value = st.repos; profile = st.profile;
+  document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === themeKey ? "true" : "false"));
+  renderLayout(); render();
+}
+function renderWall() {
+  const wall = $("wall"); if (!wall) return;
+  const st = snapshot();
+  const data = profile ? {username: user(), name: $("name").value, lines: $("lines").value, about: $("about").value, skills: $("skills").value, repos: $("repos").value} : SAMPLE;
+  wall.innerHTML = "";
+  PRESETS.forEach(p => {
+    themeKey = p.theme; layout = p.blocks.slice(); $("colorhex").value = THEMES[p.theme].accent;
+    $("username").value = data.username; $("name").value = data.name; $("lines").value = data.lines; $("about").value = data.about; $("skills").value = data.skills; $("repos").value = data.repos;
+    const html = mdToHtml(build()).replace(/<img /g, '<img loading="lazy" ');
+    const card = document.createElement("div");
+    card.style.cssText = "border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b0f14;cursor:pointer";
+    card.innerHTML = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)"><strong>' + p.name + '</strong><span style="color:var(--gold);font-size:12.5px">Use this design &rarr;</span></div>' +
+      '<div style="height:300px;overflow:hidden;position:relative"><div style="width:896px;transform:scale(0.52);transform-origin:top left;padding:14px;pointer-events:none">' + html + '</div><div style="position:absolute;inset:0"></div></div>';
+    card.onclick = () => {
+      restore(st);
+      applyPreset(p);
+      showStudio();
+      if (!profile) { $("username").value = SAMPLE.username; $("fetchmsg").textContent = "Showing sample data in this design. Type YOUR username above and press Build my profile to make it yours."; render(); }
+      $("preview").scrollIntoView({behavior: "smooth", block: "start"});
+    };
+    wall.appendChild(card);
+  });
+  restore(st);
+}
+
 // ---- First-visit simplicity: one input, one button, then the result ----
 function showStudio() {
   $("mainui").style.display = "grid";
@@ -601,7 +648,7 @@ $("lines").value = "Developer\nOpen source builder\nAlways learning";
 $("about").value = "I build small, finished things and learn in public.";
 $("skills").value = "python,javascript,html,css,git,github";
 $("repos").value = "";
-renderThemes(); renderPresets(); renderGallery(); applyPreset(PRESETS[1]);
+renderThemes(); renderPresets(); renderGallery(); applyPreset(PRESETS[1]); renderWall();
 </script>
 </body>
 </html>
