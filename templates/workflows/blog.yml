@@ -1,0 +1,20 @@
+# Latest blog posts — keeps the "Latest writing" section of your profile fresh.
+# 1) Put this file at .github/workflows/blog-post-workflow.yml in your profile repo.
+# 2) Replace the feed_list with your own feeds (Dev.to, Medium, Hashnode, your RSS).
+# 3) Your README needs the markers:
+#    <!-- BLOG-POST-LIST:START --> and <!-- BLOG-POST-LIST:END -->
+name: Latest blog post workflow
+on:
+  schedule:
+    - cron: "15 */6 * * *"
+  workflow_dispatch:
+jobs:
+  update-readme-with-blog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/blog-post-workflow@master
+        with:
+          feed_list: "https://dev.to/feed/YOUR_USERNAME, https://YOUR_BLOG.example/rss.xml"
