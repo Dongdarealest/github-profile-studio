@@ -41,8 +41,7 @@ def build(username, name, theme, lines, skills, socials):
     q = urllib.parse.quote
     typing_lines = ";".join(q(l.replace(" ", "+")) for l in lines) if lines else ""
     out = []
-    out.append(f"""<!-- Generated with GitHub Profile Studio — https://github.com/Dongdarealest/github-profile-studio -->
-<div align="center">
+    out.append(f"""<div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color={t['capsuleGradient']}&height=210&section=header&text={q(name)}&fontSize=52&fontColor={tx}&animation=fadeIn&fontAlignY=36&desc=github.com/{username}&descAlignY=56&descSize=16" width="100%" alt="header" />
 """)
