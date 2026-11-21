@@ -1,4 +1,3 @@
-<!-- Generated with GitHub Profile Studio — https://github.com/Dongdarealest/github-profile-studio -->
 <div align="center">
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=0:0D1117,50:1A1A1A,100:A98B4F&height=210&section=header&text=Dongdarealest&fontSize=52&fontColor=E6EDF3&animation=fadeIn&fontAlignY=36&desc=github.com/Dongdarealest&descAlignY=56&descSize=16" width="100%" alt="header" />
