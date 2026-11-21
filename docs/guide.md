@@ -10,7 +10,7 @@ username**. Create it: `github.com/new`, name = your username, tick *Add a READM
 Pick one of three doors — they all produce the same kind of file:
 
 - **Web (easiest):** open the [generator](https://dongdarealest.github.io/github-profile-studio/),
-  type your username, pick a theme or a colour, tick the sections you want, copy.
+  type your username and press *Build my profile* — your data, your score and a ready profile appear. Copy it, publish it in one click, or open *Customize* to mix blocks and colours.
 - **Template:** open any file in `templates/`, copy it, find-replace `YOUR_USERNAME`.
 - **Command line:** `python3 tools/generate.py --username YOUR_USERNAME --theme ocean`
 
