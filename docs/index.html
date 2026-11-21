@@ -4,16 +4,17 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>GitHub Profile Studio — a profile that lives</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon-180.png">
 <meta name="description" content="Type only your GitHub username. Your work becomes a living night sky — the moon is real, the stars are your work — with a full profile built around it. Free, open source." />
-<meta property="og:title" content="GitHub Profile Studio — a profile that lives" />
-<meta property="og:description" content="Username in. A living sky, a scored profile, one click to publish." />
-<meta property="og:type" content="website" />
+<meta property="og:title" content="GitHub Profile Studio — A profile that lives">
+<meta property="og:description" content="Your work as a night sky, your profile score, one click to publish. Just a username.">
+<meta property="og:image" content="https://raw.githubusercontent.com/Dongdarealest/github-profile-studio/main/brand/social-preview.png">
+<meta name="twitter:card" content="summary_large_image">
 <style>
   :root{
     --bg:#07090d; --gold:#a98b4f; --bone:#f4f1ea; --muted:#b6b0a4;
-    --glass:rgba(255,255,255,.055); --glass2:rgba(255,255,255,.032);
-    --stroke:rgba(255,255,255,.14); --line:rgba(255,255,255,.12);
-    --panel:rgba(255,255,255,.05); --panel2:rgba(0,0,0,.28);
+    --stroke:rgba(255,255,255,.14);
     --shadow:0 24px 60px rgba(0,0,0,.5), 0 4px 16px rgba(0,0,0,.35);
     --spec:inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(255,255,255,.04), inset 1px 0 0 rgba(255,255,255,.05);
   }
@@ -30,19 +31,13 @@
     background-attachment:fixed;
     min-height:100vh;
   }
-  /* Liquid glass surface: translucent, blurred, with a specular top edge */
-  .card, .glasscard, .mock, pre, details.card{
+  .glasscard{
     background:linear-gradient(160deg, rgba(255,255,255,.085), rgba(255,255,255,.028) 42%, rgba(255,255,255,.045));
     -webkit-backdrop-filter:blur(22px) saturate(170%);
     backdrop-filter:blur(22px) saturate(170%);
     border:1px solid var(--stroke);
     border-radius:24px;
     box-shadow:var(--shadow), var(--spec);
-  }
-  [style*="var(--panel)"]{
-    -webkit-backdrop-filter:blur(18px) saturate(160%);
-    backdrop-filter:blur(18px) saturate(160%);
-    box-shadow:var(--spec);
   }
   .page{max-width:1080px;margin:0 auto;padding:0 16px}
   /* Top bar */
@@ -70,9 +65,6 @@
   }
   .fetchbar button:active{transform:translateY(1px)}
   #fetchmsg{text-align:center;color:var(--muted);font-size:14px;min-height:20px;margin:10px 8px 0;line-height:1.5}
-  .quietrow{text-align:center;margin:12px 0 0}
-  .quietrow a{color:var(--muted);font-size:14px;text-decoration:none;border-bottom:1px dotted rgba(169,139,79,.55);padding-bottom:2px}
-  .quietrow a:hover{color:var(--gold)}
   /* Result */
   #result{margin-top:34px}
   .glasscard{padding:18px 20px}
@@ -93,105 +85,37 @@
   }
   .btn-primary:active{transform:translateY(1px)}
   .btn-primary.ghost{background:rgba(255,255,255,.06);color:var(--bone);border:1px solid var(--gold);box-shadow:var(--spec)}
-  /* Make it yours */
-  #yours{margin-top:42px}
-  .sectionh{font-family:Georgia,serif;font-weight:500;font-size:clamp(21px,3.4vw,26px);text-align:center;margin:0 0 18px}
-  .looksgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
-  .lookcard{
-    padding:0;overflow:hidden;border-radius:18px;cursor:pointer;text-align:left;color:var(--bone);
-    background:linear-gradient(165deg, rgba(255,255,255,.075), rgba(255,255,255,.02));
-    border:1px solid var(--stroke); box-shadow:var(--spec);
-    -webkit-backdrop-filter:blur(14px) saturate(150%); backdrop-filter:blur(14px) saturate(150%);
-  }
-  .lookcard:hover{border-color:rgba(169,139,79,.7)}
-  .lookcard.active{border-color:var(--gold);box-shadow:var(--spec), 0 0 0 3px rgba(169,139,79,.18)}
-  .lookstrip{display:block;height:64px;overflow:hidden;line-height:0;background:#0d1117}
-  .lookstrip img{width:100%;height:100%;object-fit:cover;display:block}
-  .lookname{display:block;padding:11px 13px;font-size:14px;font-weight:600}
-  .accentbar{margin-top:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:14px 18px}
-  .swatches{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  #status2{text-align:center;color:var(--muted);font-size:13.5px;min-height:18px;margin:12px 0 0}
+  /* Colourway */
+  .colourway{display:flex;align-items:center;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .colourway .cwlabel{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
   .dot{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.35);cursor:pointer;padding:0;flex:none;box-shadow:inset 0 1px 2px rgba(255,255,255,.5)}
   .dot.active{box-shadow:0 0 0 3px rgba(169,139,79,.55)}
-  .colorrow{display:flex;gap:10px;align-items:center;margin-left:auto}
-  input[type=color]{width:50px;height:42px;border:1px solid var(--stroke);border-radius:12px;background:rgba(255,255,255,.05);padding:4px;cursor:pointer}
-  /* Advanced builder (unchanged system, quieter frame) */
-  #advanced{margin-top:36px}
-  main{display:grid;grid-template-columns:400px 1fr;gap:20px;padding:4px 0 8px}
-  @media(max-width:940px){main{grid-template-columns:1fr}}
-  .card{padding:20px;margin-bottom:20px;position:relative}
-  .card h3{margin:0 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
-  .card .hint{color:var(--muted);font-size:13px;margin:0 0 12px;line-height:1.5}
-  .presets{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .preset, .theme, .blockitem, .addbtn{
-    background:linear-gradient(165deg, rgba(255,255,255,.075), rgba(255,255,255,.02));
-    border:1px solid var(--stroke); color:var(--bone);
-    box-shadow:var(--spec); border-radius:16px;
-    -webkit-backdrop-filter:blur(14px) saturate(150%); backdrop-filter:blur(14px) saturate(150%);
-  }
-  .preset{padding:11px 12px;cursor:pointer;text-align:left;font-size:13.5px;font-weight:600}
-  .preset small{display:block;color:var(--muted);font-weight:400;margin-top:2px;font-size:12px;line-height:1.4}
-  .preset:hover, .theme:hover, .addbtn:hover{border-color:rgba(169,139,79,.7)}
-  .themes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .theme{padding:9px 11px;cursor:pointer;font-size:13px;display:flex;gap:8px;align-items:center;font-weight:500;text-align:left}
-  .theme[aria-pressed=true]{border-color:var(--gold);box-shadow:var(--spec), 0 0 0 3px rgba(169,139,79,.16)}
-  .swatch{width:17px;height:17px;border-radius:50%;flex:none;border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 1px 2px rgba(255,255,255,.5)}
-  input[type=text], input[type=password], textarea{
-    width:100%;color:var(--bone);padding:11px 13px;font-size:14px;border-radius:14px;
+  #colorhex{
+    width:110px;color:var(--bone);padding:9px 12px;font-size:14px;border-radius:999px;
     background:rgba(0,0,0,.28);border:1px solid var(--stroke);box-shadow:inset 0 1px 0 rgba(255,255,255,.07); outline:none;
   }
-  input[type=text]:focus, textarea:focus{border-color:rgba(169,139,79,.65)}
-  .blockitem{display:flex;align-items:center;gap:9px;padding:9px 11px;margin-bottom:7px}
-  .blockitem .nm{flex:1;font-size:14px}
-  .blockitem .nm small{display:block;color:var(--muted);font-size:11.5px}
-  .mini{background:rgba(255,255,255,.06);border:1px solid var(--stroke);color:var(--bone);border-radius:999px;width:28px;height:28px;cursor:pointer;font-size:14px;line-height:1;box-shadow:var(--spec)}
-  .mini:hover{border-color:var(--gold)}
-  .addgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-  .secrow{display:flex;align-items:center;gap:14px;padding:13px 2px;border-bottom:1px solid rgba(255,255,255,.07);cursor:pointer}
-  .secrow:last-of-type{border-bottom:none}
-  .secinfo{flex:1;min-width:0}
-  .secname{display:block;font-size:15px;font-weight:600}
-  .secinfo small{display:block;color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.45}
-  .switch{position:relative;flex:none;width:46px;height:26px;display:inline-block}
-  .switch input{opacity:0;width:100%;height:100%;position:absolute;inset:0;margin:0;cursor:pointer;z-index:2}
-  .switch .track{position:absolute;inset:0;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid var(--stroke);transition:background .2s,border-color .2s;box-shadow:var(--spec)}
-  .switch .track::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#8a8680;transition:left .2s,background .2s}
-  .switch input:checked + .track{background:rgba(169,139,79,.35);border-color:var(--gold)}
-  .switch input:checked + .track::after{left:22px;background:linear-gradient(180deg,#d8bc7f,#a98b4f)}
-  .extrasbox{margin-top:14px;border-top:1px solid rgba(255,255,255,.07);padding-top:12px}
-  .extrasbox summary{cursor:pointer;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:4px 0}
-  .exrow{display:flex;align-items:center;gap:11px;padding:10px 2px;font-size:14.5px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.05)}
-  .exrow:last-child{border-bottom:none}
-  .exrow input{width:18px;height:18px;accent-color:var(--gold);cursor:pointer;flex:none}
-  .addbtn{border-style:dashed;padding:9px 10px;cursor:pointer;font-size:12.5px;text-align:left}
-  .btns{display:flex;gap:10px;flex-wrap:wrap}
-  .btns button{
-    border:none;border-radius:999px;padding:12px 19px;font-size:15px;font-weight:700;cursor:pointer;color:#17130a;
-    background:linear-gradient(180deg,#d8bc7f,#a98b4f 60%,#96793f);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 10px 24px rgba(169,139,79,.3);
+  #colorhex:focus{border-color:rgba(169,139,79,.65)}
+  /* Publish panel */
+  #pubpanel{margin-top:20px}
+  #pubpanel .hint{color:var(--muted);font-size:13.5px;line-height:1.55;margin:0 0 12px}
+  .pubrow{display:flex;gap:10px;flex-wrap:wrap}
+  #ghtoken{
+    flex:1;min-width:220px;color:var(--bone);padding:12px 15px;font-size:14px;border-radius:999px;
+    background:rgba(0,0,0,.28);border:1px solid var(--stroke);box-shadow:inset 0 1px 0 rgba(255,255,255,.07); outline:none;
   }
-  .btns button.ghost{background:rgba(255,255,255,.06);color:var(--bone);border:1px solid var(--stroke);box-shadow:var(--spec)}
-  .previewhead{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-  .mock{padding:16px;overflow:auto}
-  .mock img{max-width:100%}
-  .mock h2{font-family:Georgia,serif;color:var(--bone)}
-  pre{padding:14px;overflow:auto;font-size:12px;line-height:1.5;max-height:380px;white-space:pre-wrap;word-break:break-all}
-  footer{text-align:center;color:var(--muted);padding:34px 16px 30px;font-size:14px}
+  #ghtoken:focus{border-color:rgba(169,139,79,.65)}
+  #pubstatus{color:var(--muted);font-size:13.5px;min-height:18px;margin:10px 0 0;line-height:1.5}
+  footer{text-align:center;color:var(--muted);padding:38px 16px 30px;font-size:14px}
   a{color:var(--gold)}
-  details summary{outline:none}
   ::selection{background:rgba(169,139,79,.4)}
   @media(max-width:640px){
     .fetchbar{flex-direction:column} .fetchbar button{width:100%}
-    .card{padding:16px;border-radius:20px}
-    pre{font-size:11px}
-    .preset,.theme,.addbtn{min-height:44px}
     #scorenum{font-size:30px}
     .scoreword{min-width:0}
-    .lookstrip{height:56px}
     .actions .btn-primary{flex:1;padding:15px 12px}
-    .colorrow{margin-left:0}
     .topbar{padding:16px 2px 14px}
   }
-
 </style>
 </head>
 <body>
@@ -211,7 +135,6 @@
       <button id="fetchbtn" data-i18n="build">Build my profile</button>
     </div>
     <p id="fetchmsg" data-i18n="nosignup">No sign-up, no token. Everything is read from the public GitHub API, in your browser.</p>
-    <p class="quietrow"><a href="#" id="scratch"><span data-i18n="scratch">or start from scratch, without fetching →</span></a></p>
   </section>
 
   <section id="result" style="display:none">
@@ -229,552 +152,70 @@
       <button id="pub2" class="btn-primary" data-i18n="pub_main">Publish to my GitHub</button>
       <button id="copy2" class="btn-primary ghost" data-i18n="copy">Copy README</button>
     </div>
-    <p class="quietrow"><a href="#" id="yourslink"><span data-i18n="yours_link">Make it yours</span> ↓</a></p>
-  </section>
-
-  <section id="yours" style="display:none">
-    <h3 class="sectionh" data-i18n="looks_h">Five looks — pick one, everything follows</h3>
-    <div id="looks" class="looksgrid"></div>
-    <div class="accentbar glasscard">
-      <div id="swatches" class="swatches"></div>
-      <div class="colorrow">
-        <input type="color" id="colorpick" value="#a98b4f" />
-        <input type="text" id="colorhex" value="A98B4F" maxlength="7" style="width:110px" />
+    <p id="status2"></p>
+    <div id="pubpanel" class="glasscard" style="display:none">
+      <p class="hint" data-i18n="pub_hint">A fine-grained token with Contents read &amp; write on your username repository. It stays in this tab, is sent only to api.github.com, and is never stored.</p>
+      <div class="pubrow">
+        <input type="password" id="ghtoken" placeholder="github_pat_…" autocomplete="off" />
+        <button id="pubgo" class="btn-primary" data-i18n="pub_go">Publish now</button>
       </div>
+      <p id="pubstatus"></p>
     </div>
-    <p class="quietrow"><a href="#" id="advlink"><span data-i18n="adv_link">Advanced: build block by block</span> →</a></p>
+    <div class="colourway">
+      <span class="cwlabel" data-i18n="colourway">Colourway</span>
+      <button type="button" class="dot active" data-accent="A98B4F" title="Midnight Gold" style="background:#A98B4F"></button>
+      <button type="button" class="dot" data-accent="70A5FD" title="Tokyo Night" style="background:#70A5FD"></button>
+      <button type="button" class="dot" data-accent="DCA7A0" title="Rose" style="background:#DCA7A0"></button>
+      <input type="text" id="colorhex" value="A98B4F" maxlength="7" aria-label="Custom hex" />
+    </div>
   </section>
-
-<div id="advanced" style="display:none">
-<main id="mainui">
-  <div>
-    <section class="card">
-      <h3 data-i18n="presets_h">1 · Start from a style</h3>
-      <p class="hint">Twelve complete layouts, each a different mix of blocks. Apply one, then make it yours below.</p>
-      <div class="presets" id="presets"></div>
-    </section>
-
-    <section class="card">
-      <h3 data-i18n="colour_h">2 · Colour</h3>
-      <p class="hint">One accent, applied to every block at once — or bring your own hex.</p>
-      <div class="themes" id="themes"></div>
-    </section>
-
-    <section class="card">
-      <h3 data-i18n="sections_h">Your profile, section by section</h3>
-      <p class="hint" data-i18n="sections_hint">Turn a section on or off — the preview and the README update themselves. That is the whole layout.</p>
-      <div id="sections"></div>
-      <details class="extrasbox">
-        <summary data-i18n="extras_h">Extras</summary>
-        <div id="extras"></div>
-      </details>
-    </section>
-
-    <section class="card">
-      <h3 data-i18n="words_h">4 · Words (already filled from your GitHub)</h3>
-      <p class="hint">Fetched automatically. Edit only if you want different words.</p>
-      <div class="btns" style="margin-bottom:4px"><button class="ghost" id="writeforme" type="button" data-i18n="write_btn">Write my lines for me</button></div>
-      <p class="hint" id="writehint">Three tones, generated from your real data. Click again for the next tone.</p>
-      <label style="display:block;color:var(--muted);font-size:12px;margin:10px 0 5px">DISPLAY NAME</label>
-      <input type="text" id="name" placeholder="Your Name" />
-      <label style="display:block;color:var(--muted);font-size:12px;margin:12px 0 5px">TYPING LINES, ONE PER LINE</label>
-      <textarea id="lines" rows="3"></textarea>
-      <label style="display:block;color:var(--muted);font-size:12px;margin:12px 0 5px">ABOUT LINE</label>
-      <textarea id="about" rows="2"></textarea>
-      <label style="display:block;color:var(--muted);font-size:12px;margin:12px 0 5px">SKILLS (AUTO-DETECTED FROM YOUR REPOS)</label>
-      <input type="text" id="skills" />
-      <label style="display:block;color:var(--muted);font-size:12px;margin:12px 0 5px">FEATURED REPOS (AUTO: YOUR MOST STARRED)</label>
-      <input type="text" id="repos" />
-    </section>
-
-
-    <section class="card">
-      <h3 data-i18n="publish_h">5 · Publish straight to GitHub (optional)</h3>
-      <p class="hint">One click: creates your profile repository if needed and commits this README — plus, if you tick them, the snake and Pac-Man workflows and the agent files. Uses a token <strong>you</strong> create, only in this tab, sent only to api.github.com, never stored.</p>
-      <p class="hint">Create one in 20 seconds: GitHub → Settings → Developer settings → Personal access tokens → <em>Fine-grained</em> → Repository access: only your username repository → Permissions: Contents and Workflows, read and write.</p>
-      <input type="password" id="ghtoken" placeholder="github_pat_…" autocomplete="off" style="margin-bottom:10px" />
-      <div class="checks" style="margin-bottom:12px">
-        <label><input type="checkbox" id="pubsnake" checked /> Snake workflow</label>
-        <label><input type="checkbox" id="pubpacman" /> Pac-Man workflow</label>
-        <label><input type="checkbox" id="pubagent" checked /> AGENTS.md + llms.txt</label>
-      </div>
-      <div class="btns"><button id="publish">Publish to GitHub</button></div>
-      <p id="pubstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
-    </section>
-
-    <section class="card">
-      <div class="btns">
-        <button id="copy" data-i18n="copy">Copy README</button>
-        <button class="ghost" id="download" data-i18n="download">Download .md</button>
-      </div>
-      <p id="status" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
-    </section>
-  </div>
-
-  <div>
-    <section class="card">
-      <div class="previewhead"><span data-i18n="preview_h">Live preview — your real data</span><span><button class="mini" style="width:auto;padding:0 9px" id="w-desktop">Desktop 896</button> <button class="mini" style="width:auto;padding:0 9px" id="w-mobile">Mobile 390</button></span></div><div id="tplbanner" style="display:none;margin-bottom:10px"></div>
-      <div class="mock" id="preview"><div id="previewinner" style="max-width:896px;margin:0 auto"></div></div>
-    </section>
-    <section class="card">
-      <div class="previewhead"><span data-i18n="output_h">Your README.md</span><span>paste into your username repository</span></div>
-      <pre id="output"></pre>
-    </section>
-  </div>
-</main>
-
-<section id="gallerywrap" style="margin-top:20px">
-  <div class="card" style="margin-bottom:0">
-    <h3 data-i18n="gallery_h">Template gallery — complete profiles, one click</h3>
-    <p class="hint">The same templates as the repository files, now on the web. Preview any of them with <em>your</em> data, then use it as-is — your username and name are substituted automatically. Or go back to mixing blocks below; both roads lead to the same Copy button.</p>
-    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px"></div>
-    <p id="tplstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
-  </div>
-</section>
-</div>
 
   <footer>
-    Free and open source, MIT · <a href="https://github.com/Dongdarealest/github-profile-studio">GitHub</a> · <a href="https://github.com/Dongdarealest/github-profile-studio/blob/main/docs/guide.md">Guide</a> · <a href="https://github.com/Dongdarealest/github-profile-studio/tree/main/api">API</a>
+    <span data-i18n="footer_line">Free and open source, MIT</span> · <a href="https://github.com/Dongdarealest/github-profile-studio">GitHub</a> · <a href="https://github.com/Dongdarealest/github-profile-studio/blob/main/docs/guide.md">Guide</a> · <a href="https://github.com/Dongdarealest/github-profile-studio/tree/main/api">API</a>
   </footer>
 </div>
 
-<script src="templates-data.js"></script>
 <script src="i18n.js"></script>
 <script>
-const THEMES = {
-  "midnight-gold": {label:"Midnight Gold", bg:"0D1117", accent:"A98B4F", text:"E6EDF3", border:"30363D", grad:"0:0D1117,50:1A1A1A,100:A98B4F", icons:"dark", statsTheme:null},
-  "tokyo-night":   {label:"Tokyo Night",   bg:"1A1B27", accent:"70A5FD", text:"C0CAF5", border:"292E42", grad:"0:1A1B27,50:24283B,100:70A5FD", icons:"dark", statsTheme:"tokyonight"},
-  "dracula":       {label:"Dracula",       bg:"282A36", accent:"BD93F9", text:"F8F8F2", border:"44475A", grad:"0:282A36,50:44475A,100:BD93F9", icons:"dark", statsTheme:"dracula"},
-  "ocean":         {label:"Ocean",         bg:"0F2027", accent:"38BDF8", text:"E0F2FE", border:"203A43", grad:"0:0F2027,50:203A43,100:2C5364", icons:"dark", statsTheme:"ocean_dark"},
-  "emerald":       {label:"Emerald",       bg:"0B1D17", accent:"34D399", text:"D1FAE5", border:"134E3A", grad:"0:0B1D17,50:134E3A,100:34D399", icons:"dark", statsTheme:null},
-  "sunset":        {label:"Sunset",        bg:"201016", accent:"FB7185", text:"FFE4E6", border:"4C1D2F", grad:"0:201016,50:7F1D3A,100:F59E0B", icons:"dark", statsTheme:"sunset_dark"},
-  "rose-gold":     {label:"Rose Gold",     bg:"191013", accent:"DCA7A0", text:"FBE9E7", border:"3F2A2E", grad:"0:191013,50:3F2A2E,100:B76E79", icons:"dark", statsTheme:"rose_pine"},
-  "nord":          {label:"Nord",          bg:"2E3440", accent:"88C0D0", text:"ECEFF4", border:"3B4252", grad:"0:2E3440,50:3B4252,100:88C0D0", icons:"dark", statsTheme:"nord"},
-  "pastel":        {label:"Pastel",        bg:"FFF7ED", accent:"EC4899", text:"374151", border:"FED7AA", grad:"0:FFF7ED,50:FED7AA,100:EC4899", icons:"light", statsTheme:null},
-  "paper":         {label:"Paper",         bg:"FFFFFF", accent:"111827", text:"111827", border:"E5E7EB", grad:"0:FFFFFF,50:F3F4F6,100:111827", icons:"light", statsTheme:"default"}
-};
-let themeKey = "midnight-gold";
-let layout = [];
-let profile = null; // fetched GitHub data
+const API_BASE = "https://github-profile-studio-api.vercel.app/api";
 const $ = id => document.getElementById(id);
-const user = () => ($("username").value.trim() || "YOUR_USERNAME");
-const dispName = () => ($("name").value.trim() || (profile && profile.name) || "Your Name");
 const enc = s => encodeURIComponent(s).replace(/%20/g, "+");
-function T() { const raw = $("colorhex").value.replace(/^#/, "").toUpperCase(); const ac = /^[0-9A-F]{6}$/.test(raw) ? raw : THEMES[themeKey].accent; return Object.assign({}, THEMES[themeKey], {accent: ac}); }
-function linesArr() { return $("lines").value.split("\n").map(s => s.trim()).filter(Boolean); }
-function skillsArr() { return $("skills").value.split(",").map(s => s.trim()).filter(Boolean); }
-function reposArr() { return $("repos").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 4); }
 
+// ---- The one state: an accent on ink, and the fetched facts ----
+let accent = "A98B4F";
+let skyUser = "Dongdarealest";
+let profile = null;
+const data = {
+  lines: ["Developer", "Open source builder", "Always learning"],
+  about: "",
+  repos: []
+};
+const user = () => ($("username").value.trim() || "YOUR_USERNAME");
+function T() { return {bg: "0D1117", text: "E6EDF3", border: "30363D", accent: accent}; }
+
+// ---- The fixed composition. This is the whole product. ----
 const BLOCKS = {
-  "header-wave": {label:"Header · Wave banner", small:"Animated gradient wave with your name", make(t,u){
-    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=waving&color=' + t.grad + '&height=210&section=header&text=' + enc(dispName()) + '&fontSize=52&fontColor=' + t.text + '&animation=fadeIn&fontAlignY=36" width="100%" alt="header" />\n</div>\n'; }},
-  "header-venom": {label:"Header · Venom banner", small:"Sharp neon-edged banner", make(t,u){
-    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=venom&color=0:' + t.bg + ',100:' + t.accent + '&height=200&text=' + enc(dispName()) + '&fontSize=54&fontColor=' + t.accent + '&animation=fadeIn" width="100%" alt="header" />\n</div>\n'; }},
-  "header-serif": {label:"Header · Serif poster", small:"Quiet gallery type, no banner image", make(t,u){
-    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=transparent&height=160&text=' + enc(dispName()) + '&fontSize=58&fontColor=' + t.accent + '" alt="' + dispName() + '" />\n</div>\n'; }},
-  "header-terminal": {label:"Header · Terminal", small:"A whoami block, monospace and honest", make(t,u){
-    return "```bash\n$ whoami\n> " + u + " — " + (linesArr()[0] || "developer") + "\n$ status\n> building in public\n```\n"; }},
-  "typing": {label:"Typing line", small:"Your lines, typed and re-typed forever", make(t,u){
-    const ls = linesArr(); if (!ls.length) return "";
-    return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/typing?lines=' + ls.map(enc).join(";") + '&color=' + t.accent + '&bg=' + t.bg + '" alt="typing" />\n</div>\n'; }},
-  "badges": {label:"Badges row", small:"Views, followers and total stars", make(t,u){
-    return '<div align="center">\n<img src="https://komarev.com/ghpvc/?username=' + u + '&color=' + t.accent + '&style=flat-square&label=Profile+views" alt="views" />\n<img src="https://img.shields.io/github/followers/' + u + '?style=flat-square&color=' + t.accent + '&labelColor=' + t.bg + '&label=Followers" alt="followers" />\n<img src="https://img.shields.io/github/stars/' + u + '?style=flat-square&color=' + t.accent + '&labelColor=' + t.bg + '&label=Total+stars" alt="stars" />\n</div>\n'; }},
-  "about": {label:"About", small:"Your bio line, in plain searchable text", make(t,u){
-    const a = $("about").value.trim(); if (!a) return "";
+  "own-sky": {make(t, u){
+    return '\n<div align="center">\n<img src="' + API_BASE + '/sky?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="Your Sky — my work as a night sky" />\n</div>\n'; }},
+  "typing": {make(t, u){
+    const ls = data.lines; if (!ls.length) return "";
+    return '<div align="center">\n<img src="' + API_BASE + '/typing?lines=' + ls.map(enc).join(";") + '&color=' + t.accent + '&bg=' + t.bg + '" alt="typing" />\n</div>\n'; }},
+  "about": {make(t, u){
+    const a = data.about.trim(); if (!a) return "";
     return "\n## About\n\n" + a + "\n"; }},
-  "skills": {label:"Skill icons", small:"Auto-detected from your repositories", make(t,u){
-    const sk = skillsArr(); if (!sk.length) return "";
-    return '\n## Tech stack\n\n<div align="center">\n<img src="https://skillicons.dev/icons?i=' + sk.join(",") + '&theme=' + t.icons + '&perline=8" alt="skills" />\n</div>\n'; }},
-  "stats-row": {label:"Stats + languages", small:"The classic pair of cards", make(t,u){
-    return '\n## GitHub stats\n\n<div align="center">\n<img height="170" src="https://github-readme-stats.vercel.app/api?username=' + u + '&show_icons=true&include_all_commits=true&title_color=' + t.accent + '&icon_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="stats" />\n<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=' + u + '&layout=compact&langs_count=8&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="top languages" />\n</div>\n'; }},
-  "stats-wide": {label:"Summary card, wide", small:"One wide profile-details card", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=' + u + '&theme=' + (t.statsTheme || "github_dark") + '" width="100%" alt="profile details" />\n</div>\n'; }},
-  "streak": {label:"Streak", small:"Current and longest contribution streaks", make(t,u){
-    return '\n<div align="center">\n<img src="https://streak-stats.demolab.com?user=' + u + '&background=' + t.bg + '&border=' + t.border + '&ring=' + t.accent + '&fire=' + t.accent + '&currStreakNum=' + t.text + '&sideNums=' + t.text + '&currStreakLabel=' + t.accent + '&sideLabels=' + t.text + '&dates=' + t.text + '" alt="streak" />\n</div>\n'; }},
-  "graph": {label:"Activity graph", small:"A year of work as one line", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-readme-activity-graph.vercel.app/graph?username=' + u + '&bg_color=' + t.bg + '&color=' + t.accent + '&line=' + t.accent + '&point=' + t.text + '&area=true&hide_border=true" width="100%" alt="activity graph" />\n</div>\n'; }},
-  "trophies": {label:"Trophies", small:"Ranked achievement shelf", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-trophy.vercel.app/?username=' + u + '&theme=' + (t.statsTheme || "flat") + '&no-frame=true&margin-w=6" alt="trophies" />\n</div>\n'; }},
-  "pins": {label:"Featured repos · cards", small:"Pin cards for your best work", make(t,u){
-    const rs = reposArr(); if (!rs.length) return "";
-    return '\n## Featured projects\n\n<div align="center">\n' + rs.map(r => '<a href="https://github.com/' + u + '/' + r + '"><img src="https://github-readme-stats.vercel.app/api/pin/?username=' + u + '&repo=' + r + '&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="' + r + '" /></a>').join("\n") + '\n</div>\n'; }},
-  "projects-table": {label:"Featured repos · table", small:"Name, what it does, stars — in text", make(t,u){
-    if (!profile || !profile.topRepos || !profile.topRepos.length) return "";
-    const rows = profile.topRepos.slice(0, 4).map(r => "| **[" + r.name + "](" + r.url + ")** | " + (r.description || "—") + " | ⭐ " + r.stars + " |").join("\n");
-    return "\n## Featured projects\n\n| Project | What it does | Stars |\n| --- | --- | --- |\n" + rows + "\n"; }},
-  "snake": {label:"Contribution snake", small:"Needs the snake Action in your repo (kit includes it)", make(t,u){
-    return '\n<picture>\n<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/' + u + '/' + u + '/output/github-snake-dark.svg" />\n<source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/' + u + '/' + u + '/output/github-snake.svg" />\n<img alt="contribution snake" src="https://raw.githubusercontent.com/' + u + '/' + u + '/output/github-snake-dark.svg" />\n</picture>\n'; }},
-  "pacman": {label:"Pac-Man graph", small:"Needs the Pac-Man Action in your repo (kit includes it)", make(t,u){
-    return '\n<picture>\n<source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/' + u + '/' + u + '/output/pacman-contribution-graph-dark.svg" />\n<source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/' + u + '/' + u + '/output/pacman-contribution-graph.svg" />\n<img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/' + u + '/' + u + '/output/pacman-contribution-graph.svg" />\n</picture>\n'; }},
-  "city": {label:"Your year as a 3D city", small:"Pure URL — no setup at all", make(t,u){
-    return '\n<div align="center">\n<img src="https://gitcity.natrajx.in/api/svg?username=' + u + '" alt="My year as a city" />\n</div>\n'; }},
-  "quote": {label:"Rotating quote", small:"A new line of wisdom on each visit", make(t,u){
-    return '\n<div align="center">\n<img src="https://quotes-github-readme.vercel.app/api?type=horizontal&theme=' + (t.icons === "dark" ? "dark" : "light") + '" alt="quote" />\n</div>\n'; }},
-  "connect": {label:"Connect", small:"GitHub, your site, your links", make(t,u){
-    let s = "\n## Connect\n\n- GitHub: [github.com/" + u + "](https://github.com/" + u + ")";
-    if (profile && profile.blog) s += "\n- Web: [" + profile.blog.replace(/^https?:\/\//, "") + "](" + (profile.blog.startsWith("http") ? profile.blog : "https://" + profile.blog) + ")";
-    if (profile && profile.twitter) s += "\n- X: [@" + profile.twitter + "](https://x.com/" + profile.twitter + ")";
-    if (profile && profile.location) s += "\n- Based in: " + profile.location;
-    return s + "\n"; }},
-  "header-shark": {label:"Header · Shark banner", small:"A fin cutting through your name", make(t,u){
-    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=shark&color=' + t.grad + '&height=200&text=' + enc(dispName()) + '&fontSize=50&fontColor=' + t.text + '&animation=fadeIn" width="100%" alt="header" />\n</div>\n'; }},
-  "header-slice": {label:"Header · Slice banner", small:"A hard diagonal, editorial and bold", make(t,u){
-    return '<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=slice&color=0:' + t.bg + ',100:' + t.accent + '&height=190&text=' + enc(dispName()) + '&fontSize=52&fontColor=' + t.text + '&animation=fadeIn" width="100%" alt="header" />\n</div>\n'; }},
-  "langs-donut": {label:"Languages · Donut", small:"Your languages as a ring, not a list", make(t,u){
-    return '\n<div align="center">\n<img height="200" src="https://github-readme-stats.vercel.app/api/top-langs/?username=' + u + '&layout=donut&langs_count=8&title_color=' + t.accent + '&text_color=' + t.text + '&bg_color=' + t.bg + '&border_color=' + t.border + '" alt="languages donut" />\n</div>\n'; }},
-  "divider": {label:"Divider", small:"A thin line in your accent, between sections", make(t,u){
-    return '\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=rect&color=' + t.accent + '&height=4" width="100%" alt="" />\n</div>\n'; }},
-  "own-glass-banner": {label:"Liquid Glass banner (our own API)", small:"Frosted glass header with a specular highlight", make(t,u){
-    return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '&style=glass" width="100%" alt="banner" />\n</div>\n'; }},
-  "own-glass-card": {label:"Liquid Glass stats card (our own API)", small:"Your live numbers on frosted glass", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '&style=glass" alt="GitHub stats card" />\n</div>\n'; }},
-  "own-stats": {label:"Studio stats — full card (our own API)", small:"Stars, commits, PRs and a rank ring, drawn by the Studio", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/stats?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="GitHub stats" />\n</div>\n'; }},
-  "own-stats-pair": {label:"Studio stats + languages (our own API)", small:"The full pair, one design system", make(t,u){
-    return '\n## GitHub stats\n\n<div align="center">\n<img height="218" src="https://github-profile-studio-api.vercel.app/api/stats?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="stats" />\n<img height="218" src="https://github-profile-studio-api.vercel.app/api/langs?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="languages" />\n</div>\n'; }},
-  "own-streak": {label:"Studio streak (our own API)", small:"Active days and streaks from real push activity", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/streak?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="streak" />\n</div>\n'; }},
-  "own-graph": {label:"Studio activity wave (our own API)", small:"Push activity, last 30 days, as one wave", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/graph?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="activity" />\n</div>\n'; }},
-  "own-pins": {label:"Featured repos · Studio cards (our own API)", small:"Pin cards drawn by the Studio, not a third party", make(t,u){
-    const rs = reposArr(); if (!rs.length) return "";
-    return '\n## Featured projects\n\n<div align="center">\n' + rs.map(r => '<a href="https://github.com/' + u + '/' + r + '"><img src="https://github-profile-studio-api.vercel.app/api/pin?username=' + u + '&repo=' + r + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="' + r + '" /></a>').join("\n") + '\n</div>\n'; }},
-  "own-sky": {label:"Your Sky — signature artwork (our own API)", small:"Your work as a night sky: pushes are stars, best repos are constellations", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/sky?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="Your Sky — my work as a night sky" />\n</div>\n'; }},
-  "own-strip": {label:"Identity strip — followers, stars, repos, score (our own API)", small:"One plate, your real numbers, in the sky language", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/strip?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="My numbers" />\n</div>\n'; }},
-  "own-stack": {label:"Tech stack — monogram tiles (our own API)", small:"Your languages as serif monogram tiles, no borrowed icons", make(t,u){
-    return '\n## Tech stack\n\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/stack?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="Tech stack" />\n</div>\n'; }},
-  "own-banner": {label:"Studio banner (our own API)", small:"Served by our own service — never a dead third party", make(t,u){
-    return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '" width="100%" alt="banner" />\n</div>\n'; }},
-  "own-typing": {label:"Studio typing (our own API)", small:"Typewriter lines, hosted by the Studio", make(t,u){
-    const ls = linesArr(); if (!ls.length) return "";
-    return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/typing?lines=' + ls.map(enc).join(";") + '&color=' + t.accent + '&bg=' + t.bg + '" alt="typing" />\n</div>\n'; }},
-  "own-card": {label:"Studio stats card (our own API)", small:"Live numbers from our own service — switches with the viewer's light/dark mode", make(t,u){
-    return '\n<div align="center">\n<picture>\n<source media="(prefers-color-scheme: dark)" srcset="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" />\n<source media="(prefers-color-scheme: light)" srcset="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=FFFFFF&text=111827" />\n<img src="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="GitHub stats card" />\n</picture>\n</div>\n'; }},
-  "score-badge": {label:"Profile score badge (our own API)", small:"Your live score, as a badge worth showing off", make(t,u){
-    return '\n<div align="center">\n<a href="https://dongdarealest.github.io/github-profile-studio/"><img src="https://github-profile-studio-api.vercel.app/api/score?username=' + u + '" alt="Profile score" /></a>\n</div>\n'; }},
-  "blog": {label:"Latest blog posts (auto-updated)", small:"Needs the blog workflow from the kit — posts refresh themselves", make(t,u){
-    return '\n## Latest writing\n\n<!-- BLOG-POST-LIST:START -->\n<!-- BLOG-POST-LIST:END -->\n\n<sub>Updated automatically by the blog-post workflow — add templates/workflows/blog.yml to your profile repo and set your feed.</sub>\n'; }},
-  "own-wave": {label:"Studio wave (our own API)", small:"Animated wave divider and closer", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/wave?color=' + t.accent + '&bg=' + t.bg + '" width="100%" alt="" />\n</div>\n'; }},
-  "footer-wave": {label:"Footer · Wave", small:"The wave, closing the page", make(t,u){
-    return '\n<div align="center">\n<img src="https://capsule-render.vercel.app/api?type=waving&color=' + t.grad + '&height=110&section=footer" width="100%" alt="footer" />\n</div>\n'; }},
-  "footer-plate": {label:"Footer · Quiet plate", small:"One centred line, nothing else", make(t,u){
+  "own-strip": {make(t, u){
+    return '\n<div align="center">\n<img src="' + API_BASE + '/strip?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="My numbers" />\n</div>\n'; }},
+  "own-pins": {make(t, u){
+    const rs = data.repos; if (!rs.length) return "";
+    return '\n## Featured projects\n\n<div align="center">\n' + rs.map(r => '<a href="https://github.com/' + u + '/' + r + '"><img src="' + API_BASE + '/pin?username=' + u + '&repo=' + r + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="' + r + '" /></a>').join("\n") + '\n</div>\n'; }},
+  "footer-plate": {make(t, u){
     return '\n<div align="center">\n\n·\n\n*Built with care, updated by machines.*\n\n</div>\n'; }}
 };
-
-const PRESETS = [
-  {name:"Night Sky", desc:"Your Sky as the centrepiece — the signature", theme:"midnight-gold", blocks:["own-sky","typing","own-strip","about","own-stack","own-stats-pair","own-pins","footer-plate"]},
-  {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","own-strip","about","own-stack","own-glass-card","own-stats-pair","own-wave"]},
-  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","own-strip","about","own-stack","own-pins","own-stats-pair","footer-plate"]},
-  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","own-strip","about","own-stack","own-stats-pair","own-streak","own-graph","footer-wave"]},
-  {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","own-stack","stats-row","graph","trophies","snake","footer-wave"]},
-  {name:"Terminal Hacker", desc:"Monospace, minimal, no decoration", theme:"emerald", blocks:["header-terminal","about","own-stack","stats-row","streak","footer-plate"]},
-  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","own-pins","projects-table","own-stack","own-stats-pair","connect","footer-wave"]},
-  {name:"Maintainer", desc:"Work on top, activity as proof", theme:"emerald", blocks:["header-wave","about","own-pins","own-graph","own-stats-pair","trophies","connect","footer-wave"]},
-  {name:"Student Journey", desc:"Streak front and centre, friendly", theme:"ocean", blocks:["typing","about","own-stack","streak","stats-row","quote","footer-wave"]},
-  {name:"Creative Portfolio", desc:"Type and air do the talking", theme:"rose-gold", blocks:["header-serif","about","projects-table","own-stack","stats-wide","connect","footer-plate"]},
-  {name:"Pastel Friendly", desc:"Light, soft, welcoming", theme:"pastel", blocks:["header-wave","typing","about","own-stack","stats-row","streak","quote","footer-wave"]},
-  {name:"Editorial Paper", desc:"Black on white, like a magazine", theme:"paper", blocks:["header-serif","about","projects-table","stats-row","connect","footer-plate"]},
-  {name:"Show-off Max", desc:"Everything, including the city and Pac-Man", theme:"dracula", blocks:["header-venom","typing","own-strip","own-stack","stats-wide","trophies","city","pacman","graph","streak","footer-wave"]},
-  {name:"One Screen", desc:"The whole profile, no scrolling", theme:"nord", blocks:["header-serif","about","own-stack","stats-row","footer-plate"]}
-];
-
-function applyPreset(p) {
-  themeKey = p.theme; layout = p.blocks.slice();
-  $("colorhex").value = THEMES[p.theme].accent; $("colorpick").value = "#" + THEMES[p.theme].accent;
-  document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === p.theme ? "true" : "false"));
-  renderSections(); render(); updateHeroSky();
-}
-function renderThemes() {
-  const el = $("themes"); el.innerHTML = "";
-  Object.entries(THEMES).forEach(([k, t]) => {
-    const b = document.createElement("button"); b.type = "button"; b.className = "theme"; b.dataset.k = k;
-    b.setAttribute("aria-pressed", k === themeKey);
-    b.innerHTML = '<span class="swatch" style="background:#' + t.accent + '"></span>' + t.label;
-    b.onclick = () => { themeKey = k; $("colorhex").value = t.accent; $("colorpick").value = "#" + t.accent; document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === k ? "true" : "false")); render(); updateHeroSky(); };
-    el.appendChild(b);
-  });
-  const ab = document.createElement("button"); ab.type = "button"; ab.className = "theme";
-  ab.innerHTML = '<span class="swatch" style="background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)"></span>' + t("auto_accent");
-  ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); updateHeroSky(); };
-  el.appendChild(ab);
-}
-function renderPresets() {
-  const el = $("presets"); el.innerHTML = "";
-  PRESETS.forEach(p => {
-    const b = document.createElement("button"); b.type = "button"; b.className = "preset";
-    b.innerHTML = p.name + "<small>" + p.desc + "</small>";
-    b.onclick = () => applyPreset(p);
-    el.appendChild(b);
-  });
-}
-// ---- Sections: the calm layout panel. One switch per section, fixed order. ----
-const SECTIONS = [
-  {name:"sec_sky", desc:"sec_sky_d", blocks:["own-sky"]},
-  {name:"sec_typing", desc:"sec_typing_d", blocks:["typing"]},
-  {name:"sec_about", desc:"sec_about_d", blocks:["about"]},
-  {name:"sec_numbers", desc:"sec_numbers_d", blocks:["own-strip"]},
-  {name:"sec_stack", desc:"sec_stack_d", blocks:["own-stack"]},
-  {name:"sec_stats", desc:"sec_stats_d", blocks:["own-stats-pair"]},
-  {name:"sec_projects", desc:"sec_projects_d", blocks:["own-pins"]},
-  {name:"sec_activity", desc:"sec_activity_d", blocks:["own-streak","own-graph"]},
-  {name:"sec_footer", desc:"sec_footer_d", blocks:["footer-plate"]}
-];
-const EXTRAS = [
-  {name:"ex_snake", blocks:["snake"]},
-  {name:"ex_pacman", blocks:["pacman"]},
-  {name:"ex_trophies", blocks:["trophies"]},
-  {name:"ex_quote", blocks:["quote"]},
-  {name:"ex_blog", blocks:["blog"]},
-  {name:"ex_connect", blocks:["connect"]},
-  {name:"ex_city", blocks:["city"]},
-  {name:"ex_wave", blocks:["header-wave"]}
-];
-function partOn(blocks) { return blocks.every(id => layout.includes(id)); }
-function composeLayout() {
-  const next = [];
-  SECTIONS.forEach(sec => { if (partOn(sec.blocks)) next.push(...sec.blocks); });
-  EXTRAS.forEach(x => { if (partOn(x.blocks)) next.push(...x.blocks); });
-  return next;
-}
-function setPart(blocks, on) {
-  blocks.forEach(id => {
-    const i = layout.indexOf(id);
-    if (on && i < 0) layout.push(id);
-    if (!on && i >= 0) layout.splice(i, 1);
-  });
-  layout = composeLayout();
-}
-function renderSections() {
-  const el = $("sections"); if (!el) return;
-  el.innerHTML = "";
-  SECTIONS.forEach(sec => {
-    const row = document.createElement("label"); row.className = "secrow";
-    const info = document.createElement("span"); info.className = "secinfo";
-    info.innerHTML = '<span class="secname">' + t(sec.name) + '</span><small>' + t(sec.desc) + '</small>';
-    const sw = document.createElement("span"); sw.className = "switch";
-    const inp = document.createElement("input"); inp.type = "checkbox"; inp.checked = partOn(sec.blocks);
-    inp.onchange = () => { setPart(sec.blocks, inp.checked); renderSections(); render(); };
-    const track = document.createElement("span"); track.className = "track";
-    sw.appendChild(inp); sw.appendChild(track);
-    row.appendChild(info); row.appendChild(sw);
-    el.appendChild(row);
-  });
-  const ex = $("extras"); if (!ex) return;
-  ex.innerHTML = "";
-  EXTRAS.forEach(x => {
-    const row = document.createElement("label"); row.className = "exrow";
-    const inp = document.createElement("input"); inp.type = "checkbox"; inp.checked = partOn(x.blocks);
-    inp.onchange = () => { setPart(x.blocks, inp.checked); renderSections(); render(); };
-    row.appendChild(inp);
-    row.appendChild(document.createTextNode(t(x.name)));
-    ex.appendChild(row);
-  });
-}
-let activeTemplate = null;
-function templateMd() {
-  let md = activeTemplate.md;
-  md = md.split("YOUR_USERNAME").join(user());
-  md = md.split("Your Name").join(dispName());
-  md = md.split("your-name").join(user().toLowerCase());
-  return md;
-}
+const COMPOSITION = ["own-sky", "typing", "about", "own-strip", "own-pins", "footer-plate"];
 function build() {
-  if (activeTemplate) return templateMd();
   const t = T(), u = user();
-  return layout.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
+  return COMPOSITION.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
 }
-function mdToHtml(md) {
-  md = md.replace(/```\w*\n([\s\S]*?)```/g, '<pre style="background:#07090c;border:1px solid #30363d;border-radius:8px;padding:10px;font-size:12px;overflow:auto">$1</pre>');
-  return md
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/^## (.*)$/gm, '<h2>$1</h2>')
-    .replace(/^\| (.*) \|$/gm, "")
-    .replace(/^- (.*)$/gm, '<p style="color:#c9d1d9;margin:4px 0">• $1</p>')
-    .replace(/\*\*\[([^\]]+)\]\(([^)]+)\)\*\*/g, '<a href="$2">$1</a>')
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-    .replace(/\*([^*]+)\*/g, '<i>$1</i>');
-}
-function render() {
-  const md = build();
-  $("output").textContent = md;
-  $("previewinner").innerHTML = mdToHtml(md);
-}
-
-const LANG2ICON = {Python:"python",JavaScript:"javascript",TypeScript:"typescript",HTML:"html",CSS:"css",Go:"go",Rust:"rust",Java:"java",C:"c","C++":"cpp","C#":"cs",PHP:"php",Ruby:"ruby",Swift:"swift",Kotlin:"kotlin",Dart:"dart",Shell:"bash",Lua:"lua",Scala:"scala",Vue:"vue",Svelte:"svelte",Dockerfile:"docker"};
-async function fetchProfile() {
-  const u = user();
-  if (!u || u === "YOUR_USERNAME") { $("fetchmsg").textContent = t("fetch_first"); return; }
-  $("fetchmsg").textContent = t("fetching", {u});
-  try {
-    const [ur, rr, hasProfileRepo] = await Promise.all([
-      fetch("https://api.github.com/users/" + u).then(r => { if (!r.ok) throw new Error("user"); return r.json(); }),
-      fetch("https://api.github.com/users/" + u + "/repos?per_page=100&sort=pushed").then(r => r.json()),
-      fetch("https://api.github.com/repos/" + u + "/" + u).then(r => r.ok).catch(() => false)
-    ]);
-    const repos = Array.isArray(rr) ? rr.filter(x => !x.fork) : [];
-    const langCount = {};
-    repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
-    const langs = Object.entries(langCount).sort((a, b) => b[1] - a[1]).map(x => x[0]);
-    const icons = langs.map(l => LANG2ICON[l]).filter(Boolean);
-    const top = repos.filter(r => r.name.toLowerCase() !== u.toLowerCase()).sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0)).slice(0, 4);
-    profile = { name: ur.name, blog: ur.blog, twitter: ur.twitter_username, location: ur.location,
-      topRepos: top.map(r => ({name: r.name, description: r.description, stars: r.stargazers_count || 0, url: r.html_url})) };
-    $("name").value = ur.name || u;
-    $("about").value = ur.bio || "";
-    $("lines").value = [ur.bio ? ur.bio.replace(/\.*$/, "") : "Developer", "Building in public", "Always learning"].join("\n");
-    $("skills").value = Array.from(new Set([].concat(icons, ["git", "github"]))).slice(0, 10).join(",");
-    $("repos").value = top.map(r => r.name).join(",");
-
-    // ---- Profile score: an honest audit, not a vanity number ----
-    (function score() {
-      const sample = repos.slice(0, 20);
-      const withDesc = sample.filter(r => r.description).length;
-      const recent = repos.some(r => (Date.now() - new Date(r.pushed_at).getTime()) < 30 * 24 * 3600 * 1000);
-      const checks = [
-        {label: "Profile README exists (the repository named " + u + ")", ok: !!hasProfileRepo, pts: 18, tip: "Create it — it is the whole top of your profile. The Publish button below can do it for you."},
-        {label: "Bio written", ok: !!ur.bio, pts: 12, tip: "Add one line to your GitHub bio: what you build, for whom."},
-        {label: "Display name set", ok: !!ur.name, pts: 6, tip: "Set your name in GitHub settings — profiles with real names get followed more."},
-        {label: "Location set", ok: !!ur.location, pts: 6, tip: "A city makes you a person, not a handle."},
-        {label: "Website or blog linked", ok: !!ur.blog, pts: 8, tip: "Link your site or best project page in your profile's website field."},
-        {label: "At least 5 public repositories", ok: ur.public_repos >= 5, pts: 10, tip: "Ship small things in public; five finished toys beat one secret masterpiece."},
-        {label: "Something pushed in the last 30 days", ok: recent, pts: 14, tip: "A living profile gets followed. One small commit this week changes this line."},
-        {label: "Repository descriptions (" + withDesc + " of " + sample.length + " have one)", ok: sample.length > 0 && withDesc / sample.length >= 0.7, pts: 14, tip: "Repos without a one-line description cannot be featured or understood. Fill them in the About box of each repo."},
-        {label: "Works in 3 or more languages", ok: Object.keys(langCount).length >= 3, pts: 6, tip: "Breadth shows range — one small project in a new language is enough."},
-        {label: "At least one starred repository", ok: repos.some(r => (r.stargazers_count || 0) > 0), pts: 6, tip: "Stars come from READMEs that show the thing working. Add a screenshot or demo link."}
-      ];
-      const total = checks.reduce((sum, c) => sum + (c.ok ? c.pts : 0), 0);
-      $("scorenum").textContent = total;
-      $("scoreword").textContent = total >= 85 ? t("score85") : total >= 65 ? t("score65") : total >= 45 ? t("score45") : t("score0");
-      $("scorelist").innerHTML = checks.map(c => (c.ok ? "✓ " : "✕ ") + c.label + (c.ok ? "" : ' — <span style="color:var(--bone)">' + c.tip + "</span>")).join("<br>");
-      $("scorepanel").style.display = "block";
-    })();
-    skyUser = u;
-    showStudio(); renderLooks(); updateHeroSky();
-    $("fetchmsg").textContent = t("fetch_done");
-    setTimeout(() => $("scorepanel").scrollIntoView({behavior: "smooth", block: "center"}), 60);
-    render();
-  } catch (e) {
-    $("fetchmsg").textContent = t("fetch_fail");
-  }
-}
-$("fetchbtn").onclick = fetchProfile;
-$("username").addEventListener("keydown", e => { if (e.key === "Enter") fetchProfile(); });
-document.querySelectorAll("input,textarea").forEach(el => el.addEventListener("input", render));
-$("colorpick").addEventListener("input", () => { $("colorhex").value = $("colorpick").value.slice(1).toUpperCase(); render(); });
-$("colorhex").addEventListener("input", () => { const a = T().accent; $("colorpick").value = "#" + a; render(); });
-$("copy").onclick = async () => {
-  try { await navigator.clipboard.writeText(build()); $("status").textContent = t("copied", {u: user()}); }
-  catch { $("status").textContent = t("clip_blocked"); }
-};
-$("download").onclick = () => {
-  const blob = new Blob([build()], {type: "text/markdown"});
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "README.md"; a.click(); URL.revokeObjectURL(a.href);
-};
-
-
-// ---- Write it for me: tone variants generated from the fetched data ----
-let toneIdx = 0;
-$("writeforme").onclick = () => {
-  if (!profile) { $("writehint").textContent = t("write_first"); return; }
-  const first = ($("skills").value.split(",")[0] || "code");
-  const langName = {python:"Python",javascript:"JavaScript",typescript:"TypeScript",html:"HTML",css:"CSS",go:"Go",rust:"Rust",java:"Java",php:"PHP",ruby:"Ruby",swift:"Swift",kotlin:"Kotlin",dart:"Dart"}[first] || first;
-  const topRepo = (profile.topRepos && profile.topRepos[0]) ? profile.topRepos[0].name : "open source";
-  const place = profile.location ? " Based in " + profile.location + "." : "";
-  const tones = [
-    {name:"Professional", lines: [langName + " developer", "Building " + topRepo + " and other open-source work", "Focused on finished, useful software"], about: "I am a " + langName + " developer who ships small, finished open-source projects — currently " + topRepo + "." + place + " This profile is my workshop: everything here is real, working code."},
-    {name:"Friendly", lines: ["I build things with " + langName, "Learning in public, one repo at a time", "Say hi — I answer"], about: "Hello! I make things with " + langName + " and share them here as I learn." + place + " My favourite project right now is " + topRepo + ". If something here is useful to you, a star makes my day."},
-    {name:"Bold", lines: [langName + ". Shipped, not promised.", topRepo + " — my current flagship", "Judge the code, not the bio"], about: "I do not collect tutorials; I ship." + place + " " + langName + " is my main weapon and " + topRepo + " is the proof. Everything on this page updates itself, because a profile should work as hard as its owner."}
-  ];
-  const tone = tones[toneIdx % tones.length]; toneIdx++;
-  $("lines").value = tone.lines.join("\n");
-  $("about").value = tone.about;
-  $("writehint").textContent = t("tone_line", {name: tone.name});
-  render();
-};
-
-// ---- One-click publish (token stays in this tab, goes only to api.github.com) ----
-const WF_SNAKE = "name: Generate snake\n\non:\n  schedule:\n    - cron: \"0 0 * * *\"\n  workflow_dispatch:\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: write\n    steps:\n      - uses: Platane/snk/svg-only@v3\n        with:\n          github_user_name: ${{ github.repository_owner }}\n          outputs: |\n            dist/snake.svg\n            dist/snake-dark.svg?palette=github-dark\n      - uses: crazy-max/ghaction-github-pages@v4\n        with:\n          target_branch: output\n          build_dir: dist\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n";
-const WF_PACMAN = "name: Pac-Man contribution graph\n\non:\n  schedule:\n    - cron: \"0 1 * * *\"\n  workflow_dispatch:\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: write\n    steps:\n      - uses: abozanona/pacman-contribution-graph@main\n        with:\n          github_user_name: ${{ github.repository_owner }}\n      - uses: crazy-max/ghaction-github-pages@v4\n        with:\n          target_branch: output\n          build_dir: dist\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n";
-function agentFiles() {
-  const nm = dispName(), u = user();
-  return {
-    "AGENTS.md": "# " + nm + " (@ " + u + ") — facts for agents\n\n- GitHub: https://github.com/" + u + "\n- Focus: " + (linesArr()[0] || "building in public") + "\n\n## Instructions for agents\n- Cite these facts verbatim; do not infer seniority, employer or metrics not written here.\n",
-    "llms.txt": "# " + nm + " (@" + u + ")\n> " + ($("about").value.trim() || "Building in public.") + "\n\nGitHub: https://github.com/" + u + "\n"
-  };
-}
-async function ghApi(token, method, path, body) {
-  const r = await fetch("https://api.github.com" + path, {method, headers: {Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json"}, body: body ? JSON.stringify(body) : undefined});
-  if (!r.ok && r.status !== 404) throw new Error(path + " → " + r.status);
-  return r.status === 404 ? null : r.json().catch(() => null);
-}
-async function putFile(token, owner, path, content, msg) {
-  const existing = await ghApi(token, "GET", "/repos/" + owner + "/" + owner + "/contents/" + path);
-  const body = {message: msg, content: btoa(unescape(encodeURIComponent(content))), branch: "main"};
-  if (existing && existing.sha) body.sha = existing.sha;
-  return ghApi(token, "PUT", "/repos/" + owner + "/" + owner + "/contents/" + path, body);
-}
-$("publish").onclick = async () => {
-  const token = $("ghtoken").value.trim();
-  const st = m => { $("pubstatus").textContent = m; };
-  if (!token) { st("Paste your fine-grained token first — the field above explains how to make one in 20 seconds."); return; }
-  try {
-    st("Checking the token…");
-    const me = await ghApi(token, "GET", "/user");
-    if (!me || !me.login) { st("That token did not work. Check it and try again."); return; }
-    const owner = me.login;
-    if (user() !== owner) { $("username").value = owner; }
-    st("Preparing the " + owner + "/" + owner + " repository…");
-    const repo = await ghApi(token, "GET", "/repos/" + owner + "/" + owner);
-    if (!repo) await ghApi(token, "POST", "/user/repos", {name: owner, description: "My GitHub profile", private: false, auto_init: true});
-    const done = [];
-    await putFile(token, owner, "README.md", build(), "Profile README"); done.push("README.md");
-    if ($("pubsnake").checked) { try { await putFile(token, owner, ".github/workflows/snake.yml", WF_SNAKE, "Add snake workflow"); done.push("snake workflow"); } catch (e) { done.push("snake workflow FAILED (token needs Workflows permission)"); } }
-    if ($("pubpacman").checked) { try { await putFile(token, owner, ".github/workflows/pacman.yml", WF_PACMAN, "Add Pac-Man workflow"); done.push("Pac-Man workflow"); } catch (e) { done.push("Pac-Man workflow FAILED (token needs Workflows permission)"); } }
-    if ($("pubagent").checked) { const af = agentFiles(); for (const [path, content] of Object.entries(af)) { await putFile(token, owner, path, content, "Add " + path); done.push(path); } }
-    $("ghtoken").value = "";
-    st("Published: " + done.join(", ") + ". Your profile is live at https://github.com/" + owner);
-  } catch (e) {
-    st("Publish stopped: " + e.message + ". Nothing is stored; check the token's repository access and permissions.");
-  }
-};
-
-// ---- Template gallery ----
-function renderGallery() {
-  const g = $("gallery"); if (!g || !window.TEMPLATES) return;
-  g.innerHTML = "";
-  window.TEMPLATES.forEach(tpl => {
-    const d = document.createElement("div");
-    d.style.cssText = "border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:13px";
-    d.innerHTML = "<strong>" + tpl.name + "</strong><p style=\"color:var(--muted);font-size:12.5px;line-height:1.45;margin:6px 0 10px\">" + tpl.desc + "</p>";
-    const b = document.createElement("button"); b.className = "addbtn"; b.style.width = "100%"; b.textContent = t("use_template");
-    b.onclick = () => {
-      activeTemplate = tpl;
-      $("tplbanner").style.display = "block";
-      $("tplbanner").innerHTML = '<div style="border:1px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:13.5px">' + t("tpl_showing", {name: tpl.name}) + ' <button class="mini" style="width:auto;padding:0 10px;margin-left:8px" id="tplback">' + t("tpl_back") + '</button></div>';
-      $("tplback").onclick = () => { activeTemplate = null; $("tplbanner").style.display = "none"; $("tplstatus").textContent = ""; render(); };
-      $("tplstatus").textContent = t("tpl_loaded", {name: tpl.name});
-      render();
-      document.getElementById("preview").scrollIntoView({behavior: "smooth", block: "start"});
-    };
-    d.appendChild(b); g.appendChild(d);
-  });
-}
-// ---- Preview width: GitHub renders profiles at 896px, phones at ~390px ----
-$("w-desktop").onclick = () => { $("previewinner").style.maxWidth = "896px"; };
-$("w-mobile").onclick = () => { $("previewinner").style.maxWidth = "390px"; };
-// ---- Auto accent from the username itself ----
-function deriveAccent(name) {
-  let h = 0; for (const c of name) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  const hue = h % 360; const s = 0.62, l = 0.62;
-  const f = n => { const k = (n + hue / 30) % 12; const a = s * Math.min(l, 1 - l); const v = l - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1))); return Math.round(255 * v).toString(16).padStart(2, "0"); };
-  return (f(0) + f(8) + f(4)).toUpperCase();
-}
-
-
-
 
 // ---- Languages: 10 interface languages, auto-detected, remembered ----
 let LANG = "en";
@@ -791,35 +232,12 @@ function applyLang(l) {
   document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   const sel = $("langsel"); if (sel) sel.value = l;
   document.documentElement.lang = l;
-  if (typeof renderThemes === "function") renderThemes();
-  if (typeof renderGallery === "function") renderGallery();
-  if (typeof renderSections === "function") renderSections();
 }
 
-// ---- The calm flow: hero sky, result, five looks, advanced ----
-const API_BASE = "https://github-profile-studio-api.vercel.app/api";
-let skyUser = "Dongdarealest";
-let currentLook = "night";
-const LOOKS = [
-  {id: "night", name: "Night Sky", preset: "Night Sky"},
-  {id: "glass", name: "Liquid Glass", preset: "Liquid Glass", skyBg: "101623"},
-  {id: "classic", name: "Midnight Classic", preset: "Dark Classic"},
-  {id: "paper", name: "Paper Editorial", preset: "Editorial Paper"},
-  {id: "neon", name: "Neon Cyber", preset: "Neon Cyber"}
-];
-function lookTheme(lk) {
-  const p = PRESETS.find(x => x.name === lk.preset);
-  const th = Object.assign({}, THEMES[p.theme]);
-  if (lk.skyBg) th.bg = lk.skyBg;
-  return th;
-}
-function skyUrlFor(u, th) {
-  return API_BASE + "/sky?username=" + encodeURIComponent(u) + "&color=" + th.accent + "&bg=" + th.bg + "&text=" + th.text;
-}
-function heroSkyUrl() {
-  const t = T();
-  const bg = currentLook === "glass" ? "101623" : t.bg;
-  return API_BASE + "/sky?username=" + encodeURIComponent(skyUser) + "&color=" + t.accent + "&bg=" + bg + "&text=" + t.text;
+// ---- Hero sky ----
+function skyUrl() {
+  const th = T();
+  return API_BASE + "/sky?username=" + encodeURIComponent(skyUser) + "&color=" + th.accent + "&bg=" + th.bg + "&text=" + th.text;
 }
 let skyTimer = null;
 function updateHeroSky() {
@@ -827,85 +245,131 @@ function updateHeroSky() {
   skyTimer = setTimeout(() => {
     const img = $("herosky");
     if (!img) return;
-    const url = heroSkyUrl();
+    const url = skyUrl();
     if (img.getAttribute("src") !== url) img.src = url;
   }, 200);
 }
-function renderLooks() {
-  const el = $("looks"); if (!el) return;
-  el.innerHTML = "";
-  LOOKS.forEach(lk => {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "lookcard" + (lk.id === currentLook ? " active" : "");
-    card.dataset.id = lk.id;
-    card.innerHTML = '<span class="lookstrip"><img loading="lazy" src="' + skyUrlFor(skyUser, lookTheme(lk)) + '" alt="" /></span><span class="lookname">' + lk.name + '</span>';
-    card.onclick = () => {
-      currentLook = lk.id;
-      const p = PRESETS.find(x => x.name === lk.preset);
-      if (p) applyPreset(p);
-      document.querySelectorAll(".lookcard").forEach(c => c.classList.toggle("active", c.dataset.id === lk.id));
-      updateHeroSky();
-    };
-    el.appendChild(card);
-  });
-}
-function renderSwatches() {
-  const el = $("swatches"); if (!el) return;
-  el.innerHTML = "";
-  Object.entries(THEMES).forEach(([k, th]) => {
-    const b = document.createElement("button");
-    b.type = "button"; b.className = "dot" + (k === themeKey ? " active" : ""); b.dataset.k = k; b.title = th.label;
-    b.style.background = "#" + th.accent;
-    b.onclick = () => {
-      themeKey = k; $("colorhex").value = th.accent; $("colorpick").value = "#" + th.accent;
-      document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === k ? "true" : "false"));
-      document.querySelectorAll(".dot").forEach(d => d.classList.toggle("active", d.dataset.k === k));
-      render(); updateHeroSky();
-    };
-    el.appendChild(b);
-  });
-  const ab = document.createElement("button");
-  ab.type = "button"; ab.className = "dot"; ab.title = t("auto_accent");
-  ab.style.background = "conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)";
-  ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); updateHeroSky(); };
-  el.appendChild(ab);
-}
-function showStudio() { $("result").style.display = "block"; }
-function openYours() { $("yours").style.display = "block"; }
-function openAdvanced() { $("advanced").style.display = "block"; }
-$("yourslink").onclick = e => {
-  e.preventDefault();
-  const y = $("yours");
-  const show = y.style.display === "none";
-  y.style.display = show ? "block" : "none";
-  if (show) y.scrollIntoView({behavior: "smooth", block: "start"});
-};
-$("advlink").onclick = e => {
-  e.preventDefault();
-  openAdvanced();
-  $("advanced").scrollIntoView({behavior: "smooth", block: "start"});
-};
-$("scratch").onclick = e => {
-  e.preventDefault();
-  showStudio(); openYours(); render();
-  $("result").scrollIntoView({behavior: "smooth", block: "start"});
-};
-$("copy2").onclick = () => $("copy").click();
-$("pub2").onclick = () => {
-  openYours(); openAdvanced();
-  setTimeout(() => $("ghtoken").scrollIntoView({behavior: "smooth", block: "center"}), 60);
-};
-$("colorpick").addEventListener("change", updateHeroSky);
-$("colorhex").addEventListener("change", updateHeroSky);
 
-// Defaults: the signature look, fully editable, before any fetch.
-$("name").value = "Your Name";
-$("lines").value = "Developer\nOpen source builder\nAlways learning";
-$("about").value = "I build small, finished things and learn in public.";
-$("skills").value = "python,javascript,html,css,git,github";
-$("repos").value = "";
-renderThemes(); renderPresets(); renderGallery(); renderLooks(); renderSwatches(); applyPreset(PRESETS[0]);
+// ---- Fetch: username in, everything filled ----
+async function fetchProfile() {
+  const u = user();
+  if (!u || u === "YOUR_USERNAME") { $("fetchmsg").textContent = t("fetch_first"); return; }
+  $("fetchmsg").textContent = t("fetching", {u});
+  try {
+    const [ur, rr, hasProfileRepo] = await Promise.all([
+      fetch("https://api.github.com/users/" + u).then(r => { if (!r.ok) throw new Error("user"); return r.json(); }),
+      fetch("https://api.github.com/users/" + u + "/repos?per_page=100&sort=pushed").then(r => r.json()),
+      fetch("https://api.github.com/repos/" + u + "/" + u).then(r => r.ok).catch(() => false)
+    ]);
+    const repos = Array.isArray(rr) ? rr.filter(x => !x.fork) : [];
+    const langCount = {};
+    repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1; });
+    const top = repos.filter(r => r.name.toLowerCase() !== u.toLowerCase()).sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0)).slice(0, 4);
+    profile = { name: ur.name, blog: ur.blog, twitter: ur.twitter_username, location: ur.location,
+      topRepos: top.map(r => ({name: r.name, description: r.description, stars: r.stargazers_count || 0, url: r.html_url})) };
+    data.about = ur.bio || "";
+    data.lines = [ur.bio ? ur.bio.replace(/\.*$/, "") : "Developer", "Building in public", "Always learning"];
+    data.repos = top.map(r => r.name);
+
+    // ---- Profile score: an honest audit, not a vanity number ----
+    (function score() {
+      const sample = repos.slice(0, 20);
+      const withDesc = sample.filter(r => r.description).length;
+      const recent = repos.some(r => (Date.now() - new Date(r.pushed_at).getTime()) < 30 * 24 * 3600 * 1000);
+      const checks = [
+        {label: t("sc1", {u}), ok: !!hasProfileRepo, pts: 18, tip: t("st1")},
+        {label: t("sc2"), ok: !!ur.bio, pts: 12, tip: t("st2")},
+        {label: t("sc3"), ok: !!ur.name, pts: 6, tip: t("st3")},
+        {label: t("sc4"), ok: !!ur.location, pts: 6, tip: t("st4")},
+        {label: t("sc5"), ok: !!ur.blog, pts: 8, tip: t("st5")},
+        {label: t("sc6"), ok: ur.public_repos >= 5, pts: 10, tip: t("st6")},
+        {label: t("sc7"), ok: recent, pts: 14, tip: t("st7")},
+        {label: t("sc8", {a: withDesc, b: sample.length}), ok: sample.length > 0 && withDesc / sample.length >= 0.7, pts: 14, tip: t("st8")},
+        {label: t("sc9"), ok: Object.keys(langCount).length >= 3, pts: 6, tip: t("st9")},
+        {label: t("sc10"), ok: repos.some(r => (r.stargazers_count || 0) > 0), pts: 6, tip: t("st10")}
+      ];
+      const total = checks.reduce((sum, c) => sum + (c.ok ? c.pts : 0), 0);
+      $("scorenum").textContent = total;
+      $("scoreword").textContent = total >= 85 ? t("score85") : total >= 65 ? t("score65") : total >= 45 ? t("score45") : t("score0");
+      $("scorelist").innerHTML = checks.map(c => (c.ok ? "✓ " : "✕ ") + c.label + (c.ok ? "" : ' — <span style="color:var(--bone)">' + c.tip + "</span>")).join("<br>");
+      $("scorepanel").style.display = "block";
+    })();
+    skyUser = u;
+    $("result").style.display = "block";
+    updateHeroSky();
+    $("fetchmsg").textContent = t("fetch_done");
+    setTimeout(() => $("scorepanel").scrollIntoView({behavior: "smooth", block: "center"}), 60);
+  } catch (e) {
+    $("fetchmsg").textContent = t("fetch_fail");
+  }
+}
+$("fetchbtn").onclick = fetchProfile;
+$("username").addEventListener("keydown", e => { if (e.key === "Enter") fetchProfile(); });
+
+// ---- Colourway: three dots and a hex, nothing more ----
+document.querySelectorAll(".dot").forEach(d => {
+  d.onclick = () => {
+    accent = d.dataset.accent;
+    $("colorhex").value = accent;
+    document.querySelectorAll(".dot").forEach(x => x.classList.toggle("active", x === d));
+    updateHeroSky();
+  };
+});
+$("colorhex").addEventListener("input", () => {
+  const raw = $("colorhex").value.replace(/^#/, "").toUpperCase();
+  if (/^[0-9A-F]{6}$/.test(raw)) {
+    accent = raw;
+    document.querySelectorAll(".dot").forEach(x => x.classList.toggle("active", x.dataset.accent === raw));
+    updateHeroSky();
+  }
+});
+
+// ---- Copy ----
+$("copy2").onclick = async () => {
+  try { await navigator.clipboard.writeText(build()); $("status2").textContent = t("copied", {u: user()}); }
+  catch { $("status2").textContent = t("clip_blocked"); }
+};
+
+// ---- One-click publish (token stays in this tab, goes only to api.github.com) ----
+async function ghApi(token, method, path, body) {
+  const r = await fetch("https://api.github.com" + path, {method, headers: {Authorization: "Bearer " + token, Accept: "application/vnd.github+json", "Content-Type": "application/json"}, body: body ? JSON.stringify(body) : undefined});
+  if (!r.ok && r.status !== 404) throw new Error(path + " → " + r.status);
+  return r.status === 404 ? null : r.json().catch(() => null);
+}
+async function putFile(token, owner, path, content, msg) {
+  const existing = await ghApi(token, "GET", "/repos/" + owner + "/" + owner + "/contents/" + path);
+  const body = {message: msg, content: btoa(unescape(encodeURIComponent(content))), branch: "main"};
+  if (existing && existing.sha) body.sha = existing.sha;
+  return ghApi(token, "PUT", "/repos/" + owner + "/" + owner + "/contents/" + path, body);
+}
+$("pub2").onclick = () => {
+  const p = $("pubpanel");
+  const show = p.style.display === "none";
+  p.style.display = show ? "block" : "none";
+  if (show) $("ghtoken").focus();
+};
+$("pubgo").onclick = async () => {
+  const token = $("ghtoken").value.trim();
+  const st = m => { $("pubstatus").textContent = m; };
+  if (!token) { st(t("pub_need")); return; }
+  try {
+    st(t("pub_checking"));
+    const me = await ghApi(token, "GET", "/user");
+    if (!me || !me.login) { st(t("pub_badtoken")); return; }
+    const owner = me.login;
+    if (user() !== owner) { $("username").value = owner; }
+    st(t("pub_preparing", {u: owner}));
+    const repo = await ghApi(token, "GET", "/repos/" + owner + "/" + owner);
+    if (!repo) await ghApi(token, "POST", "/user/repos", {name: owner, description: "My GitHub profile", private: false, auto_init: true});
+    await putFile(token, owner, "README.md", build(), "Profile README");
+    $("ghtoken").value = "";
+    st(t("pub_done", {u: owner}));
+  } catch (e) {
+    st(t("pub_stopped", {e: e.message}));
+  }
+};
+
+// ---- Init language ----
 (function initLang() {
   let l = "en";
   try { l = localStorage.getItem("gps-lang") || (navigator.language || "en").slice(0, 2); } catch (e) {}
@@ -913,7 +377,6 @@ renderThemes(); renderPresets(); renderGallery(); renderLooks(); renderSwatches(
   applyLang(l);
   $("langsel").addEventListener("change", e => applyLang(e.target.value));
 })();
-
 </script>
 </body>
 </html>
