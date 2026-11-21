@@ -10,6 +10,28 @@
 
 </div>
 
+
+<div align="center">
+
+**First, get scored.** The Studio audits any GitHub profile out of 100 — README, bio, repo descriptions, recent activity — and lists the exact fixes. This is the maker's own live score:
+
+<a href="https://dongdarealest.github.io/github-profile-studio/"><img src="https://github-profile-studio-api.vercel.app/api/score?username=Dongdarealest" alt="Profile score" /></a>
+<img src="https://github-profile-studio-api.vercel.app/api/card?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Live stats card, served by the Studio's own API" />
+
+<sub>(For the record: torvalds scores 56. The rubric is open — argue with it in the issues.)</sub>
+
+</div>
+
+## Designs, rendered live
+
+Everything below is a real render from a real account — change the username in any URL and it becomes yours. On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) all twelve designs re-render with *your* data the moment you type your username.
+
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=transparent&height=120&text=Gallery%20Luxury&fontSize=44&fontColor=A98B4F" alt="Gallery Luxury" />
+<img src="https://github-readme-stats.vercel.app/api?username=Dongdarealest&show_icons=true&title_color=A98B4F&icon_color=A98B4F&text_color=E6EDF3&bg_color=0D1117&border_color=30363D" height="165" alt="stats in Midnight Gold" />
+<img src="https://streak-stats.demolab.com?user=Dongdarealest&background=0D1117&border=30363D&ring=A98B4F&fire=A98B4F&currStreakNum=E6EDF3&sideNums=E6EDF3&currStreakLabel=A98B4F&sideLabels=E6EDF3&dates=E6EDF3" height="165" alt="streak in Midnight Gold" />
+</div>
+
 **Your GitHub profile is your portfolio, your résumé and your first impression — all in one page.**
 This kit makes that page beautiful in about 60 seconds, even if you have never written a line of Markdown.
 
