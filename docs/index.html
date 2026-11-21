@@ -378,6 +378,17 @@ const BLOCKS = {
     return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '&style=glass" width="100%" alt="banner" />\n</div>\n'; }},
   "own-glass-card": {label:"Liquid Glass stats card (our own API)", small:"Your live numbers on frosted glass", make(t,u){
     return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '&style=glass" alt="GitHub stats card" />\n</div>\n'; }},
+  "own-stats": {label:"Studio stats — full card (our own API)", small:"Stars, commits, PRs and a rank ring, drawn by the Studio", make(t,u){
+    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/stats?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="GitHub stats" />\n</div>\n'; }},
+  "own-stats-pair": {label:"Studio stats + languages (our own API)", small:"The full pair, one design system", make(t,u){
+    return '\n## GitHub stats\n\n<div align="center">\n<img height="218" src="https://github-profile-studio-api.vercel.app/api/stats?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="stats" />\n<img height="218" src="https://github-profile-studio-api.vercel.app/api/langs?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="languages" />\n</div>\n'; }},
+  "own-streak": {label:"Studio streak (our own API)", small:"Active days and streaks from real push activity", make(t,u){
+    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/streak?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="streak" />\n</div>\n'; }},
+  "own-graph": {label:"Studio activity wave (our own API)", small:"Push activity, last 30 days, as one wave", make(t,u){
+    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/graph?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="activity" />\n</div>\n'; }},
+  "own-pins": {label:"Featured repos · Studio cards (our own API)", small:"Pin cards drawn by the Studio, not a third party", make(t,u){
+    const rs = reposArr(); if (!rs.length) return "";
+    return '\n## Featured projects\n\n<div align="center">\n' + rs.map(r => '<a href="https://github.com/' + u + '/' + r + '"><img src="https://github-profile-studio-api.vercel.app/api/pin?username=' + u + '&repo=' + r + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="' + r + '" /></a>').join("\n") + '\n</div>\n'; }},
   "own-banner": {label:"Studio banner (our own API)", small:"Served by our own service — never a dead third party", make(t,u){
     return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '" width="100%" alt="banner" />\n</div>\n'; }},
   "own-typing": {label:"Studio typing (our own API)", small:"Typewriter lines, hosted by the Studio", make(t,u){
@@ -398,13 +409,13 @@ const BLOCKS = {
 };
 
 const PRESETS = [
-  {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","badges","about","skills","own-glass-card","stats-row","own-wave"]},
-  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","pins","stats-row","footer-plate"]},
-  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","stats-row","streak","graph","footer-wave"]},
+  {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","badges","about","skills","own-glass-card","own-stats-pair","own-wave"]},
+  {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","own-pins","own-stats-pair","footer-plate"]},
+  {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","own-stats-pair","own-streak","own-graph","footer-wave"]},
   {name:"Neon Cyber", desc:"Venom banner, trophies, full telemetry", theme:"tokyo-night", blocks:["header-venom","typing","skills","stats-row","graph","trophies","snake","footer-wave"]},
   {name:"Terminal Hacker", desc:"Monospace, minimal, no decoration", theme:"emerald", blocks:["header-terminal","about","skills","stats-row","streak","footer-plate"]},
-  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","pins","projects-table","skills","stats-row","connect","footer-wave"]},
-  {name:"Maintainer", desc:"Work on top, activity as proof", theme:"emerald", blocks:["header-wave","about","pins","graph","stats-row","trophies","connect","footer-wave"]},
+  {name:"Recruiter Ready", desc:"Projects first, proof right after", theme:"nord", blocks:["header-wave","about","own-pins","projects-table","skills","own-stats-pair","connect","footer-wave"]},
+  {name:"Maintainer", desc:"Work on top, activity as proof", theme:"emerald", blocks:["header-wave","about","own-pins","own-graph","own-stats-pair","trophies","connect","footer-wave"]},
   {name:"Student Journey", desc:"Streak front and centre, friendly", theme:"ocean", blocks:["typing","about","skills","streak","stats-row","quote","footer-wave"]},
   {name:"Creative Portfolio", desc:"Type and air do the talking", theme:"rose-gold", blocks:["header-serif","about","projects-table","skills","stats-wide","connect","footer-plate"]},
   {name:"Pastel Friendly", desc:"Light, soft, welcoming", theme:"pastel", blocks:["header-wave","typing","about","skills","stats-row","streak","quote","footer-wave"]},
