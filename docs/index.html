@@ -144,6 +144,8 @@
     <section class="card">
       <h3>4 · Words (already filled from your GitHub)</h3>
       <p class="hint">Fetched automatically. Edit only if you want different words.</p>
+      <div class="btns" style="margin-bottom:4px"><button class="ghost" id="writeforme" type="button">Write my lines for me</button></div>
+      <p class="hint" id="writehint">Three tones, generated from your real data. Click again for the next tone.</p>
       <label style="display:block;color:var(--muted);font-size:12px;margin:10px 0 5px">DISPLAY NAME</label>
       <input type="text" id="name" placeholder="Your Name" />
       <label style="display:block;color:var(--muted);font-size:12px;margin:12px 0 5px">TYPING LINES, ONE PER LINE</label>
@@ -287,8 +289,12 @@ const BLOCKS = {
   "own-typing": {label:"Studio typing (our own API)", small:"Typewriter lines, hosted by the Studio", make(t,u){
     const ls = linesArr(); if (!ls.length) return "";
     return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/typing?lines=' + ls.map(enc).join(";") + '&color=' + t.accent + '&bg=' + t.bg + '" alt="typing" />\n</div>\n'; }},
-  "own-card": {label:"Studio stats card (our own API)", small:"Live numbers from our own service, username only", make(t,u){
-    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="GitHub stats card" />\n</div>\n'; }},
+  "own-card": {label:"Studio stats card (our own API)", small:"Live numbers from our own service — switches with the viewer's light/dark mode", make(t,u){
+    return '\n<div align="center">\n<picture>\n<source media="(prefers-color-scheme: dark)" srcset="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" />\n<source media="(prefers-color-scheme: light)" srcset="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=FFFFFF&text=111827" />\n<img src="https://github-profile-studio-api.vercel.app/api/card?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="GitHub stats card" />\n</picture>\n</div>\n'; }},
+  "score-badge": {label:"Profile score badge (our own API)", small:"Your live score, as a badge worth showing off", make(t,u){
+    return '\n<div align="center">\n<a href="https://dongdarealest.github.io/github-profile-studio/"><img src="https://github-profile-studio-api.vercel.app/api/score?username=' + u + '" alt="Profile score" /></a>\n</div>\n'; }},
+  "blog": {label:"Latest blog posts (auto-updated)", small:"Needs the blog workflow from the kit — posts refresh themselves", make(t,u){
+    return '\n## Latest writing\n\n<!-- BLOG-POST-LIST:START -->\n<!-- BLOG-POST-LIST:END -->\n\n<sub>Updated automatically by the blog-post workflow — add templates/workflows/blog.yml to your profile repo and set your feed.</sub>\n'; }},
   "own-wave": {label:"Studio wave (our own API)", small:"Animated wave divider and closer", make(t,u){
     return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/wave?color=' + t.accent + '&bg=' + t.bg + '" width="100%" alt="" />\n</div>\n'; }},
   "credit": {label:"Credit line", small:"One quiet line that helps the next person find the Studio", make(t,u){
@@ -461,6 +467,26 @@ $("download").onclick = () => {
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "README.md"; a.click(); URL.revokeObjectURL(a.href);
 };
 
+
+// ---- Write it for me: tone variants generated from the fetched data ----
+let toneIdx = 0;
+$("writeforme").onclick = () => {
+  if (!profile) { $("writehint").textContent = "Fetch your username first (Step 1) — the writer needs your real data."; return; }
+  const first = ($("skills").value.split(",")[0] || "code");
+  const langName = {python:"Python",javascript:"JavaScript",typescript:"TypeScript",html:"HTML",css:"CSS",go:"Go",rust:"Rust",java:"Java",php:"PHP",ruby:"Ruby",swift:"Swift",kotlin:"Kotlin",dart:"Dart"}[first] || first;
+  const topRepo = (profile.topRepos && profile.topRepos[0]) ? profile.topRepos[0].name : "open source";
+  const place = profile.location ? " Based in " + profile.location + "." : "";
+  const tones = [
+    {name:"Professional", lines: [langName + " developer", "Building " + topRepo + " and other open-source work", "Focused on finished, useful software"], about: "I am a " + langName + " developer who ships small, finished open-source projects — currently " + topRepo + "." + place + " This profile is my workshop: everything here is real, working code."},
+    {name:"Friendly", lines: ["I build things with " + langName, "Learning in public, one repo at a time", "Say hi — I answer"], about: "Hello! I make things with " + langName + " and share them here as I learn." + place + " My favourite project right now is " + topRepo + ". If something here is useful to you, a star makes my day."},
+    {name:"Bold", lines: [langName + ". Shipped, not promised.", topRepo + " — my current flagship", "Judge the code, not the bio"], about: "I do not collect tutorials; I ship." + place + " " + langName + " is my main weapon and " + topRepo + " is the proof. Everything on this page updates itself, because a profile should work as hard as its owner."}
+  ];
+  const t = tones[toneIdx % tones.length]; toneIdx++;
+  $("lines").value = t.lines.join("\n");
+  $("about").value = t.about;
+  $("writehint").textContent = "Tone: " + t.name + ". Click again for the next tone — or edit the words freely.";
+  render();
+};
 
 // ---- One-click publish (token stays in this tab, goes only to api.github.com) ----
 const WF_SNAKE = "name: Generate snake\n\non:\n  schedule:\n    - cron: \"0 0 * * *\"\n  workflow_dispatch:\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    permissions:\n      contents: write\n    steps:\n      - uses: Platane/snk/svg-only@v3\n        with:\n          github_user_name: ${{ github.repository_owner }}\n          outputs: |\n            dist/snake.svg\n            dist/snake-dark.svg?palette=github-dark\n      - uses: crazy-max/ghaction-github-pages@v4\n        with:\n          target_branch: output\n          build_dir: dist\n        env:\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\n";
