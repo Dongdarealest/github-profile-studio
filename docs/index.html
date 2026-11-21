@@ -443,7 +443,7 @@ function renderThemes() {
     el.appendChild(b);
   });
   const ab = document.createElement("button"); ab.type = "button"; ab.className = "theme";
-  ab.innerHTML = '<span class="swatch" style="background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)"></span>Auto from my username';
+  ab.innerHTML = '<span class="swatch" style="background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)"></span>' + t("auto_accent");
   ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); };
   el.appendChild(ab);
 }
@@ -461,11 +461,11 @@ function renderLayout() {
   layout.forEach((id, i) => {
     const d = document.createElement("div"); d.className = "blockitem";
     d.innerHTML = '<span class="nm">' + BLOCKS[id].label + '<small>' + BLOCKS[id].small + '</small></span>';
-    const up = document.createElement("button"); up.className = "mini"; up.textContent = "↑"; up.title = "Move up";
+    const up = document.createElement("button"); up.className = "mini"; up.textContent = "↑"; up.title = t("move_up");
     up.onclick = () => { if (i > 0) { [layout[i-1], layout[i]] = [layout[i], layout[i-1]]; renderLayout(); render(); } };
-    const dn = document.createElement("button"); dn.className = "mini"; dn.textContent = "↓"; dn.title = "Move down";
+    const dn = document.createElement("button"); dn.className = "mini"; dn.textContent = "↓"; dn.title = t("move_down");
     dn.onclick = () => { if (i < layout.length - 1) { [layout[i+1], layout[i]] = [layout[i], layout[i+1]]; renderLayout(); render(); } };
-    const rm = document.createElement("button"); rm.className = "mini"; rm.textContent = "✕"; rm.title = "Remove";
+    const rm = document.createElement("button"); rm.className = "mini"; rm.textContent = "✕"; rm.title = t("remove_block");
     rm.onclick = () => { layout.splice(i, 1); renderLayout(); render(); };
     d.appendChild(up); d.appendChild(dn); d.appendChild(rm); el.appendChild(d);
   });
@@ -482,13 +482,12 @@ function templateMd() {
   md = md.split("YOUR_USERNAME").join(user());
   md = md.split("Your Name").join(dispName());
   md = md.split("your-name").join(user().toLowerCase());
-  return "<!-- Built with GitHub Profile Studio — template: " + activeTemplate.name + " -->\n" + md;
+  return md;
 }
 function build() {
   if (activeTemplate) return templateMd();
   const t = T(), u = user();
-  return "<!-- Built with GitHub Profile Studio — https://github.com/Dongdarealest/github-profile-studio -->\n" +
-    layout.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
+  return layout.map(id => BLOCKS[id].make(t, u)).filter(Boolean).join("\n");
 }
 function mdToHtml(md) {
   md = md.replace(/```\w*\n([\s\S]*?)```/g, '<pre style="background:#07090c;border:1px solid #30363d;border-radius:8px;padding:10px;font-size:12px;overflow:auto">$1</pre>');
@@ -556,7 +555,7 @@ async function fetchProfile() {
       $("scorepanel").style.display = "block";
     })();
     $("avatar").src = ur.avatar_url;
-    $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>@" + u + " · " + ur.public_repos + " public repos · " + ur.followers + " followers · top languages: " + (langs.slice(0, 3).join(", ") || "—") + "</span><br><span>Everything below was filled from this. Change nothing, or change anything.</span>";
+    $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>" + t("who_line", {u: u, repos: ur.public_repos, followers: ur.followers, langs: (langs.slice(0, 3).join(", ") || "—")}) + "</span><br><span>" + t("who_note") + "</span>";
     $("profilechip").style.display = "flex";
     showStudio(); renderWall();
     $("fetchmsg").textContent = t("fetch_done");
@@ -573,7 +572,7 @@ $("colorpick").addEventListener("input", () => { $("colorhex").value = $("colorp
 $("colorhex").addEventListener("input", () => { const a = T().accent; $("colorpick").value = "#" + a; render(); });
 $("copy").onclick = async () => {
   try { await navigator.clipboard.writeText(build()); $("status").textContent = t("copied", {u: user()}); }
-  catch { $("status").textContent = "Clipboard blocked — select the text below and copy it manually."; }
+  catch { $("status").textContent = t("clip_blocked"); }
 };
 $("download").onclick = () => {
   const blob = new Blob([build()], {type: "text/markdown"});
@@ -584,7 +583,7 @@ $("download").onclick = () => {
 // ---- Write it for me: tone variants generated from the fetched data ----
 let toneIdx = 0;
 $("writeforme").onclick = () => {
-  if (!profile) { $("writehint").textContent = "Fetch your username first (Step 1) — the writer needs your real data."; return; }
+  if (!profile) { $("writehint").textContent = t("write_first"); return; }
   const first = ($("skills").value.split(",")[0] || "code");
   const langName = {python:"Python",javascript:"JavaScript",typescript:"TypeScript",html:"HTML",css:"CSS",go:"Go",rust:"Rust",java:"Java",php:"PHP",ruby:"Ruby",swift:"Swift",kotlin:"Kotlin",dart:"Dart"}[first] || first;
   const topRepo = (profile.topRepos && profile.topRepos[0]) ? profile.topRepos[0].name : "open source";
@@ -594,10 +593,10 @@ $("writeforme").onclick = () => {
     {name:"Friendly", lines: ["I build things with " + langName, "Learning in public, one repo at a time", "Say hi — I answer"], about: "Hello! I make things with " + langName + " and share them here as I learn." + place + " My favourite project right now is " + topRepo + ". If something here is useful to you, a star makes my day."},
     {name:"Bold", lines: [langName + ". Shipped, not promised.", topRepo + " — my current flagship", "Judge the code, not the bio"], about: "I do not collect tutorials; I ship." + place + " " + langName + " is my main weapon and " + topRepo + " is the proof. Everything on this page updates itself, because a profile should work as hard as its owner."}
   ];
-  const t = tones[toneIdx % tones.length]; toneIdx++;
-  $("lines").value = t.lines.join("\n");
-  $("about").value = t.about;
-  $("writehint").textContent = "Tone: " + t.name + ". Click again for the next tone — or edit the words freely.";
+  const tone = tones[toneIdx % tones.length]; toneIdx++;
+  $("lines").value = tone.lines.join("\n");
+  $("about").value = tone.about;
+  $("writehint").textContent = t("tone_line", {name: tone.name});
   render();
 };
 
@@ -634,9 +633,9 @@ $("publish").onclick = async () => {
     if (user() !== owner) { $("username").value = owner; }
     st("Preparing the " + owner + "/" + owner + " repository…");
     const repo = await ghApi(token, "GET", "/repos/" + owner + "/" + owner);
-    if (!repo) await ghApi(token, "POST", "/user/repos", {name: owner, description: "My GitHub profile — built with GitHub Profile Studio", private: false, auto_init: true});
+    if (!repo) await ghApi(token, "POST", "/user/repos", {name: owner, description: "My GitHub profile", private: false, auto_init: true});
     const done = [];
-    await putFile(token, owner, "README.md", build(), "Profile README — built with GitHub Profile Studio"); done.push("README.md");
+    await putFile(token, owner, "README.md", build(), "Profile README"); done.push("README.md");
     if ($("pubsnake").checked) { try { await putFile(token, owner, ".github/workflows/snake.yml", WF_SNAKE, "Add snake workflow"); done.push("snake workflow"); } catch (e) { done.push("snake workflow FAILED (token needs Workflows permission)"); } }
     if ($("pubpacman").checked) { try { await putFile(token, owner, ".github/workflows/pacman.yml", WF_PACMAN, "Add Pac-Man workflow"); done.push("Pac-Man workflow"); } catch (e) { done.push("Pac-Man workflow FAILED (token needs Workflows permission)"); } }
     if ($("pubagent").checked) { const af = agentFiles(); for (const [path, content] of Object.entries(af)) { await putFile(token, owner, path, content, "Add " + path); done.push(path); } }
@@ -650,17 +649,18 @@ $("publish").onclick = async () => {
 // ---- Template gallery ----
 function renderGallery() {
   const g = $("gallery"); if (!g || !window.TEMPLATES) return;
+  g.innerHTML = "";
   window.TEMPLATES.forEach(tpl => {
     const d = document.createElement("div");
     d.style.cssText = "border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:13px";
     d.innerHTML = "<strong>" + tpl.name + "</strong><p style=\"color:var(--muted);font-size:12.5px;line-height:1.45;margin:6px 0 10px\">" + tpl.desc + "</p>";
-    const b = document.createElement("button"); b.className = "addbtn"; b.style.width = "100%"; b.textContent = "Use this template";
+    const b = document.createElement("button"); b.className = "addbtn"; b.style.width = "100%"; b.textContent = t("use_template");
     b.onclick = () => {
       activeTemplate = tpl;
       $("tplbanner").style.display = "block";
-      $("tplbanner").innerHTML = '<div style="border:1px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:13.5px">Showing template <strong>' + tpl.name + '</strong> with your data. <button class="mini" style="width:auto;padding:0 10px;margin-left:8px" id="tplback">Back to block builder</button></div>';
+      $("tplbanner").innerHTML = '<div style="border:1px solid var(--gold);border-radius:10px;padding:10px 12px;font-size:13.5px">' + t("tpl_showing", {name: tpl.name}) + ' <button class="mini" style="width:auto;padding:0 10px;margin-left:8px" id="tplback">' + t("tpl_back") + '</button></div>';
       $("tplback").onclick = () => { activeTemplate = null; $("tplbanner").style.display = "none"; $("tplstatus").textContent = ""; render(); };
-      $("tplstatus").textContent = "Template \"" + tpl.name + "\" loaded into the preview and the README output. Copy it below, or publish it in one click.";
+      $("tplstatus").textContent = t("tpl_loaded", {name: tpl.name});
       render();
       document.getElementById("preview").scrollIntoView({behavior: "smooth", block: "start"});
     };
@@ -696,6 +696,9 @@ function applyLang(l) {
   document.querySelectorAll("[data-i18n-ph]").forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   const sel = $("langsel"); if (sel) sel.value = l;
   document.documentElement.lang = l;
+  if (typeof renderThemes === "function") renderThemes();
+  if (typeof renderGallery === "function") renderGallery();
+  if (typeof renderWall === "function") renderWall();
 }
 
 // ---- The Designs wall: live-rendered presets you choose with your eyes ----
@@ -720,13 +723,13 @@ function renderWall() {
     const html = mdToHtml(build()).replace(/<img /g, '<img loading="lazy" ');
     const card = document.createElement("div");
     card.style.cssText = "border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b0f14;cursor:pointer";
-    card.innerHTML = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)"><strong>' + p.name + '</strong><span style="color:var(--gold);font-size:12.5px">Use this design →</span></div>' +
+    card.innerHTML = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)"><strong>' + p.name + '</strong><span style="color:var(--gold);font-size:12.5px">' + t("use_design") + '</span></div>' +
       '<div class="wallframe"><div class="wallscale">' + html + '</div><div style="position:absolute;inset:0"></div></div>';
     card.onclick = () => {
       restore(st);
       applyPreset(p);
       showStudio();
-      if (!profile) { $("username").value = SAMPLE.username; $("fetchmsg").textContent = "Showing sample data in this design. Type YOUR username above and press Build my profile to make it yours."; render(); }
+      if (!profile) { $("username").value = SAMPLE.username; $("fetchmsg").textContent = t("sample_note", {build: t("build")}); render(); }
       $("preview").scrollIntoView({behavior: "smooth", block: "start"});
     };
     wall.appendChild(card);
@@ -744,7 +747,7 @@ let advOpen = false;
 $("custombtn").onclick = () => {
   advOpen = !advOpen;
   document.querySelectorAll(".adv").forEach(c => { c.style.display = advOpen ? "block" : "none"; });
-  $("custombtn").textContent = advOpen ? "Hide customization" : "Customize";
+  $("custombtn").textContent = advOpen ? t("hide_custom") : t("a_customize");
   if (advOpen) document.querySelector(".adv").scrollIntoView({behavior: "smooth", block: "start"});
 };
 $("scratch").onclick = e => { e.preventDefault(); showStudio(); $("mainui").scrollIntoView({behavior: "smooth"}); };
