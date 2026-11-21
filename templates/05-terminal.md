@@ -1,4 +1,4 @@
-<!-- TEMPLATE 05 · TERMINAL — GitHub Profile Studio
+<!-- TEMPLATE 05 · TERMINAL
      Replace YOUR_USERNAME and your-name. Accent: 33FF66 on near-black. Swap the hex to re-skin. -->
 ```bash
 $ whoami
