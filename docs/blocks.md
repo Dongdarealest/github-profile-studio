@@ -218,3 +218,59 @@ When a block ships two versions (the snake does), serve each visitor the right o
   <img alt="contribution snake" src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/output/snake.svg" />
 </picture>
 ```
+
+## 26. Pac-Man eats your contribution graph
+
+The most shared profile element of recent years: your graph becomes an arcade game.
+Needs one Action in your profile repo — see `templates/workflows/pacman.yml` —
+then embed both colour schemes:
+
+```html
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/output/pacman-contribution-graph-dark.svg" />
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/output/pacman-contribution-graph.svg" />
+  <img alt="Pac-Man contribution graph" src="https://raw.githubusercontent.com/YOUR_USERNAME/YOUR_USERNAME/output/pacman-contribution-graph.svg" />
+</picture>
+```
+
+## 27. Your year as a 3D city — isometric skyline
+
+Pure URL, no Action, no token. Verified live at the time of writing; two independent services:
+
+```md
+<img src="https://gitcity.natrajx.in/api/svg?username=YOUR_USERNAME" alt="My year as a city" />
+<img src="https://isometric-contributions-spectrewolf8.onrender.com/api/graph?username=YOUR_USERNAME&theme=dark&stats=true" alt="Isometric contributions" />
+```
+
+Themes on the second: `github`, `dark`, `light`, `neon`, `minimal`, `ocean`, plus `year=` and `width/height=`.
+Young hosted services — if one ever sleeps, the self-hosted fallback is the 3D contribution Action (`yoshi389111/github-profile-3d-contrib`).
+
+## 28. Discord live presence — Lanyard
+
+Join the Lanyard Discord server once (that is how it reads your presence), then it is a URL.
+`bg=` takes any hex, so it obeys the one-accent rule:
+
+```md
+<a href="https://discord.com/users/YOUR_DISCORD_ID"><img src="https://lanyard.cnrad.dev/api/YOUR_DISCORD_ID?theme=dark&bg=0D1117&borderRadius=10px&showDisplayName=true" alt="Discord presence" /></a>
+```
+
+## 29. A joke card in your colours
+
+```md
+<img src="https://readme-jokes.vercel.app/api?theme=dark&qColor=%23A98B4F&aColor=%23E6EDF3&borderColor=%2330363D" alt="A developer joke" />
+```
+
+Note the `%23` — inside this URL a hex colour needs its `#` encoded.
+
+## 30. An agent-readable profile — AGENTS.md + llms.txt
+
+The newest pattern in this kit, and the one nobody else ships yet: your README speaks to
+humans, while two small files in the same repository speak to the AI agents and recruiter
+tools that increasingly read profiles first — structured facts, plus rules for quoting you.
+Copy `templates/agent/AGENTS.md` and `templates/agent/llms.txt`, edit the facts, and add
+one line to your README:
+
+```md
+## For agents
+This profile is agent-readable: see [AGENTS.md](./AGENTS.md) for structured facts, or [llms.txt](./llms.txt) for the short version.
+```
