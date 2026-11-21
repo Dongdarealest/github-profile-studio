@@ -1,6 +1,7 @@
 // GET /api/stats?username=octocat&color=A98B4F&bg=0D1117&text=E6EDF3
-// A full stats card: stars, commits, PRs, issues, followers — plus a rank
-// ring computed from the same numbers. Search failures degrade to "—".
+// "GitHub in Numbers": stars, commits, PRs, issues, followers — composed in
+// the sky language (serif name, star-glyph rows, hairlines, the rank as a
+// moon disc). Search failures degrade to "—".
 function hex(v, fallback) {
   const s = String(v || fallback).replace(/^#/, "");
   return /^[0-9a-fA-F]{6}$/.test(s) ? s : fallback;
@@ -30,23 +31,43 @@ export function statsSvg({ name, stars, commits, prs, issues, followers, color, 
   const score = (stars || 0) * 2 + (followers || 0) * 3 + (prs || 0) * 5 + (commits || 0) / 20;
   const percent = Math.min(97, Math.round(100 * score / (score + 120)));
   const grade = percent >= 90 ? "S" : percent >= 75 ? "A+" : percent >= 60 ? "A" : percent >= 45 ? "B+" : percent >= 30 ? "B" : "C+";
-  const C = 2 * Math.PI * 42;
-  const row = (label, value, y) =>
-    `<text x="36" y="${y}" font-family="Verdana, sans-serif" font-size="14.5" fill="#${tx}" opacity="0.75">${label}</text>` +
-    `<text x="330" y="${y}" text-anchor="end" font-family="Verdana, sans-serif" font-size="15.5" font-weight="bold" fill="#${tx}">${value}</text>`;
+  const displayName = String(name || "").length > 24 ? String(name).slice(0, 23) + "…" : String(name || "");
+  // The sky language's four-point star, used as the row glyph.
+  const star = (x, y) =>
+    `<path transform="translate(${x} ${y})" d="M0 -7 C1.2 -2 2 -1.2 7 0 C2 1.2 1.2 2 0 7 C-1.2 2 -2 1.2 -7 0 C-2 -1.2 -1.2 -2 0 -7 Z" fill="#${c}"/>`;
+  const rowsData = [
+    ["STARS EARNED", fmt(stars)],
+    ["TOTAL COMMITS", fmt(commits)],
+    ["PULL REQUESTS", fmt(prs)],
+    ["TOTAL ISSUES", fmt(issues)],
+    ["FOLLOWERS", fmt(followers)],
+  ];
+  const rows = rowsData.map(([label, value], i) => {
+    const y = 106 + i * 22.5;
+    const hairline = i < rowsData.length - 1
+      ? `<line x1="36" y1="${y + 11}" x2="364" y2="${y + 11}" stroke="#${c}" stroke-opacity="0.16" stroke-width="1"/>`
+      : "";
+    return `${star(44, y - 4)}` +
+      `<text x="62" y="${y}" font-family="Verdana, sans-serif" font-size="11" letter-spacing="2" fill="#${tx}" opacity="0.8">${label}</text>` +
+      `<text x="356" y="${y + 2}" text-anchor="end" font-family="Georgia, serif" font-size="19" fill="#${tx}">${value}</text>` +
+      hairline;
+  }).join("\n  ");
+  const RC = 2 * Math.PI * 44;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="218" viewBox="0 0 500 218">
-  <rect width="500" height="218" rx="10" fill="#${b}" stroke="#${c}" stroke-width="1.5"/>
-  <text x="36" y="42" font-family="Georgia, serif" font-size="21" fill="#${c}">${esc(name)}'s GitHub Stats</text>
-  ${row("Total Stars Earned", fmt(stars), 78)}
-  ${row("Total Commits", fmt(commits), 106)}
-  ${row("Total PRs", fmt(prs), 134)}
-  ${row("Total Issues", fmt(issues), 162)}
-  ${row("Followers", fmt(followers), 190)}
-  <circle cx="418" cy="118" r="42" fill="none" stroke="#${c}" stroke-opacity="0.22" stroke-width="7"/>
-  <circle cx="418" cy="118" r="42" fill="none" stroke="#${c}" stroke-width="7" stroke-linecap="round"
-    stroke-dasharray="${(percent / 100 * C).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 418 118)"/>
-  <text x="418" y="128" text-anchor="middle" font-family="Georgia, serif" font-size="27" font-weight="bold" fill="#${tx}">${grade}</text>
-  <text x="418" y="182" text-anchor="middle" font-family="Verdana, sans-serif" font-size="11" fill="#${tx}" opacity="0.6">${percent}%</text>
+  <defs><clipPath id="moonClip"><circle cx="430" cy="124" r="36"/></clipPath></defs>
+  <rect width="500" height="218" rx="14" fill="#${b}" stroke="#${c}" stroke-width="1.5"/>
+  <text x="36" y="44" font-family="Georgia, serif" font-size="24" fill="#${c}">${esc(displayName)}</text>
+  <text x="36" y="66" font-family="Verdana, sans-serif" font-size="10" letter-spacing="3" fill="#${tx}" opacity="0.65">GITHUB IN NUMBERS</text>
+  <line x1="36" y1="80" x2="364" y2="80" stroke="#${c}" stroke-opacity="0.3" stroke-width="1"/>
+  ${rows}
+  <text x="430" y="68" text-anchor="middle" font-family="Verdana, sans-serif" font-size="9" letter-spacing="2.5" fill="#${tx}" opacity="0.65">RANK</text>
+  <circle cx="430" cy="124" r="44" fill="none" stroke="#${c}" stroke-opacity="0.22" stroke-width="3"/>
+  <circle cx="430" cy="124" r="44" fill="none" stroke="#${c}" stroke-width="3" stroke-linecap="round"
+    stroke-dasharray="${(percent / 100 * RC).toFixed(1)} ${RC.toFixed(1)}" transform="rotate(-90 430 124)"/>
+  <circle cx="430" cy="124" r="36" fill="#${c}"/>
+  <g clip-path="url(#moonClip)"><circle cx="411" cy="111" r="30" fill="#${b}" opacity="0.08"/></g>
+  <text x="430" y="133" text-anchor="middle" font-family="Georgia, serif" font-size="25" font-weight="bold" fill="#${b}">${grade}</text>
+  <text x="430" y="190" text-anchor="middle" font-family="Verdana, sans-serif" font-size="11" fill="#${tx}" opacity="0.65">${percent}%</text>
 </svg>`;
 }
 export default async function handler(req, res) {
