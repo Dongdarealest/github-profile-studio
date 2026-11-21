@@ -1,4 +1,4 @@
-<!-- TEMPLATE 06 · GALLERY — GitHub Profile Studio
+<!-- TEMPLATE 06 · GALLERY
      The house style of the author: a profile laid out like a small museum.
      Serif poster, quiet captions, one accent colour, lots of air.
      Replace YOUR_USERNAME and Your Name. Accent: A98B4F — swap the hex to re-skin. -->
