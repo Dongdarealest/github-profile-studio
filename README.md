@@ -53,12 +53,13 @@ README in, commit. Full walkthrough: [`docs/guide.md`](docs/guide.md).
 | --- | --- |
 | Web generator with live preview, 10 themes, custom hex colour | [`docs/index.html`](docs/index.html) · [live](https://dongdarealest.github.io/github-profile-studio/) |
 | 10 ready templates: Minimal, Dark Luxury, Neon Cyber, Pastel Soft, Terminal, Gallery, Hire Me, Maintainer, Student, Creative | [`templates/`](templates/) |
-| Block library: 25 copy-paste blocks with every colour parameter explained | [`docs/blocks.md`](docs/blocks.md) |
+| Block library: 30 copy-paste blocks with every colour parameter explained | [`docs/blocks.md`](docs/blocks.md) |
 | Pro tips: the 10 rules behind profiles that get followed | [`docs/pro-tips.md`](docs/pro-tips.md) |
 | 10 curated themes + bring-your-own-colour rules | [`docs/themes.md`](docs/themes.md) |
 | Offline CLI generator (Python, zero dependencies) | [`tools/generate.py`](tools/generate.py) |
 | Your own dynamic SVG API — banner, typing, live stats card, wave. No third party | [`api/`](api/) |
-| Snake + full metrics workflows for your profile repo | [`templates/workflows/`](templates/workflows/) |
+| Snake, Pac-Man + full metrics workflows for your profile repo | [`templates/workflows/`](templates/workflows/) |
+| Agent-readable profile: `AGENTS.md` + `llms.txt` templates — the 2026 pattern no other kit ships | [`templates/agent/`](templates/agent/) |
 | A worked example, generated for the author | [`examples/dongdarealest.md`](examples/dongdarealest.md) |
 
 ## See it working
