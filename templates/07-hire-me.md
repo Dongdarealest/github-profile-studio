@@ -1,4 +1,4 @@
-<!-- TEMPLATE 07 · HIRE ME (job-seeker portfolio) — GitHub Profile Studio
+<!-- TEMPLATE 07 · HIRE ME (job-seeker portfolio)
      Replace YOUR_USERNAME, Your Name, and the contact links. Accent: 70A5FD — swap the hex to re-skin.
      Recruiters scan for 3 things: what you do, proof you ship, how to reach you. This layout answers in that order. -->
 <div align="center">
