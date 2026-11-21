@@ -28,15 +28,36 @@ This kit is built around three simple ideas:
 3. **Text is a parameter too.** The typing lines, the banner name, the tagline all
    live in the URL. Edit the words, the image follows.
 
+## Why this one, when profile generators already exist?
+
+Most generators hand you one fixed frame and a form. This Studio is built differently:
+
+- **Username only.** It reads your real GitHub (name, bio, languages, best repos) and fills
+  everything in. There is almost nothing to type.
+- **A profile score, with the fixes.** Before you decorate anything, the Studio audits your
+  account out of 100 and tells you exactly what is leaking visitors: missing bio, repos
+  without descriptions, a cold activity graph — each with the concrete fix.
+- **Mix and match, not one frame.** 22 independent blocks from different styles; take the
+  header from one, the projects from another, reorder freely. Plus 12 style presets and the
+  full 10 template gallery, all on the web.
+- **One-click publish.** Paste a fine-grained token you create (used only in your browser
+  tab, sent only to api.github.com, never stored) and the Studio creates your profile
+  repository and commits the README, the animation workflows and the agent files for you.
+- **Honest preview.** Desktop at GitHub's real 896px width, or mobile at 390px.
+- **Agent-ready.** Ships `AGENTS.md` and `llms.txt` profile templates, so AI tools describe
+  you from facts you wrote.
+- **Yours to run.** MIT licensed, a static page, an offline CLI, and your own SVG API in
+  `api/` to self-host when a public widget service goes down.
+
 ## Use it in 60 seconds
 
 **Option A — the web Studio (no files, no clone):**
-open **[dongdarealest.github.io/github-profile-studio](https://dongdarealest.github.io/github-profile-studio/)**
-and type **only your username**. The Studio reads your real GitHub — name, bio, languages,
-most-starred repositories — and fills everything in. Then pick one of 12 style presets,
-or mix your own layout from 22 independent blocks: take the header from one style, the
-projects from another, the closer from a third. Reorder them, remove them, add more.
-Copy the README. That is the whole workflow.
+open **[dongdarealest.github.io/github-profile-studio](https://dongdarealest.github.io/github-profile-studio/)**.
+
+1. Type **only your username**, press *Build my profile* — your data is fetched and your
+   profile is scored, with the fixes listed.
+2. Pick a style preset, a complete template from the gallery, or mix your own blocks.
+3. Copy the README — or use the one-click Publish button and skip the manual steps entirely.
 
 **Option B — a template:** copy any file from [`templates/`](templates/),
 find-replace `YOUR_USERNAME`, paste it into your profile repository.
