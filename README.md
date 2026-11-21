@@ -4,6 +4,12 @@
 
 **A profile that lives.**
 
+> **Status — a keepsake.** This Studio was designed and built in a single night,
+> 21 November 2026, as an experiment in making GitHub profiles feel alive.
+> It is complete as it stands and is no longer under active development.
+> Everything here still works — and the sky at the top of this page is still
+> live: its moon follows the real moon, and its stars are still being earned.
+
 <img src="https://github-profile-studio-api.vercel.app/api/strip?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="The maker's numbers, on the Studio's own identity strip" />
 
 [Stars](https://github.com/Dongdarealest/github-profile-studio/stargazers) · [MIT License](LICENSE) · [Open the web Studio](https://dongdarealest.github.io/github-profile-studio/)
