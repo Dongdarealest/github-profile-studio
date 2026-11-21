@@ -128,6 +128,23 @@ Self-hosted, no third party at all. Deploy the `api/` folder on Vercel, then:
 
 `card` reads the public GitHub API live, so the username is genuinely the only input.
 
+The hosted instance at `github-profile-studio-api.vercel.app` serves the full suite —
+every endpoint takes `username=` plus the same `color` / `bg` / `text` hex parameters:
+
+| Endpoint | What it draws |
+| --- | --- |
+| `/api/banner` | Name banner with subtitle |
+| `/api/typing` | Animated typing lines |
+| `/api/card` | Live profile card (name, bio, followers, top repos) |
+| `/api/stats` | Full stats with rank ring |
+| `/api/langs` | Most-used languages bar |
+| `/api/streak` | Active days and streaks from real push activity |
+| `/api/pin?username=X&repo=Y` | One repository pin card |
+| `/api/graph` | Push activity, last 30 days, as one wave |
+| `/api/score` | Profile Score badge (the same 10-check rubric as the web audit) |
+| `/api/sky` | **Your Sky** — the last 90 days as a night sky; pushes are stars, best repos are constellations |
+| `/api/wave` | A quiet footer wave |
+
 ## 16. Now playing on Spotify
 
 Needs the `novatorem/spotify-github-profile` service connected to your Spotify once;
