@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>GitHub Profile Studio — type your username, we build the rest</title>
-<meta name="description" content="Type only your GitHub username. The Studio reads your real profile — name, bio, languages, best repos — then lets you mix and match beautiful blocks into your own layout. Free, open source." />
-<meta property="og:title" content="GitHub Profile Studio — type your username, we build the rest" />
-<meta property="og:description" content="Username in. A designed, self-updating profile out. Mix blocks, pick a colour, copy." />
+<title>GitHub Profile Studio — a profile that lives</title>
+<meta name="description" content="Type only your GitHub username. Your work becomes a living night sky — the moon is real, the stars are your work — with a full profile built around it. Free, open source." />
+<meta property="og:title" content="GitHub Profile Studio — a profile that lives" />
+<meta property="og:description" content="Username in. A living sky, a scored profile, one click to publish." />
 <meta property="og:type" content="website" />
 <style>
   :root{
@@ -31,7 +31,7 @@
     min-height:100vh;
   }
   /* Liquid glass surface: translucent, blurred, with a specular top edge */
-  .card, #profilechip, #scorepanel, .mock, pre, details.card{
+  .card, .glasscard, .mock, pre, details.card{
     background:linear-gradient(160deg, rgba(255,255,255,.085), rgba(255,255,255,.028) 42%, rgba(255,255,255,.045));
     -webkit-backdrop-filter:blur(22px) saturate(170%);
     backdrop-filter:blur(22px) saturate(170%);
@@ -44,31 +44,79 @@
     backdrop-filter:blur(18px) saturate(160%);
     box-shadow:var(--spec);
   }
-  header{padding:54px 20px 26px;text-align:center}
-  header .mark{width:58px;height:32px;margin:0 auto 14px;border:2px solid var(--gold);border-bottom:none;border-radius:58px 58px 0 0;filter:drop-shadow(0 2px 10px rgba(169,139,79,.45))}
-  h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(34px,5.6vw,56px);margin:0;letter-spacing:.01em;text-shadow:0 2px 24px rgba(0,0,0,.5)}
-  h1 em{color:var(--gold)}
-  header p{color:var(--muted);max-width:680px;margin:12px auto 0;font-size:16.5px;line-height:1.55}
-  .fetchbar{max-width:760px;margin:26px auto 4px;display:flex;gap:10px;padding:0 16px}
+  .page{max-width:1080px;margin:0 auto;padding:0 16px}
+  /* Top bar */
+  .topbar{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:22px 2px 18px}
+  .wordmark{font-family:Georgia,serif;font-size:clamp(20px,3.4vw,25px);letter-spacing:.01em;display:flex;align-items:center;gap:11px;white-space:nowrap}
+  .wordmark em{color:var(--gold);font-style:normal}
+  .wordmark .mark{width:31px;height:18px;flex:none;border:2px solid var(--gold);border-bottom:none;border-radius:31px 31px 0 0;filter:drop-shadow(0 2px 8px rgba(169,139,79,.45))}
+  #langsel{appearance:none;background:rgba(255,255,255,.07);color:var(--bone);border:1px solid var(--stroke);border-radius:999px;padding:10px 16px;font-size:14px;cursor:pointer;box-shadow:var(--spec);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);min-height:44px}
+  /* Hero */
+  .skyframe{border-radius:26px;overflow:hidden;border:1px solid var(--stroke);box-shadow:var(--shadow), var(--spec);line-height:0;background:#0d1117}
+  .skyframe img{width:100%;height:auto;display:block}
+  .tagline{text-align:center;font-family:Georgia,serif;font-style:italic;font-size:clamp(17px,2.6vw,21px);color:var(--bone);margin:22px auto 2px;max-width:720px;line-height:1.5}
+  .fetchbar{max-width:760px;margin:20px auto 4px;display:flex;gap:10px}
   .fetchbar input{
-    flex:1;color:var(--bone);padding:15px 18px;font-size:17px;border-radius:999px;
+    flex:1;color:var(--bone);padding:15px 18px;font-size:17px;border-radius:999px;min-height:52px;
     background:rgba(255,255,255,.06);border:1px solid rgba(169,139,79,.55);
     -webkit-backdrop-filter:blur(16px) saturate(160%);backdrop-filter:blur(16px) saturate(160%);
-    box-shadow:var(--spec), 0 10px 30px rgba(0,0,0,.35); outline:none;
+    box-shadow:var(--spec), 0 10px 30px rgba(0,0,0,.35); outline:none;min-width:0;
   }
   .fetchbar input:focus{border-color:var(--gold);box-shadow:var(--spec), 0 0 0 4px rgba(169,139,79,.18)}
   .fetchbar button{
-    border:none;border-radius:999px;padding:15px 24px;font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap;color:#17130a;
+    border:none;border-radius:999px;padding:15px 24px;font-size:16px;font-weight:700;cursor:pointer;white-space:nowrap;color:#17130a;min-height:52px;
     background:linear-gradient(180deg,#d8bc7f, #a98b4f 55%, #96793f);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.65), inset 0 -2px 6px rgba(0,0,0,.25), 0 12px 28px rgba(169,139,79,.35);
   }
   .fetchbar button:active{transform:translateY(1px)}
-  #fetchmsg{text-align:center;color:var(--muted);font-size:14px;min-height:20px;margin:10px 16px 0}
-  #profilechip{display:none;max-width:760px;margin:12px auto 0;padding:12px 16px;align-items:center;gap:14px}
-  #profilechip img{width:52px;height:52px;border-radius:50%;border:2px solid var(--gold);box-shadow:0 4px 14px rgba(0,0,0,.4)}
-  #profilechip .who{font-size:15px;line-height:1.45}
-  #profilechip .who span{color:var(--muted)}
-  main{max-width:1240px;margin:0 auto;padding:24px 16px 70px;display:grid;grid-template-columns:400px 1fr;gap:20px}
+  #fetchmsg{text-align:center;color:var(--muted);font-size:14px;min-height:20px;margin:10px 8px 0;line-height:1.5}
+  .quietrow{text-align:center;margin:12px 0 0}
+  .quietrow a{color:var(--muted);font-size:14px;text-decoration:none;border-bottom:1px dotted rgba(169,139,79,.55);padding-bottom:2px}
+  .quietrow a:hover{color:var(--gold)}
+  /* Result */
+  #result{margin-top:34px}
+  .glasscard{padding:18px 20px}
+  .scorerow{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .scorechip{display:flex;align-items:baseline;gap:8px;background:rgba(0,0,0,.3);border:1px solid rgba(169,139,79,.55);border-radius:999px;padding:9px 18px;box-shadow:var(--spec)}
+  .scorelabel{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
+  #scorenum{font-family:Georgia,serif;font-size:34px;color:var(--gold);line-height:1}
+  .scoreof{color:var(--muted);font-size:14px}
+  .scoreword{font-weight:600;font-size:16.5px;flex:1;min-width:220px;line-height:1.45}
+  .scorefixes{margin-top:12px}
+  .scorefixes summary{cursor:pointer;color:var(--muted);font-size:13.5px;min-height:28px}
+  #scorelist{color:var(--muted);font-size:13.5px;line-height:1.65;margin-top:6px}
+  .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .btn-primary{
+    border:none;border-radius:999px;padding:15px 27px;font-size:16px;font-weight:700;cursor:pointer;color:#17130a;min-height:52px;
+    background:linear-gradient(180deg,#d8bc7f,#a98b4f 60%,#96793f);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 10px 24px rgba(169,139,79,.3);
+  }
+  .btn-primary:active{transform:translateY(1px)}
+  .btn-primary.ghost{background:rgba(255,255,255,.06);color:var(--bone);border:1px solid var(--gold);box-shadow:var(--spec)}
+  /* Make it yours */
+  #yours{margin-top:42px}
+  .sectionh{font-family:Georgia,serif;font-weight:500;font-size:clamp(21px,3.4vw,26px);text-align:center;margin:0 0 18px}
+  .looksgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px}
+  .lookcard{
+    padding:0;overflow:hidden;border-radius:18px;cursor:pointer;text-align:left;color:var(--bone);
+    background:linear-gradient(165deg, rgba(255,255,255,.075), rgba(255,255,255,.02));
+    border:1px solid var(--stroke); box-shadow:var(--spec);
+    -webkit-backdrop-filter:blur(14px) saturate(150%); backdrop-filter:blur(14px) saturate(150%);
+  }
+  .lookcard:hover{border-color:rgba(169,139,79,.7)}
+  .lookcard.active{border-color:var(--gold);box-shadow:var(--spec), 0 0 0 3px rgba(169,139,79,.18)}
+  .lookstrip{display:block;height:64px;overflow:hidden;line-height:0;background:#0d1117}
+  .lookstrip img{width:100%;height:100%;object-fit:cover;display:block}
+  .lookname{display:block;padding:11px 13px;font-size:14px;font-weight:600}
+  .accentbar{margin-top:14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:14px 18px}
+  .swatches{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  .dot{width:30px;height:30px;border-radius:50%;border:1px solid rgba(255,255,255,.35);cursor:pointer;padding:0;flex:none;box-shadow:inset 0 1px 2px rgba(255,255,255,.5)}
+  .dot.active{box-shadow:0 0 0 3px rgba(169,139,79,.55)}
+  .colorrow{display:flex;gap:10px;align-items:center;margin-left:auto}
+  input[type=color]{width:50px;height:42px;border:1px solid var(--stroke);border-radius:12px;background:rgba(255,255,255,.05);padding:4px;cursor:pointer}
+  /* Advanced builder (unchanged system, quieter frame) */
+  #advanced{margin-top:36px}
+  main{display:grid;grid-template-columns:400px 1fr;gap:20px;padding:4px 0 8px}
   @media(max-width:940px){main{grid-template-columns:1fr}}
   .card{padding:20px;margin-bottom:20px;position:relative}
   .card h3{margin:0 0 6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -87,8 +135,6 @@
   .theme{padding:9px 11px;cursor:pointer;font-size:13px;display:flex;gap:8px;align-items:center;font-weight:500;text-align:left}
   .theme[aria-pressed=true]{border-color:var(--gold);box-shadow:var(--spec), 0 0 0 3px rgba(169,139,79,.16)}
   .swatch{width:17px;height:17px;border-radius:50%;flex:none;border:1px solid rgba(255,255,255,.35);box-shadow:inset 0 1px 2px rgba(255,255,255,.5)}
-  .colorrow{display:flex;gap:10px;align-items:center;margin-top:10px}
-  input[type=color]{width:50px;height:42px;border:1px solid var(--stroke);border-radius:12px;background:rgba(255,255,255,.05);padding:4px;cursor:pointer}
   input[type=text], input[type=password], textarea{
     width:100%;color:var(--bone);padding:11px 13px;font-size:14px;border-radius:14px;
     background:rgba(0,0,0,.28);border:1px solid var(--stroke);box-shadow:inset 0 1px 0 rgba(255,255,255,.07); outline:none;
@@ -113,92 +159,78 @@
   .mock img{max-width:100%}
   .mock h2{font-family:Georgia,serif;color:var(--bone)}
   pre{padding:14px;overflow:auto;font-size:12px;line-height:1.5;max-height:380px;white-space:pre-wrap;word-break:break-all}
-  footer{text-align:center;color:var(--muted);padding:26px;font-size:14px}
+  footer{text-align:center;color:var(--muted);padding:34px 16px 30px;font-size:14px}
   a{color:var(--gold)}
   details summary{outline:none}
   ::selection{background:rgba(169,139,79,.4)}
-  .wallframe{height:300px;overflow:hidden;position:relative}
-  .wallscale{width:896px;transform:scale(.52);transform-origin:top left;padding:14px;pointer-events:none}
-  @media(max-width:1200px){.wallscale{transform:scale(.46)}}
   @media(max-width:640px){
-    .wallscale{transform:scale(.40)} .wallframe{height:250px}
     .fetchbar{flex-direction:column} .fetchbar button{width:100%}
-    header{padding:40px 16px 20px} .card{padding:16px;border-radius:20px}
-    main{padding:16px 12px 50px} pre{font-size:11px}
+    .card{padding:16px;border-radius:20px}
+    pre{font-size:11px}
     .preset,.theme,.addbtn{min-height:44px}
-    #scorenum{font-size:42px !important}
+    #scorenum{font-size:30px}
+    .scoreword{min-width:0}
+    .lookstrip{height:56px}
+    .actions .btn-primary{flex:1;padding:15px 12px}
+    .colorrow{margin-left:0}
+    .topbar{padding:16px 2px 14px}
   }
 
 </style>
 </head>
 <body>
-<header>
-  <div class="mark"></div>
-  <h1>GitHub Profile <em>Studio</em></h1>
-  <p><strong style="color:var(--bone)" data-i18n="hero_b">Type only your username.</strong> <span data-i18n="hero_rest"> The Studio reads your real GitHub — your name, bio, languages and best repositories — fills everything in for you, then lets you mix beautiful blocks from different styles into a layout that is yours.</span></p>
-  <div style="margin-top:18px">
-    <select id="langsel" aria-label="Language" style="appearance:none;background:rgba(255,255,255,.07);color:var(--bone);border:1px solid var(--stroke);border-radius:999px;padding:10px 38px 10px 16px;font-size:14px;cursor:pointer;box-shadow:var(--spec);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)">
+<div class="page">
+  <div class="topbar">
+    <div class="wordmark"><span class="mark"></span><span>GitHub Profile <em>Studio</em></span></div>
+    <select id="langsel" aria-label="Language">
       <option value="en">🌐 English</option><option value="vi">Tiếng Việt</option><option value="zh">中文</option><option value="ja">日本語</option><option value="ko">한국어</option><option value="es">Español</option><option value="pt">Português</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="hi">हिन्दी</option>
     </select>
   </div>
-</header>
 
-<div class="fetchbar">
-  <input type="text" id="username" placeholder="your-github-username" data-i18n-ph="ph" autocomplete="off" />
-  <button id="fetchbtn" data-i18n="build">Build my profile</button>
-</div>
-<p id="fetchmsg" data-i18n="nosignup">No sign-up, no token. Everything is read from the public GitHub API, in your browser.</p>
-<p style="text-align:center;margin:10px 0 0"><a href="#" id="scratch" style="font-size:13.5px"><span data-i18n="scratch">or start from scratch, without fetching →</span></a></p>
-<div id="profilechip">
-  <img id="avatar" alt="" />
-  <div class="who" id="whotext"></div>
-</div>
+  <section id="hero">
+    <div class="skyframe"><img id="herosky" src="https://github-profile-studio-api.vercel.app/api/sky?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Your Sky — a living GitHub profile" /></div>
+    <p class="tagline" data-i18n="hero_line">A profile that lives — the moon is real, the stars are your work.</p>
+    <div class="fetchbar">
+      <input type="text" id="username" placeholder="your-github-username" data-i18n-ph="ph" autocomplete="off" />
+      <button id="fetchbtn" data-i18n="build">Build my profile</button>
+    </div>
+    <p id="fetchmsg" data-i18n="nosignup">No sign-up, no token. Everything is read from the public GitHub API, in your browser.</p>
+    <p class="quietrow"><a href="#" id="scratch"><span data-i18n="scratch">or start from scratch, without fetching →</span></a></p>
+  </section>
 
-<div style="max-width:1240px;margin:26px auto 0;padding:0 16px">
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px">
-    <div data-i18n="step1" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"></div>
-    <div data-i18n="step2" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"></div>
-    <div data-i18n="step3" style="background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px"></div>
-  </div>
-  <details style="margin-top:12px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px">
-    <summary style="cursor:pointer;font-weight:600" data-i18n="howto_q">How do I put this on my GitHub? (30 seconds, by hand)</summary>
-    <ol style="color:var(--muted);line-height:1.65;margin:10px 0 4px;padding-left:20px">
-      <li>On GitHub, create a <strong style="color:var(--bone)">new public repository named exactly your username</strong> (for example <em>octocat/octocat</em>). GitHub itself will tell you it is special.</li>
-      <li>Open its README.md, delete the placeholder text, and paste what you copied here.</li>
-      <li>Commit. Your profile updates immediately — every number on it then updates itself.</li>
-      <li>No repository yet? The one-click Publish button in step 5 creates it for you.</li>
-    </ol>
-  </details>
-  <div id="scorepanel" style="display:none;margin-top:12px;background:var(--panel);border:1px solid var(--gold);border-radius:12px;padding:16px">
-    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
-      <div id="scorenum" style="font-family:Georgia,serif;font-size:52px;color:var(--gold);line-height:1">–</div>
-      <div style="flex:1;min-width:260px">
-        <div id="scoreword" style="font-weight:700;font-size:16px"></div>
-        <div id="scorelist" style="color:var(--muted);font-size:13.5px;line-height:1.6;margin-top:4px"></div>
+  <section id="result" style="display:none">
+    <div id="scorepanel" class="glasscard" style="display:none">
+      <div class="scorerow">
+        <div class="scorechip"><span class="scorelabel" data-i18n="score_label">Profile score</span><span id="scorenum">–</span><span class="scoreof">/100</span></div>
+        <div id="scoreword" class="scoreword"></div>
+      </div>
+      <details class="scorefixes">
+        <summary data-i18n="score_fixes">What to fix</summary>
+        <div id="scorelist"></div>
+      </details>
+    </div>
+    <div class="actions">
+      <button id="pub2" class="btn-primary" data-i18n="pub_main">Publish to my GitHub</button>
+      <button id="copy2" class="btn-primary ghost" data-i18n="copy">Copy README</button>
+    </div>
+    <p class="quietrow"><a href="#" id="yourslink"><span data-i18n="yours_link">Make it yours</span> ↓</a></p>
+  </section>
+
+  <section id="yours" style="display:none">
+    <h3 class="sectionh" data-i18n="looks_h">Five looks — pick one, everything follows</h3>
+    <div id="looks" class="looksgrid"></div>
+    <div class="accentbar glasscard">
+      <div id="swatches" class="swatches"></div>
+      <div class="colorrow">
+        <input type="color" id="colorpick" value="#a98b4f" />
+        <input type="text" id="colorhex" value="A98B4F" maxlength="7" style="width:110px" />
       </div>
     </div>
-  </div>
-</div>
+    <p class="quietrow"><a href="#" id="advlink"><span data-i18n="adv_link">Advanced: build block by block</span> →</a></p>
+  </section>
 
-
-<section style="max-width:1240px;margin:22px auto 0;padding:0 16px">
-  <div class="card" style="margin-bottom:0">
-    <h3 style="font-size:13px" data-i18n="wall_h">The designs — every one rendered live from real GitHub data</h3>
-    <p class="hint" id="wallhint" data-i18n="wall_hint">This is a sample profile. Type <em>your</em> username above and press Build — the whole wall re-renders with your name, your languages, your repositories. Click any design to use it.</p>
-    <div id="wall" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(400px,100%),1fr));gap:14px"></div>
-  </div>
-</section>
-
-<section id="gallerywrap" style="display:none;max-width:1240px;margin:22px auto 0;padding:0 16px">
-  <div class="card" style="margin-bottom:0">
-    <h3 data-i18n="gallery_h">Template gallery — complete profiles, one click</h3>
-    <p class="hint">The same templates as the repository files, now on the web. Preview any of them with <em>your</em> data, then use it as-is — your username and name are substituted automatically. Or go back to mixing blocks below; both roads lead to the same Copy button.</p>
-    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px"></div>
-    <p id="tplstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
-  </div>
-</section>
-
-<main id="mainui" style="display:none">
+<div id="advanced" style="display:none">
+<main id="mainui">
   <div>
     <section class="card">
       <h3 data-i18n="presets_h">1 · Start from a style</h3>
@@ -210,10 +242,6 @@
       <h3 data-i18n="colour_h">2 · Colour</h3>
       <p class="hint">One accent, applied to every block at once — or bring your own hex.</p>
       <div class="themes" id="themes"></div>
-      <div class="colorrow">
-        <input type="color" id="colorpick" value="#a98b4f" />
-        <input type="text" id="colorhex" value="A98B4F" maxlength="7" />
-      </div>
     </section>
 
     <section class="card">
@@ -269,12 +297,6 @@
     <section class="card">
       <div class="previewhead"><span data-i18n="preview_h">Live preview — your real data</span><span><button class="mini" style="width:auto;padding:0 9px" id="w-desktop">Desktop 896</button> <button class="mini" style="width:auto;padding:0 9px" id="w-mobile">Mobile 390</button></span></div><div id="tplbanner" style="display:none;margin-bottom:10px"></div>
       <div class="mock" id="preview"><div id="previewinner" style="max-width:896px;margin:0 auto"></div></div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
-      <button id="copy2" data-i18n="a_copy" style="background:linear-gradient(180deg,#d8bc7f,#a98b4f 60%,#96793f);color:#17130a;border:none;border-radius:999px;padding:13px 22px;font-size:15.5px;font-weight:700;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 10px 24px rgba(169,139,79,.3)">Copy README — done</button>
-      <button id="pub2" data-i18n="a_publish" style="background:rgba(255,255,255,.06);color:var(--bone);border:1px solid var(--gold);border-radius:999px;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer">Publish to GitHub for me</button>
-      <button id="custombtn" data-i18n="a_customize" style="background:rgba(255,255,255,.04);color:var(--muted);border:1px solid var(--stroke);border-radius:999px;padding:13px 20px;font-size:15px;cursor:pointer">Customize</button>
-    </div>
-    <p style="color:var(--muted);font-size:13px;margin:10px 0 0" data-i18n="a_note">That is all most people need. <em>Customize</em> opens styles, blocks, templates and wording — only if you want them.</p>
     </section>
     <section class="card">
       <div class="previewhead"><span data-i18n="output_h">Your README.md</span><span>paste into your username repository</span></div>
@@ -283,10 +305,20 @@
   </div>
 </main>
 
-<footer>
-  Free and open source, MIT · <a href="https://github.com/Dongdarealest/github-profile-studio">GitHub Profile Studio</a> ·
-  Widgets by capsule-render, readme-typing-svg, github-readme-stats, streak-stats, skillicons, shields.io and friends.
-</footer>
+<section id="gallerywrap" style="margin-top:20px">
+  <div class="card" style="margin-bottom:0">
+    <h3 data-i18n="gallery_h">Template gallery — complete profiles, one click</h3>
+    <p class="hint">The same templates as the repository files, now on the web. Preview any of them with <em>your</em> data, then use it as-is — your username and name are substituted automatically. Or go back to mixing blocks below; both roads lead to the same Copy button.</p>
+    <div id="gallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:10px"></div>
+    <p id="tplstatus" style="color:var(--muted);font-size:13px;min-height:18px;margin:10px 0 0"></p>
+  </div>
+</section>
+</div>
+
+  <footer>
+    Free and open source, MIT · <a href="https://github.com/Dongdarealest/github-profile-studio">GitHub</a> · <a href="https://github.com/Dongdarealest/github-profile-studio/blob/main/docs/guide.md">Guide</a> · <a href="https://github.com/Dongdarealest/github-profile-studio/tree/main/api">API</a>
+  </footer>
+</div>
 
 <script src="templates-data.js"></script>
 <script src="i18n.js"></script>
@@ -431,7 +463,7 @@ function applyPreset(p) {
   themeKey = p.theme; layout = p.blocks.slice();
   $("colorhex").value = THEMES[p.theme].accent; $("colorpick").value = "#" + THEMES[p.theme].accent;
   document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === p.theme ? "true" : "false"));
-  renderLayout(); render();
+  renderLayout(); render(); updateHeroSky();
 }
 function renderThemes() {
   const el = $("themes"); el.innerHTML = "";
@@ -439,12 +471,12 @@ function renderThemes() {
     const b = document.createElement("button"); b.type = "button"; b.className = "theme"; b.dataset.k = k;
     b.setAttribute("aria-pressed", k === themeKey);
     b.innerHTML = '<span class="swatch" style="background:#' + t.accent + '"></span>' + t.label;
-    b.onclick = () => { themeKey = k; $("colorhex").value = t.accent; $("colorpick").value = "#" + t.accent; document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === k ? "true" : "false")); render(); };
+    b.onclick = () => { themeKey = k; $("colorhex").value = t.accent; $("colorpick").value = "#" + t.accent; document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === k ? "true" : "false")); render(); updateHeroSky(); };
     el.appendChild(b);
   });
   const ab = document.createElement("button"); ab.type = "button"; ab.className = "theme";
   ab.innerHTML = '<span class="swatch" style="background:conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)"></span>' + t("auto_accent");
-  ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); };
+  ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); updateHeroSky(); };
   el.appendChild(ab);
 }
 function renderPresets() {
@@ -554,10 +586,8 @@ async function fetchProfile() {
       $("scorelist").innerHTML = checks.map(c => (c.ok ? "✓ " : "✕ ") + c.label + (c.ok ? "" : ' — <span style="color:var(--bone)">' + c.tip + "</span>")).join("<br>");
       $("scorepanel").style.display = "block";
     })();
-    $("avatar").src = ur.avatar_url;
-    $("whotext").innerHTML = "<strong>" + (ur.name || u) + "</strong> <span>" + t("who_line", {u: u, repos: ur.public_repos, followers: ur.followers, langs: (langs.slice(0, 3).join(", ") || "—")}) + "</span><br><span>" + t("who_note") + "</span>";
-    $("profilechip").style.display = "flex";
-    showStudio(); renderWall();
+    skyUser = u;
+    showStudio(); renderLooks(); updateHeroSky();
     $("fetchmsg").textContent = t("fetch_done");
     setTimeout(() => $("scorepanel").scrollIntoView({behavior: "smooth", block: "center"}), 60);
     render();
@@ -698,72 +728,118 @@ function applyLang(l) {
   document.documentElement.lang = l;
   if (typeof renderThemes === "function") renderThemes();
   if (typeof renderGallery === "function") renderGallery();
-  if (typeof renderWall === "function") renderWall();
 }
 
-// ---- The Designs wall: live-rendered presets you choose with your eyes ----
-const SAMPLE = {username: "Dongdarealest", name: "Dongdarealest", lines: "Developer\nOpen source builder\nAlways learning", about: "I build small, finished things and learn in public.", skills: "javascript,python,html,css,git,github", repos: "TubeEQ,sai-dau-sua-do,DONGUNLOCK,github-profile-studio"};
-function snapshot() {
-  return {themeKey, layout: layout.slice(), color: $("colorhex").value, username: $("username").value, name: $("name").value, lines: $("lines").value, about: $("about").value, skills: $("skills").value, repos: $("repos").value, profile};
+// ---- The calm flow: hero sky, result, five looks, advanced ----
+const API_BASE = "https://github-profile-studio-api.vercel.app/api";
+let skyUser = "Dongdarealest";
+let currentLook = "night";
+const LOOKS = [
+  {id: "night", name: "Night Sky", preset: "Night Sky"},
+  {id: "glass", name: "Liquid Glass", preset: "Liquid Glass", skyBg: "101623"},
+  {id: "classic", name: "Midnight Classic", preset: "Dark Classic"},
+  {id: "paper", name: "Paper Editorial", preset: "Editorial Paper"},
+  {id: "neon", name: "Neon Cyber", preset: "Neon Cyber"}
+];
+function lookTheme(lk) {
+  const p = PRESETS.find(x => x.name === lk.preset);
+  const th = Object.assign({}, THEMES[p.theme]);
+  if (lk.skyBg) th.bg = lk.skyBg;
+  return th;
 }
-function restore(st) {
-  themeKey = st.themeKey; layout = st.layout; $("colorhex").value = st.color; $("colorpick").value = "#" + T().accent;
-  $("username").value = st.username; $("name").value = st.name; $("lines").value = st.lines; $("about").value = st.about; $("skills").value = st.skills; $("repos").value = st.repos; profile = st.profile;
-  document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === themeKey ? "true" : "false"));
-  renderLayout(); render();
+function skyUrlFor(u, th) {
+  return API_BASE + "/sky?username=" + encodeURIComponent(u) + "&color=" + th.accent + "&bg=" + th.bg + "&text=" + th.text;
 }
-function renderWall() {
-  const wall = $("wall"); if (!wall) return;
-  const st = snapshot();
-  const data = profile ? {username: user(), name: $("name").value, lines: $("lines").value, about: $("about").value, skills: $("skills").value, repos: $("repos").value} : SAMPLE;
-  wall.innerHTML = "";
-  PRESETS.forEach(p => {
-    themeKey = p.theme; layout = p.blocks.slice(); $("colorhex").value = THEMES[p.theme].accent;
-    $("username").value = data.username; $("name").value = data.name; $("lines").value = data.lines; $("about").value = data.about; $("skills").value = data.skills; $("repos").value = data.repos;
-    const html = mdToHtml(build()).replace(/<img /g, '<img loading="lazy" ');
-    const card = document.createElement("div");
-    card.style.cssText = "border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b0f14;cursor:pointer";
-    card.innerHTML = '<div style="padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line)"><strong>' + p.name + '</strong><span style="color:var(--gold);font-size:12.5px">' + t("use_design") + '</span></div>' +
-      '<div class="wallframe"><div class="wallscale">' + html + '</div><div style="position:absolute;inset:0"></div></div>';
+function heroSkyUrl() {
+  const t = T();
+  const bg = currentLook === "glass" ? "101623" : t.bg;
+  return API_BASE + "/sky?username=" + encodeURIComponent(skyUser) + "&color=" + t.accent + "&bg=" + bg + "&text=" + t.text;
+}
+let skyTimer = null;
+function updateHeroSky() {
+  clearTimeout(skyTimer);
+  skyTimer = setTimeout(() => {
+    const img = $("herosky");
+    if (!img) return;
+    const url = heroSkyUrl();
+    if (img.getAttribute("src") !== url) img.src = url;
+  }, 200);
+}
+function renderLooks() {
+  const el = $("looks"); if (!el) return;
+  el.innerHTML = "";
+  LOOKS.forEach(lk => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "lookcard" + (lk.id === currentLook ? " active" : "");
+    card.dataset.id = lk.id;
+    card.innerHTML = '<span class="lookstrip"><img loading="lazy" src="' + skyUrlFor(skyUser, lookTheme(lk)) + '" alt="" /></span><span class="lookname">' + lk.name + '</span>';
     card.onclick = () => {
-      restore(st);
-      applyPreset(p);
-      showStudio();
-      if (!profile) { $("username").value = SAMPLE.username; $("fetchmsg").textContent = t("sample_note", {build: t("build")}); render(); }
-      $("preview").scrollIntoView({behavior: "smooth", block: "start"});
+      currentLook = lk.id;
+      const p = PRESETS.find(x => x.name === lk.preset);
+      if (p) applyPreset(p);
+      document.querySelectorAll(".lookcard").forEach(c => c.classList.toggle("active", c.dataset.id === lk.id));
+      updateHeroSky();
     };
-    wall.appendChild(card);
+    el.appendChild(card);
   });
-  restore(st);
 }
-
-// ---- First-visit simplicity: one input, one button, then the result ----
-function showStudio() {
-  $("mainui").style.display = "grid";
-  $("gallerywrap").style.display = "block";
+function renderSwatches() {
+  const el = $("swatches"); if (!el) return;
+  el.innerHTML = "";
+  Object.entries(THEMES).forEach(([k, th]) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "dot" + (k === themeKey ? " active" : ""); b.dataset.k = k; b.title = th.label;
+    b.style.background = "#" + th.accent;
+    b.onclick = () => {
+      themeKey = k; $("colorhex").value = th.accent; $("colorpick").value = "#" + th.accent;
+      document.querySelectorAll(".theme").forEach(x => x.setAttribute("aria-pressed", x.dataset.k === k ? "true" : "false"));
+      document.querySelectorAll(".dot").forEach(d => d.classList.toggle("active", d.dataset.k === k));
+      render(); updateHeroSky();
+    };
+    el.appendChild(b);
+  });
+  const ab = document.createElement("button");
+  ab.type = "button"; ab.className = "dot"; ab.title = t("auto_accent");
+  ab.style.background = "conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)";
+  ab.onclick = () => { const a = deriveAccent(user()); $("colorhex").value = a; $("colorpick").value = "#" + a; render(); updateHeroSky(); };
+  el.appendChild(ab);
 }
-document.querySelectorAll("#mainui > div:first-child > .card").forEach((c, i) => { if (i < 4) { c.classList.add("adv"); c.style.display = "none"; } });
-let advOpen = false;
-$("custombtn").onclick = () => {
-  advOpen = !advOpen;
-  document.querySelectorAll(".adv").forEach(c => { c.style.display = advOpen ? "block" : "none"; });
-  $("custombtn").textContent = advOpen ? t("hide_custom") : t("a_customize");
-  if (advOpen) document.querySelector(".adv").scrollIntoView({behavior: "smooth", block: "start"});
+function showStudio() { $("result").style.display = "block"; }
+function openYours() { $("yours").style.display = "block"; }
+function openAdvanced() { $("advanced").style.display = "block"; }
+$("yourslink").onclick = e => {
+  e.preventDefault();
+  const y = $("yours");
+  const show = y.style.display === "none";
+  y.style.display = show ? "block" : "none";
+  if (show) y.scrollIntoView({behavior: "smooth", block: "start"});
 };
-$("scratch").onclick = e => { e.preventDefault(); showStudio(); $("mainui").scrollIntoView({behavior: "smooth"}); };
+$("advlink").onclick = e => {
+  e.preventDefault();
+  openAdvanced();
+  $("advanced").scrollIntoView({behavior: "smooth", block: "start"});
+};
+$("scratch").onclick = e => {
+  e.preventDefault();
+  showStudio(); openYours(); render();
+  $("result").scrollIntoView({behavior: "smooth", block: "start"});
+};
 $("copy2").onclick = () => $("copy").click();
 $("pub2").onclick = () => {
-  if (!advOpen) $("custombtn").click();
-  document.getElementById("ghtoken").scrollIntoView({behavior: "smooth", block: "center"});
+  openYours(); openAdvanced();
+  setTimeout(() => $("ghtoken").scrollIntoView({behavior: "smooth", block: "center"}), 60);
 };
+$("colorpick").addEventListener("change", updateHeroSky);
+$("colorhex").addEventListener("change", updateHeroSky);
 
-// Defaults: a sensible starter profile, fully editable, before any fetch.
+// Defaults: the signature look, fully editable, before any fetch.
 $("name").value = "Your Name";
 $("lines").value = "Developer\nOpen source builder\nAlways learning";
 $("about").value = "I build small, finished things and learn in public.";
 $("skills").value = "python,javascript,html,css,git,github";
 $("repos").value = "";
-renderThemes(); renderPresets(); renderGallery(); applyPreset(PRESETS[1]); renderWall();
+renderThemes(); renderPresets(); renderGallery(); renderLooks(); renderSwatches(); applyPreset(PRESETS[0]);
 (function initLang() {
   let l = "en";
   try { l = localStorage.getItem("gps-lang") || (navigator.language || "en").slice(0, 2); } catch (e) {}
@@ -771,6 +847,7 @@ renderThemes(); renderPresets(); renderGallery(); applyPreset(PRESETS[1]); rende
   applyLang(l);
   $("langsel").addEventListener("change", e => applyLang(e.target.value));
 })();
+
 </script>
 </body>
 </html>
