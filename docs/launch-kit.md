@@ -98,8 +98,10 @@ Title: *Show HN: GitHub Profile Studio – score, build and publish your profile
 
 ## 6. In-product loops already live (do not remove)
 
-- Credit line in every preset; score badge links back to the Studio.
-- The Studio's own cards carry its domain on every profile that uses them.
+- The score badge links back to the Studio, and the Studio's own cards carry its
+  domain in their URLs on every profile that uses them. (No visible credit line —
+  users are decorating *their* profile, not advertising ours. The loop must be
+  invisible or valuable: a badge they are proud of, a card that never breaks.)
 - Showcase issue template: "Show us yours" — featured profiles go into the README,
   which gives users a reason to open the issue and others a reason to copy them.
 
