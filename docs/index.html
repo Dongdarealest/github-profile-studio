@@ -389,6 +389,8 @@ const BLOCKS = {
   "own-pins": {label:"Featured repos · Studio cards (our own API)", small:"Pin cards drawn by the Studio, not a third party", make(t,u){
     const rs = reposArr(); if (!rs.length) return "";
     return '\n## Featured projects\n\n<div align="center">\n' + rs.map(r => '<a href="https://github.com/' + u + '/' + r + '"><img src="https://github-profile-studio-api.vercel.app/api/pin?username=' + u + '&repo=' + r + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" alt="' + r + '" /></a>').join("\n") + '\n</div>\n'; }},
+  "own-sky": {label:"Your Sky — signature artwork (our own API)", small:"Your work as a night sky: pushes are stars, best repos are constellations", make(t,u){
+    return '\n<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/sky?username=' + u + '&color=' + t.accent + '&bg=' + t.bg + '&text=' + t.text + '" width="100%" alt="Your Sky — my work as a night sky" />\n</div>\n'; }},
   "own-banner": {label:"Studio banner (our own API)", small:"Served by our own service — never a dead third party", make(t,u){
     return '<div align="center">\n<img src="https://github-profile-studio-api.vercel.app/api/banner?text=' + enc(dispName()) + '&sub=github.com/' + u + '&color=' + t.accent + '&bg=' + t.bg + '&accent=' + t.text + '" width="100%" alt="banner" />\n</div>\n'; }},
   "own-typing": {label:"Studio typing (our own API)", small:"Typewriter lines, hosted by the Studio", make(t,u){
@@ -409,6 +411,7 @@ const BLOCKS = {
 };
 
 const PRESETS = [
+  {name:"Night Sky", desc:"Your Sky as the centrepiece — the signature", theme:"midnight-gold", blocks:["own-sky","typing","badges","about","skills","own-stats-pair","own-pins","footer-plate"]},
   {name:"Liquid Glass", desc:"Frosted glass, specular light, our own API", theme:"midnight-gold", blocks:["own-glass-banner","typing","badges","about","skills","own-glass-card","own-stats-pair","own-wave"]},
   {name:"Gallery Luxury", desc:"Serif poster, restraint, gold", theme:"midnight-gold", blocks:["header-serif","typing","badges","about","skills","own-pins","own-stats-pair","footer-plate"]},
   {name:"Dark Classic", desc:"The proven all-rounder", theme:"midnight-gold", blocks:["header-wave","typing","badges","about","skills","own-stats-pair","own-streak","own-graph","footer-wave"]},
