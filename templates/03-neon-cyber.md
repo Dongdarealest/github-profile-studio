@@ -1,4 +1,4 @@
-<!-- TEMPLATE 03 · NEON CYBER — GitHub Profile Studio
+<!-- TEMPLATE 03 · NEON CYBER
      Replace YOUR_USERNAME and Your Name. Accent: 00FF9C and 70A5FD — swap either hex to re-skin. -->
 <div align="center">
 
