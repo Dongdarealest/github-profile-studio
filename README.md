@@ -28,8 +28,8 @@ Everything below is a real render from a real account — change the username in
 
 <div align="center">
 <img src="https://capsule-render.vercel.app/api?type=transparent&height=120&text=Gallery%20Luxury&fontSize=44&fontColor=A98B4F" alt="Gallery Luxury" />
-<img src="https://github-readme-stats.vercel.app/api?username=Dongdarealest&show_icons=true&title_color=A98B4F&icon_color=A98B4F&text_color=E6EDF3&bg_color=0D1117&border_color=30363D" height="165" alt="stats in Midnight Gold" />
-<img src="https://streak-stats.demolab.com?user=Dongdarealest&background=0D1117&border=30363D&ring=A98B4F&fire=A98B4F&currStreakNum=E6EDF3&sideNums=E6EDF3&currStreakLabel=A98B4F&sideLabels=E6EDF3&dates=E6EDF3" height="165" alt="streak in Midnight Gold" />
+<img src="https://github-profile-studio-api.vercel.app/api/stats?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" height="200" alt="The Studio's own stats card" />
+<img src="https://github-profile-studio-api.vercel.app/api/streak?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" height="200" alt="The Studio's own streak card" />
 </div>
 
 **Your GitHub profile is your portfolio, your résumé and your first impression — all in one page.**
@@ -105,7 +105,7 @@ README in, commit. Full walkthrough: [`docs/guide.md`](docs/guide.md).
 | Pro tips: the 10 rules behind profiles that get followed | [`docs/pro-tips.md`](docs/pro-tips.md) |
 | 10 curated themes + bring-your-own-colour rules | [`docs/themes.md`](docs/themes.md) |
 | Offline CLI generator (Python, zero dependencies) | [`tools/generate.py`](tools/generate.py) |
-| Your own dynamic SVG API — banner, typing, live stats card, wave. No third party | [`api/`](api/) |
+| Your own dynamic SVG API — banner, typing, stats, languages, streak, pins, activity graph, score badge, wave. No third party | [`api/`](api/) |
 | Snake, Pac-Man + full metrics workflows for your profile repo | [`templates/workflows/`](templates/workflows/) |
 | Agent-readable profile: `AGENTS.md` + `llms.txt` templates — the 2026 pattern no other kit ships | [`templates/agent/`](templates/agent/) |
 | A worked example, generated for the author | [`examples/dongdarealest.md`](examples/dongdarealest.md) |
@@ -113,16 +113,24 @@ README in, commit. Full walkthrough: [`docs/guide.md`](docs/guide.md).
 ## See it working
 
 This README is itself built from the kit's blocks, and so is the author's profile.
-The example file shows the generator's raw output for a real account:
+The cards below are the Studio's own — stats, languages, streak, pins and activity,
+drawn by its API from a real account:
 
 <div align="center">
-<img height="170" src="https://github-readme-stats.vercel.app/api?username=Dongdarealest&show_icons=true&include_all_commits=true&title_color=A98B4F&icon_color=A98B4F&text_color=E6EDF3&bg_color=0D1117&border_color=30363D" alt="Dongdarealest stats" />
-<img height="170" src="https://github-readme-stats.vercel.app/api/top-langs/?username=Dongdarealest&layout=compact&langs_count=8&title_color=A98B4F&text_color=E6EDF3&bg_color=0D1117&border_color=30363D" alt="Dongdarealest languages" />
+<img height="218" src="https://github-profile-studio-api.vercel.app/api/stats?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Dongdarealest stats — drawn by the Studio's own API" />
+<img height="218" src="https://github-profile-studio-api.vercel.app/api/langs?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Dongdarealest languages — drawn by the Studio's own API" />
 </div>
 
 <div align="center">
-<img src="https://streak-stats.demolab.com?user=Dongdarealest&background=0D1117&border=30363D&ring=A98B4F&fire=A98B4F&currStreakNum=E6EDF3&sideNums=E6EDF3&currStreakLabel=A98B4F&sideLabels=E6EDF3&dates=E6EDF3" alt="Dongdarealest streak" />
+<img src="https://github-profile-studio-api.vercel.app/api/streak?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" alt="Dongdarealest streak — drawn by the Studio's own API" />
+<img src="https://github-profile-studio-api.vercel.app/api/pin?username=Dongdarealest&repo=TubeEQ&color=A98B4F&bg=0D1117&text=E6EDF3" alt="A Studio pin card" />
 </div>
+
+<div align="center">
+<img src="https://github-profile-studio-api.vercel.app/api/graph?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="Dongdarealest push activity — drawn by the Studio's own API" />
+</div>
+
+Every card above is drawn by **the Studio's own API** — one design system, one host, no third-party widgets.
 
 Every image above becomes yours by changing one word in its URL: `Dongdarealest` → your username.
 
