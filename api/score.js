@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     const headers = { "User-Agent": "github-profile-studio", Accept: "application/vnd.github+json" };
     const [uRes, rRes, pRes] = await Promise.all([
       fetch(`https://api.github.com/users/${username}`, { headers }),
-      fetch(`https://api.github.com/users/${username}/repos?per_page=100`, { headers }),
+      fetch(`https://api.github.com/users/${username}/repos?per_page=100&sort=pushed`, { headers }),
       fetch(`https://api.github.com/repos/${username}/${username}`, { headers }),
     ]);
     if (!uRes.ok) throw new Error("user fetch failed");
