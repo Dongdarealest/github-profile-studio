@@ -1,4 +1,4 @@
-<!-- TEMPLATE 02 · DARK LUXURY — GitHub Profile Studio
+<!-- TEMPLATE 02 · DARK LUXURY
      How to use: replace YOUR_USERNAME and Your Name.
      The accent is A98B4F (old gold). Replace every A98B4F with your own hex to re-skin the whole profile. -->
 <div align="center">
