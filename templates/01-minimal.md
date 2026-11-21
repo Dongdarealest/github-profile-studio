@@ -1,4 +1,4 @@
-<!-- TEMPLATE 01 · MINIMAL — GitHub Profile Studio
+<!-- TEMPLATE 01 · MINIMAL
      How to use: replace YOUR_USERNAME (everywhere) and Your Name. Nothing else is required.
      Want colour? Replace 111827 with your hex, or use the web generator. -->
 # Hi, I'm Your Name
