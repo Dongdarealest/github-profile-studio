@@ -4,11 +4,7 @@
 
 **A profile that lives.**
 
-> **Status — a keepsake.** This Studio was designed and built in a single night,
-> 21 November 2026, as an experiment in making GitHub profiles feel alive.
-> It is complete as it stands and is no longer under active development.
-> Everything here still works — and the sky at the top of this page is still
-> live: its moon follows the real moon, and its stars are still being earned.
+> **Status — under new direction.** The Studio is being refocused on a single idea, done purely: the living sky. What you see is the whole product.
 
 <img src="https://github-profile-studio-api.vercel.app/api/strip?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="The maker's numbers, on the Studio's own identity strip" />
 
@@ -64,8 +60,8 @@ Stats in the sky language: star-led rows and your rank as a moon, not a copied r
 <img src="https://github-profile-studio-api.vercel.app/api/graph?username=Dongdarealest&color=A98B4F&bg=0D1117&text=E6EDF3" width="100%" alt="Activity wave — drawn by the Studio" />
 </div>
 
-On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) all fourteen
-designs re-render with *your* data the moment you type your username.
+On the [web Studio](https://dongdarealest.github.io/github-profile-studio/) the one
+design re-renders with *your* data the moment you type your username.
 
 **Your GitHub profile is your portfolio, your résumé and your first impression — all in one page.**
 This kit makes that page beautiful in about 60 seconds, even if you have never written a line of Markdown.
@@ -104,22 +100,16 @@ Most generators hand you one fixed frame and a form. This Studio is built differ
 
 - **Username only.** It reads your real GitHub (name, bio, languages, best repos) and fills
   everything in. There is almost nothing to type.
-- **A profile score, with the fixes.** Before you decorate anything, the Studio audits your
-  account out of 100 and tells you exactly what is leaking visitors: missing bio, repos
-  without descriptions, a cold activity graph — each with the concrete fix.
-- **Mix and match, not one frame.** 40 independent blocks from different styles; take the
-  header from one, the projects from another, reorder freely. Plus 14 style presets and the
-  full 10 template gallery, all on the web.
+- **A profile score, with the fixes.** The Studio audits your account out of 100 and tells
+  you exactly what is leaking visitors: missing bio, repos without descriptions, a cold
+  activity graph — each with the concrete fix.
+- **One living design, every element drawn by its own API.** A single composition — the
+  living sky, your numbers on one plate, your best work as cards — drawn entirely by the
+  Studio's own API in one design language, and served from one host. Nothing is borrowed,
+  and nothing depends on a stranger's uptime.
 - **One-click publish.** Paste a fine-grained token you create (used only in your browser
   tab, sent only to api.github.com, never stored) and the Studio creates your profile
-  repository and commits the README, the animation workflows and the agent files for you.
-- **Honest preview.** Desktop at GitHub's real 896px width, or mobile at 390px.
-- **Agent-ready.** Ships `AGENTS.md` and `llms.txt` profile templates, so AI tools describe
-  you from facts you wrote.
-- **Yours to run.** MIT licensed, a static page, an offline CLI, and an SVG API in `api/`
-  that is also hosted for everyone at `github-profile-studio-api.vercel.app` — every visual on your profile — sky, strip, stack, stats,
-  languages, streak, pins, graph, score, banner, typing, card, wave — is drawn by the
-  Studio itself and never depends on a stranger's uptime.
+  repository and commits the README for you.
 
 ## Use it in 60 seconds
 
